@@ -24,3 +24,36 @@ model User {
   profile_image_url String?
   clerk_id          String   @unique
 }
+
+model Product {
+  id                Int       @id @default(autoincrement())
+  paddle_product_id String    @unique
+  name              String
+  type              String?
+  description       String?
+  tax_category      String
+  image_url         String?
+  created_at        String
+  updated_at        String
+  prices            Price[]
+}
+
+model Price {
+  id                        Int       @id @default(autoincrement())
+  paddle_price_id           String    @unique
+  product_id                String
+  description               String
+  name                      String?
+  billing_cycle_interval    String?
+  billing_cycle_frequency   Int?
+  trial_period_interval     String?
+  trial_period_frequency    Int?
+  tax_mode                  String
+  unit_price_amount         String
+  unit_price_currency       String
+  created_at                String
+  updated_at                String
+  product                   Product   @relation(fields: [product_id], references: [paddle_product_id])
+
+  @@index([product_id])
+}
