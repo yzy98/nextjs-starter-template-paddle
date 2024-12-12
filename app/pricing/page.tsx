@@ -1,4 +1,5 @@
 import prisma from "@/lib/db";
+import { PriceCardsToggle } from "@/components/pricing/price-cards-toggle";
 
 import { syncPrices, syncProducts } from "./actions";
 
@@ -17,9 +18,8 @@ export default async function PricingPage() {
   }
 
   return (
-    <div>
-      <div>{JSON.stringify(allProducts)}</div>
-      <div>{JSON.stringify(allPrices)}</div>
+    <div className="flex flex-col gap-4">
+      <PriceCardsToggle products={allProducts} prices={allPrices} />
     </div>
   );
 }
