@@ -1,6 +1,7 @@
 import prisma from "@/lib/db";
 import { auth } from "@clerk/nextjs/server";
 import { redirect } from "next/navigation";
+import { UserButton } from "@clerk/nextjs";
 
 export default async function Dashboard() {
   const { userId } = await auth();
@@ -19,5 +20,9 @@ export default async function Dashboard() {
     redirect("/");
   }
 
-  return <div className="bg-purple-500">{JSON.stringify(user)}</div>;
+  return (
+    <div className="bg-purple-500">
+      <UserButton />
+    </div>
+  );
 }

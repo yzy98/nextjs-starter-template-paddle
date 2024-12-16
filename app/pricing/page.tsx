@@ -18,8 +18,17 @@ export default async function PricingPage() {
   }
 
   return (
-    <div className="flex flex-col gap-4">
-      <PriceCardsToggle products={allProducts} prices={allPrices} />
+    <div className="max-w-7xl mx-auto px-4 py-24">
+      <div className="text-center mb-16">
+        <h1 className="text-4xl font-bold mb-4">Simple, Transparent Pricing</h1>
+        <p className="text-xl text-gray-600">
+          Choose the plan that's right for you
+        </p>
+      </div>
+
+      <div className="flex flex-col md:flex-row gap-8 justify-center">
+        <PriceCardsToggle products={allProducts} prices={allPrices} />
+      </div>
     </div>
   );
 }

@@ -15,15 +15,21 @@ export const PriceAmount = ({
     <div className="mt-6 flex flex-col px-8">
       <div
         className={cn(
-          "text-[80px] leading-[96px] tracking-[-1.6px] font-medium"
+          "text-[64px] leading-[76px] tracking-[-1.6px] font-medium",
+          "min-h-[76px] flex items-center",
+          "lg:w-[280px]"
         )}
       >
         {price}
       </div>
       {interval && frequency && (
-        <div className={cn("font-medium leading-[12px] text-[12px]")}>
-          per user /{" "}
-          {frequency > 1 ? `${frequency} ${interval}s` : `${interval}`}
+        <div
+          className={cn(
+            "font-medium text-[14px] leading-[20px] text-muted-foreground",
+            "mt-2"
+          )}
+        >
+          per user / {frequency > 1 ? `${frequency} ${interval}s` : interval}
         </div>
       )}
     </div>
