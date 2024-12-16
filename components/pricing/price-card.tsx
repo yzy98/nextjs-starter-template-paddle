@@ -5,6 +5,7 @@ import { Button } from "@/components/ui/button";
 
 import { PriceTitle } from "./price-title";
 import { PriceAmount } from "./price-amount";
+import Link from "next/link";
 
 type PriceCardProps = {
   price: Price;
@@ -45,10 +46,7 @@ export const PriceCard = ({ price, product }: PriceCardProps) => {
       </div>
       <div className={"px-8 mt-8"}>
         <Button className={"w-full"} variant={"secondary"} asChild={true}>
-          {/* <Link href={`/checkout/${tier.priceId[frequency.value]}`}>
-            Get started
-          </Link> */}
-          Get started
+          <Link href={`/checkout/${price.paddle_price_id}`}>Get started</Link>
         </Button>
       </div>
     </div>

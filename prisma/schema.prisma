@@ -23,6 +23,8 @@ model User {
   gender            String?
   profile_image_url String?
   clerk_id          String   @unique
+
+  subscriptions     Subscription[]
 }
 
 model Product {
@@ -35,7 +37,9 @@ model Product {
   image_url         String?
   created_at        String
   updated_at        String
+
   prices            Price[]
+  subscriptions     Subscription[]
 }
 
 model Price {
@@ -53,7 +57,44 @@ model Price {
   unit_price_currency       String
   created_at                String
   updated_at                String
+
+  // Relations
   product                   Product   @relation(fields: [product_id], references: [paddle_product_id])
 
+  subscriptions             Subscription[]
+
+  @@index([product_id])
+
+}
+
+model Subscription {
+  id                           Int       @id @default(autoincrement())
+  paddle_subscription_id       String    @unique
+  user_id                      String
+  price_id                     String
+  product_id                   String
+  status                       String
+
+  // Billing details
+  price_amount                 String
+  price_currency               String
+  collection_mode              String
+  billing_cycle_interval       String
+  billing_cycle_frequency      Int
+
+  // Timestamps
+  starts_at                     String?
+  renews_at                     String?
+  ends_at                       String?
+  trial_starts_at               String?
+  trial_ends_at                 String?
+
+  // Relations
+  user                         User      @relation(fields: [user_id], references: [clerk_id])
+  price                        Price     @relation(fields: [price_id], references: [paddle_price_id])
+  product                      Product   @relation(fields: [product_id], references: [paddle_product_id])
+
+  @@index([user_id])
+  @@index([price_id])
   @@index([product_id])
 }
