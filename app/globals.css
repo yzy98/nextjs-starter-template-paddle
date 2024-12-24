@@ -70,3 +70,14 @@ body {
     @apply bg-background text-foreground;
   }
 }
+
+@layer components {
+  .nav-link {
+    @apply text-gray-600 hover:text-gray-900 transition-colors;
+  }
+}
+
+/* Make sure the main content doesn't overlap with the fixed navbar */
+main {
+  @apply pt-4;
+}
