@@ -88,6 +88,8 @@ model Subscription {
   ends_at                       String?
   trial_starts_at               String?
   trial_ends_at                 String?
+  canceled_at                  String?
+  scheduled_change              Json?
 
   // Relations
   user                         User      @relation(fields: [user_id], references: [clerk_id])

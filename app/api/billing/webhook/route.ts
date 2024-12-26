@@ -1,6 +1,8 @@
 import { subscriptionCreate } from "@/lib/data/subscription/subscription-create";
 import crypto from "crypto";
 import { isPaddleEvent, isPaddleSubscriptionEvent } from "@/lib/typeguards";
+import { subscriptionUpdate } from "@/lib/data/subscription/subscription-update";
+import { subscriptionCancel } from "@/lib/data/subscription/subscription-cancel";
 
 async function isValidSignature(
   requestBody: string,
@@ -58,7 +60,6 @@ export async function POST(request: Request) {
     const eventData = JSON.parse(rawRequestBody);
 
     console.log("eventData", eventData);
-
     if (!isPaddleEvent(eventData)) {
       return Response.json(
         {
@@ -75,10 +76,10 @@ export async function POST(request: Request) {
           await subscriptionCreate(eventData);
           break;
         case "subscription.updated":
-          // TODO: Update subscription
+          await subscriptionUpdate(eventData);
           break;
-        case "subscription.cancelled":
-          // TODO: Cancel subscription
+        case "subscription.canceled":
+          await subscriptionCancel(eventData);
           break;
         default:
           return Response.json(

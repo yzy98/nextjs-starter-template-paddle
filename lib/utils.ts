@@ -24,3 +24,12 @@ export function formatMoney(amount: number = 0, currency: string = "USD") {
     currency: currency,
   }).format(amount);
 }
+
+export const formatDate = (dateString: string | null) => {
+  if (!dateString) return null;
+  return new Date(dateString).toLocaleDateString("en-US", {
+    year: "numeric",
+    month: "long",
+    day: "numeric",
+  });
+};

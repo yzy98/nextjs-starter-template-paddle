@@ -7,9 +7,12 @@ export const subscriptionCreate = async (data: any) => {
     throw new Error("Invalid subscription event data");
   }
 
-  const updateData: Omit<Subscription, "id"> = {
+  const updateData: Omit<
+    Subscription,
+    "id" | "scheduled_change" | "canceled_at"
+  > = {
     paddle_subscription_id: data.data.id,
-    user_id: data.data.custom_data.user_id,
+    user_id: data.data?.custom_data?.user_id ?? "",
     price_id: data.data.items[0].price.id,
     product_id: data.data.items[0].product.id,
     status: data.data.status,
@@ -20,7 +23,7 @@ export const subscriptionCreate = async (data: any) => {
     billing_cycle_frequency: data.data.billing_cycle.frequency,
     starts_at: data.data.started_at,
     renews_at: data.data.next_billed_at,
-    ends_at: data.data.current_billing_period.ends_at,
+    ends_at: data.data?.current_billing_period?.ends_at ?? null,
     trial_starts_at: data.data.items[0].trial_dates?.starts_at ?? null,
     trial_ends_at: data.data.items[0].trial_dates?.ends_at ?? null,
   };

@@ -79,7 +79,7 @@ export function isPaddleSubscriptionEvent(obj: unknown): obj is {
   event_type:
     | "subscription.created"
     | "subscription.updated"
-    | "subscription.cancelled";
+    | "subscription.canceled";
   data: {
     id: string;
     items: SubscriptionItem[];
@@ -98,7 +98,7 @@ export function isPaddleSubscriptionEvent(obj: unknown): obj is {
     canceled_at: string | null;
     custom_data: {
       user_id: string;
-    };
+    } | null;
     billing_cycle: {
       interval: string;
       frequency: number;
@@ -106,7 +106,7 @@ export function isPaddleSubscriptionEvent(obj: unknown): obj is {
     current_billing_period: {
       starts_at: string;
       ends_at: string;
-    };
+    } | null;
   };
 } {
   if (!isPaddleEvent(obj)) return false;
@@ -114,7 +114,7 @@ export function isPaddleSubscriptionEvent(obj: unknown): obj is {
   const subscriptionEventTypes = [
     "subscription.created",
     "subscription.updated",
-    "subscription.cancelled",
+    "subscription.canceled",
   ];
 
   if (!subscriptionEventTypes.includes(obj.event_type)) return false;
@@ -146,8 +146,9 @@ export function isPaddleSubscriptionEvent(obj: unknown): obj is {
     isObject(data.billing_cycle) &&
     typeof data.billing_cycle.interval === "string" &&
     typeof data.billing_cycle.frequency === "number" &&
-    isObject(data.current_billing_period) &&
-    typeof data.current_billing_period.starts_at === "string" &&
-    typeof data.current_billing_period.ends_at === "string"
+    (data.current_billing_period === null ||
+      (isObject(data.current_billing_period) &&
+        typeof data.current_billing_period.starts_at === "string" &&
+        typeof data.current_billing_period.ends_at === "string"))
   );
 }
