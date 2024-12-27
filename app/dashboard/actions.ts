@@ -1,12 +1,19 @@
 "use server";
 
+import prisma from "@/lib/db";
 import { getPaddleInstance } from "@/lib/paddle/get-paddle-instance";
 import { auth } from "@clerk/nextjs/server";
 
 export type EffectiveFrom = "immediately" | "next_billing_period";
 
 export async function manageSubscription(
-  action: "pause" | "resume" | "cancel" | "scheduled_cancel",
+  action:
+    | "pause"
+    | "resume"
+    | "cancel"
+    | "scheduled_cancel"
+    | "downgrade"
+    | "upgrade",
   subscriptionId: string,
   effectiveFrom: EffectiveFrom
 ) {
@@ -37,6 +44,76 @@ export async function manageSubscription(
       case "resume":
         await paddle.subscriptions.resume(subscriptionId, {
           effectiveFrom: "immediately",
+        });
+        break;
+      case "downgrade":
+        const downgradedSubscription = await prisma.subscription.findUnique({
+          where: { paddle_subscription_id: subscriptionId },
+          include: {
+            product: {
+              include: {
+                prices: true,
+              },
+            },
+          },
+        });
+
+        if (!downgradedSubscription) {
+          throw new Error("Subscription not found");
+        }
+
+        const monthlyPrice = downgradedSubscription.product.prices.find(
+          (price) => price.billing_cycle_interval === "month"
+        );
+
+        if (!monthlyPrice) {
+          throw new Error("Monthly price not found");
+        }
+
+        await paddle.subscriptions.update(subscriptionId, {
+          prorationBillingMode: "prorated_immediately",
+          onPaymentFailure: "prevent_change",
+          items: [
+            {
+              priceId: monthlyPrice.paddle_price_id,
+              quantity: 1,
+            },
+          ],
+        });
+        break;
+      case "upgrade":
+        const upgradedSubscription = await prisma.subscription.findUnique({
+          where: { paddle_subscription_id: subscriptionId },
+          include: {
+            product: {
+              include: {
+                prices: true,
+              },
+            },
+          },
+        });
+
+        if (!upgradedSubscription) {
+          throw new Error("Subscription not found");
+        }
+
+        const yearlyPrice = upgradedSubscription.product.prices.find(
+          (price) => price.billing_cycle_interval === "year"
+        );
+
+        if (!yearlyPrice) {
+          throw new Error("Yearly price not found");
+        }
+
+        await paddle.subscriptions.update(subscriptionId, {
+          prorationBillingMode: "prorated_immediately",
+          onPaymentFailure: "prevent_change",
+          items: [
+            {
+              priceId: yearlyPrice.paddle_price_id,
+              quantity: 1,
+            },
+          ],
         });
         break;
       default:

@@ -134,6 +134,7 @@ export default async function Dashboard() {
               <SubscriptionActions
                 status={activeSubscription.status.toLowerCase()}
                 subscriptionId={activeSubscription.paddle_subscription_id}
+                billingInterval={activeSubscription.billing_cycle_interval.toLowerCase()}
                 scheduledChange={
                   activeSubscription.scheduled_change as ScheduledChange
                 }

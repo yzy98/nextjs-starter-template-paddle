@@ -8,7 +8,15 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { Button } from "@/components/ui/button";
-import { MoreHorizontal, Pause, Play, XCircle, CreditCard } from "lucide-react";
+import {
+  MoreHorizontal,
+  Pause,
+  Play,
+  XCircle,
+  CreditCard,
+  ArrowUpCircle,
+  ArrowDownCircle,
+} from "lucide-react";
 import {
   SubscriptionManagementDialog,
   type SubscriptionAction,
@@ -17,6 +25,7 @@ import {
 interface SubscriptionActionsProps {
   status: string;
   subscriptionId: string;
+  billingInterval: string;
   scheduledChange?: {
     action: "pause" | "cancel";
     effective_at: string;
@@ -27,6 +36,7 @@ interface SubscriptionActionsProps {
 export function SubscriptionActions({
   status,
   subscriptionId,
+  billingInterval,
   scheduledChange,
 }: SubscriptionActionsProps) {
   const [dialogState, setDialogState] = useState<{
@@ -72,15 +82,28 @@ export function SubscriptionActions({
           )} */}
           {status === "active" && !scheduledChange && (
             <>
-              {/* <DropdownMenuItem
-                className="text-yellow-700 flex items-center justify-center gap-2 p-2 cursor-pointer"
-                onClick={() =>
-                  setDialogState({ isOpen: true, action: "pause" })
-                }
-              >
-                <Pause className="h-4 w-4" />
-                Pause
-              </DropdownMenuItem> */}
+              {billingInterval === "month" && (
+                <DropdownMenuItem
+                  className="text-blue-700 flex items-center justify-center gap-2 p-2 cursor-pointer"
+                  onClick={() =>
+                    setDialogState({ isOpen: true, action: "upgrade" })
+                  }
+                >
+                  <ArrowUpCircle className="h-4 w-4" />
+                  Upgrade to Annually
+                </DropdownMenuItem>
+              )}
+              {billingInterval === "year" && (
+                <DropdownMenuItem
+                  className="text-orange-700 flex items-center justify-center gap-2 p-2 cursor-pointer"
+                  onClick={() =>
+                    setDialogState({ isOpen: true, action: "downgrade" })
+                  }
+                >
+                  <ArrowDownCircle className="h-4 w-4" />
+                  Downgrade to Monthly
+                </DropdownMenuItem>
+              )}
               <DropdownMenuItem
                 className="text-red-700 flex items-center justify-center gap-2 p-2 cursor-pointer"
                 onClick={() =>

@@ -18,7 +18,13 @@ import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Label } from "@/components/ui/label";
 import { useToast } from "@/hooks/use-toast";
 
-export type SubscriptionAction = "pause" | "resume" | "cancel" | null;
+export type SubscriptionAction =
+  | "pause"
+  | "resume"
+  | "cancel"
+  | "upgrade"
+  | "downgrade"
+  | null;
 
 interface SubscriptionManagementDialogProps {
   isOpen: boolean;
@@ -48,6 +54,22 @@ const actionConfig = {
     confirmText: "Cancel subscription",
     confirmClass: "text-red-700 border-red-500 hover:bg-red-50",
     showEffectiveFrom: true,
+  },
+  upgrade: {
+    title: "Upgrade to Annual Plan",
+    description:
+      "Would you like to upgrade to our annual plan? You'll save 16% compared to monthly billing.",
+    confirmText: "Upgrade to annually",
+    confirmClass: "text-blue-700 border-blue-500 hover:bg-blue-50",
+    showEffectiveFrom: false,
+  },
+  downgrade: {
+    title: "Downgrade to Month Plan",
+    description:
+      "Are you sure you want to switch to month billing? You'll lose the annual discount.",
+    confirmText: "Downgrade to monthly",
+    confirmClass: "text-orange-700 border-orange-500 hover:bg-orange-50",
+    showEffectiveFrom: false,
   },
 } as const;
 
