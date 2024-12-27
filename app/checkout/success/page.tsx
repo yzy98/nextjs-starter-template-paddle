@@ -1,10 +1,15 @@
+"use client";
+
 import { CheckIcon } from "lucide-react";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
+import { useConfetti } from "@/hooks/use-confetti";
 
 export default function CheckoutSuccessPage() {
+  useConfetti();
+
   return (
-    <div className="min-h-screen flex items-center justify-center bg-background">
+    <div className="min-h-[calc(100vh-64px)] flex items-center justify-center bg-background">
       <div className="max-w-md w-full p-8 space-y-6 text-center">
         <div className="mx-auto w-16 h-16 flex items-center justify-center rounded-full bg-green-100">
           <CheckIcon className="w-8 h-8 text-green-600" />

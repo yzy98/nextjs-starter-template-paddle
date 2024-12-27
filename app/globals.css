@@ -79,5 +79,5 @@ body {
 
 /* Make sure the main content doesn't overlap with the fixed navbar */
 main {
-  @apply pt-4;
+  @apply pt-16;
 }
