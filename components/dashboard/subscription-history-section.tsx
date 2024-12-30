@@ -36,7 +36,7 @@ export function SubscriptionHistorySection({
   const hasMore = displayCount < subscriptions.length;
 
   return (
-    <div className="bg-white shadow rounded-lg p-6 mt-6">
+    <div className="bg-white shadow rounded-lg mt-6 p-4 md:p-6">
       <h2 className="text-xl font-semibold mb-4">Subscription History</h2>
       <div className="space-y-4">
         {displayedSubscriptions.map((sub) => (

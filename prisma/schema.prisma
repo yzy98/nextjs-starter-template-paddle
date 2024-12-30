@@ -92,7 +92,7 @@ model Subscription {
   scheduled_change              Json?
 
   // Relations
-  user                         User      @relation(fields: [user_id], references: [clerk_id])
+  user                         User      @relation(fields: [user_id], references: [clerk_id], onDelete: Cascade)
   price                        Price     @relation(fields: [price_id], references: [paddle_price_id])
   product                      Product   @relation(fields: [product_id], references: [paddle_product_id])
 

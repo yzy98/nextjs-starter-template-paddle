@@ -109,6 +109,12 @@ export async function POST(req: Request) {
         await userDelete({
           clerk_id: payload?.data?.id,
         });
+
+        console.log("User deleted:", payload?.data);
+        return NextResponse.json({
+          status: 200,
+          message: "User deleted",
+        });
       } catch (error: any) {
         console.error("Error deleting user:", error);
         return NextResponse.json({

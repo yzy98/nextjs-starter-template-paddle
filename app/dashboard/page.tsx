@@ -71,22 +71,24 @@ export default function Dashboard() {
   );
 
   return (
-    <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-      <h1 className="text-2xl font-bold mb-6">Dashboard</h1>
+    <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-4 md:py-8">
+      <h1 className="text-xl md:text-2xl font-bold mb-4 md:mb-6">Dashboard</h1>
 
-      <UserProfileSection />
+      <div className="space-y-4 md:space-y-6">
+        <UserProfileSection />
 
-      {activeSubscription?.scheduled_change && (
-        <SubscriptionScheduledBanner
-          action={activeSubscription.scheduled_change.action}
-          effectiveDate={activeSubscription.scheduled_change.effective_at}
-          subscriptionId={activeSubscription.paddle_subscription_id}
-        />
-      )}
+        {activeSubscription?.scheduled_change && (
+          <SubscriptionScheduledBanner
+            action={activeSubscription.scheduled_change.action}
+            effectiveDate={activeSubscription.scheduled_change.effective_at}
+            subscriptionId={activeSubscription.paddle_subscription_id}
+          />
+        )}
 
-      <SubscriptionStatusSection subscription={activeSubscription} />
+        <SubscriptionStatusSection subscription={activeSubscription} />
 
-      <SubscriptionHistorySection subscriptions={historicalSubscriptions} />
+        <SubscriptionHistorySection subscriptions={historicalSubscriptions} />
+      </div>
     </div>
   );
 }

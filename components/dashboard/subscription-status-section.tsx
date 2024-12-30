@@ -48,7 +48,7 @@ export function SubscriptionStatusSection({
   subscription,
 }: SubscriptionStatusSectionProps) {
   return (
-    <div className="bg-white shadow rounded-lg p-6">
+    <div className="bg-white shadow rounded-lg p-4 md:p-6">
       <div className="flex justify-between items-center mb-4">
         <h2 className="text-xl font-semibold">Subscription Status</h2>
         {subscription && (

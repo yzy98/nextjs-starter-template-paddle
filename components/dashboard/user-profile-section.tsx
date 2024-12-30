@@ -7,6 +7,7 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { Button } from "@/components/ui/button";
 import { LogOut, MoreHorizontal, Settings } from "lucide-react";
+import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
 
 export function UserProfileSection() {
   const { user } = useUser();
@@ -15,15 +16,17 @@ export function UserProfileSection() {
   if (!user) return null;
 
   return (
-    <div className="bg-white shadow rounded-lg p-6 mb-6">
+    <div className="bg-white rounded-lg shadow p-4 md:p-6">
       <div className="flex justify-between items-center mb-4">
         <div className="flex items-center space-x-4">
           {user.imageUrl && (
-            <img
-              src={user.imageUrl}
-              alt="Profile"
-              className="h-16 w-16 rounded-full"
-            />
+            <Avatar className="h-16 w-16">
+              <AvatarImage src={user.imageUrl} alt="Profile" />
+              <AvatarFallback>
+                {user.firstName?.[0]}
+                {user.lastName?.[0]}
+              </AvatarFallback>
+            </Avatar>
           )}
           <div>
             <h2 className="text-xl font-semibold">
