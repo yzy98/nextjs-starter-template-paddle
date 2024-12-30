@@ -29,7 +29,7 @@ export const PriceTitle = ({ title, imageUrl, featured }: PriceTitleProps) => {
         <p
           className={cn(
             "text-[22px] leading-[32px] font-semibold",
-            "text-foreground/90"
+            "text-foreground"
           )}
         >
           {title}
@@ -40,8 +40,9 @@ export const PriceTitle = ({ title, imageUrl, featured }: PriceTitleProps) => {
           className={cn(
             "flex items-center px-3 py-1",
             "rounded-full",
-            "border border-primary/20",
-            "bg-primary/5",
+            "border border-primary",
+            "bg-primary/10",
+            "text-primary",
             "text-[14px] font-medium",
             "h-[32px] leading-[21px]",
             "featured-card-badge"

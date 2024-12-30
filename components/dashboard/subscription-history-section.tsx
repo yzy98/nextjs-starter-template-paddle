@@ -36,30 +36,37 @@ export function SubscriptionHistorySection({
   const hasMore = displayCount < subscriptions.length;
 
   return (
-    <div className="bg-white shadow rounded-lg mt-6 p-4 md:p-6">
-      <h2 className="text-xl font-semibold mb-4">Subscription History</h2>
+    <div className="bg-card border border-border rounded-lg p-4 md:p-6">
+      <h2 className="text-xl font-semibold text-foreground mb-4">
+        Subscription History
+      </h2>
       <div className="space-y-4">
         {displayedSubscriptions.map((sub) => (
-          <div key={sub.id} className="border-b pb-4 last:border-b-0">
+          <div
+            key={sub.id}
+            className="border-b border-border pb-4 last:border-b-0 last:pb-0"
+          >
             <div className="flex justify-between items-start">
               <div>
-                <p className="font-medium">{sub.product.name}</p>
-                <p className="text-sm text-gray-600">
+                <p className="font-medium text-foreground">
+                  {sub.product.name}
+                </p>
+                <p className="text-sm text-muted-foreground">
                   {formatPrice(sub.price_amount, sub.price_currency)}/
                   {sub.billing_cycle_interval.toLowerCase()}
                 </p>
                 {sub.starts_at && (
-                  <p className="text-sm text-gray-600">
+                  <p className="text-sm text-muted-foreground">
                     Started: {formatDate(sub.starts_at)}
                   </p>
                 )}
                 {sub.canceled_at && (
-                  <p className="text-sm text-gray-600">
+                  <p className="text-sm text-muted-foreground">
                     Canceled: {formatDate(sub.canceled_at)}
                   </p>
                 )}
                 {sub.ends_at && (
-                  <p className="text-sm text-gray-600">
+                  <p className="text-sm text-muted-foreground">
                     Ended: {formatDate(sub.ends_at)}
                   </p>
                 )}
@@ -80,7 +87,7 @@ export function SubscriptionHistorySection({
         <Button
           onClick={() => setDisplayCount((prev) => prev + ITEMS_PER_PAGE)}
           variant="outline"
-          className="mt-4 w-full"
+          className="mt-4 w-full border border-border"
         >
           <History className="mr-2 h-4 w-4" />
           Load More History

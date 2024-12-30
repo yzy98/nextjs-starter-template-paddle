@@ -15,17 +15,17 @@ interface SubscriptionStatusSectionProps {
 export function getStatusBadgeColor(status: string) {
   switch (status.toLowerCase()) {
     case "active":
-      return "bg-green-100 text-green-800";
+      return "bg-[hsl(var(--chart-2)/0.2)] text-[hsl(var(--chart-2))]";
     case "trialing":
-      return "bg-blue-100 text-blue-800";
+      return "bg-[hsl(var(--chart-1)/0.2)] text-[hsl(var(--chart-1))]";
     case "past_due":
-      return "bg-yellow-100 text-yellow-800";
+      return "bg-[hsl(var(--chart-4)/0.2)] text-[hsl(var(--chart-4))]";
     case "paused":
-      return "bg-gray-100 text-gray-800";
+      return "bg-muted text-muted-foreground";
     case "canceled":
-      return "bg-red-100 text-red-800";
+      return "bg-destructive/20 text-destructive";
     default:
-      return "bg-gray-100 text-gray-800";
+      return "bg-muted text-muted-foreground";
   }
 }
 
@@ -48,9 +48,11 @@ export function SubscriptionStatusSection({
   subscription,
 }: SubscriptionStatusSectionProps) {
   return (
-    <div className="bg-white shadow rounded-lg p-4 md:p-6">
+    <div className="bg-card border border-border rounded-lg p-4 md:p-6">
       <div className="flex justify-between items-center mb-4">
-        <h2 className="text-xl font-semibold">Subscription Status</h2>
+        <h2 className="text-xl font-semibold text-foreground">
+          Subscription Status
+        </h2>
         {subscription && (
           <div className="flex space-x-2">
             <SubscriptionActions
@@ -73,11 +75,11 @@ export function SubscriptionStatusSection({
               {getStatusText(subscription.status)}
             </span>
           </div>
-          <div className="border-t pt-4">
-            <p className="text-gray-700 font-medium">
+          <div className="border-t border-border pt-4">
+            <p className="text-foreground font-medium">
               Plan: {subscription.product.name}
             </p>
-            <p className="text-gray-700">
+            <p className="text-muted-foreground">
               Price:{" "}
               {formatPrice(
                 subscription.price_amount,
@@ -86,17 +88,17 @@ export function SubscriptionStatusSection({
               /{subscription.billing_cycle_interval.toLowerCase()}
             </p>
             {subscription.trial_ends_at && (
-              <p className="text-gray-700">
+              <p className="text-muted-foreground">
                 Trial ends: {formatDate(subscription.trial_ends_at)}
               </p>
             )}
             {subscription.renews_at && (
-              <p className="text-gray-700">
+              <p className="text-muted-foreground">
                 Next billing date: {formatDate(subscription.renews_at)}
               </p>
             )}
             {subscription.ends_at && (
-              <p className="text-gray-700">
+              <p className="text-muted-foreground">
                 Subscription ends: {formatDate(subscription.ends_at)}
               </p>
             )}
@@ -104,7 +106,7 @@ export function SubscriptionStatusSection({
         </div>
       ) : (
         <div className="space-y-4">
-          <p className="text-gray-600">
+          <p className="text-muted-foreground">
             You don't have an active subscription.
           </p>
           <Button asChild>

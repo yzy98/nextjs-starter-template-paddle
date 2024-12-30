@@ -2,6 +2,7 @@ import { cn, formatPrice } from "@/lib/utils";
 import { Price, Product } from "@prisma/client";
 import { Separator } from "@/components/ui/separator";
 import { Button } from "@/components/ui/button";
+import { BackgroundGradient } from "@/components/ui/background-gradient";
 import { useToast } from "@/hooks/use-toast";
 import { useUser } from "@clerk/nextjs";
 
@@ -18,6 +19,13 @@ export const PriceCard = ({ price, product }: PriceCardProps) => {
   const { toast } = useToast();
   const { user } = useUser();
 
+  const isPremium = product.name === "Premium";
+
+  const PriceCardContainer = isPremium ? BackgroundGradient : "div";
+  const containerClassName = isPremium
+    ? "rounded-[22px] bg-card/90"
+    : "rounded-[22px] bg-card/90 border border-border";
+
   const handleClick = (e: React.MouseEvent) => {
     if (!user) {
       e.preventDefault();
@@ -31,19 +39,22 @@ export const PriceCard = ({ price, product }: PriceCardProps) => {
     redirect(`/checkout/${price.paddle_price_id}`);
   };
 
+  const buttonClassName = cn(
+    "w-full h-12 text-[15px] font-medium",
+    "transition-all duration-300",
+    isPremium && "hover:scale-[1.02]",
+    isPremium
+      ? "bg-primary text-primary-foreground hover:bg-primary/90"
+      : "bg-muted text-muted-foreground cursor-default"
+  );
+
   return (
-    <div
-      className={cn(
-        "rounded-2xl bg-background/80 backdrop-blur-lg shadow-lg hover:shadow-xl transition-all duration-300",
-        "border border-border/50 hover:border-primary/20",
-        "transform hover:-translate-y-1"
-      )}
-    >
+    <PriceCardContainer className={containerClassName}>
       <div className={cn("flex gap-6 flex-col p-1", "rounded-xl")}>
         <PriceTitle
           title={price?.name ?? product.name}
           imageUrl={product?.image_url ?? undefined}
-          featured={product.name === "Premium"}
+          featured={isPremium}
         />
         <PriceAmount
           price={formatPrice(
@@ -54,7 +65,7 @@ export const PriceCard = ({ price, product }: PriceCardProps) => {
           frequency={price?.billing_cycle_frequency ?? undefined}
         />
         <div className={"px-8"}>
-          <Separator className={"bg-border/30"} />
+          <Separator className={"bg-border"} />
         </div>
         <div
           className={"px-8 text-[16px] leading-relaxed text-muted-foreground"}
@@ -64,17 +75,13 @@ export const PriceCard = ({ price, product }: PriceCardProps) => {
       </div>
       <div className={"p-8 pt-6"}>
         <Button
-          className={cn(
-            "w-full h-12 text-[15px] font-medium",
-            "transition-all duration-300",
-            "hover:scale-[1.02]"
-          )}
-          variant={"secondary"}
+          className={buttonClassName}
           onClick={handleClick}
+          disabled={!isPremium}
         >
-          Get started
+          {isPremium ? "Get started" : "Free plan"}
         </Button>
       </div>
-    </div>
+    </PriceCardContainer>
   );
 };

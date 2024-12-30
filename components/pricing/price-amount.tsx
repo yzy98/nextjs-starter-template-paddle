@@ -17,7 +17,8 @@ export const PriceAmount = ({
         className={cn(
           "text-[64px] leading-[76px] tracking-[-1.6px] font-medium",
           "min-h-[76px] flex items-center",
-          "lg:w-[280px]"
+          "lg:w-[280px]",
+          "text-foreground"
         )}
       >
         {price}

@@ -16,7 +16,7 @@ export function UserProfileSection() {
   if (!user) return null;
 
   return (
-    <div className="bg-white rounded-lg shadow p-4 md:p-6">
+    <div className="bg-card border border-border rounded-lg p-4 md:p-6">
       <div className="flex justify-between items-center mb-4">
         <div className="flex items-center space-x-4">
           {user.imageUrl && (
@@ -29,10 +29,10 @@ export function UserProfileSection() {
             </Avatar>
           )}
           <div>
-            <h2 className="text-xl font-semibold">
+            <h2 className="text-xl font-semibold text-foreground">
               {user.firstName} {user.lastName}
             </h2>
-            <p className="text-gray-600">
+            <p className="text-muted-foreground">
               {user.primaryEmailAddress?.emailAddress}
             </p>
           </div>

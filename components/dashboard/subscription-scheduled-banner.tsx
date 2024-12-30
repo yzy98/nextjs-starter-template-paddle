@@ -46,9 +46,9 @@ export function SubscriptionScheduledBanner({
   };
 
   return (
-    <div className="bg-slate-100 rounded-lg p-3 md:p-4 mb-6 flex items-center justify-between">
+    <div className="bg-muted shadow-md rounded-lg p-3 md:p-4 mb-6 flex items-center justify-between">
       <div className="flex items-center gap-3">
-        <div className="text-slate-600">
+        <div className="text-muted-foreground">
           <svg
             xmlns="http://www.w3.org/2000/svg"
             width="24"
@@ -65,8 +65,8 @@ export function SubscriptionScheduledBanner({
           </svg>
         </div>
         <div>
-          <h3 className="font-semibold text-slate-900">Scheduled {action}</h3>
-          <p className="text-sm text-slate-600">
+          <h3 className="font-semibold text-foreground">Scheduled {action}</h3>
+          <p className="text-sm text-muted-foreground">
             This subscription is scheduled to be {action}d on{" "}
             {formatDate(effectiveDate)}
           </p>
