@@ -26,7 +26,9 @@ export function CheckoutPriceContainer({ checkoutData }: Props) {
             checkoutData?.recurring_totals?.total,
             checkoutData?.currency_code
           )}{" "}
-          monthly
+          {checkoutData?.items?.[0]?.billing_cycle?.interval === "year"
+            ? "annually"
+            : "monthly"}
         </div>
       ) : (
         <Skeleton className="mt-4 h-[20px] w-full bg-border" />
