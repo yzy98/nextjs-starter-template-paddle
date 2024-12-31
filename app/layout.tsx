@@ -2,6 +2,7 @@ import { ClerkProvider } from "@clerk/nextjs";
 import "./globals.css";
 import { Toaster } from "@/components/ui/toaster";
 import { Navbar } from "@/components/layout/navbar";
+import { Footer } from "@/components/layout/footer";
 import { ThemeProvider } from "@/components/layout/theme-provider";
 
 export default function RootLayout({
@@ -12,7 +13,7 @@ export default function RootLayout({
   return (
     <ClerkProvider>
       <html lang="en" suppressHydrationWarning>
-        <body>
+        <body className="min-h-screen flex flex-col">
           <ThemeProvider
             attribute="class"
             defaultTheme="system"
@@ -20,7 +21,8 @@ export default function RootLayout({
             disableTransitionOnChange
           >
             <Navbar />
-            <main>{children}</main>
+            <main className="flex-1">{children}</main>
+            <Footer />
             <Toaster />
           </ThemeProvider>
         </body>

@@ -3,8 +3,6 @@ import { Skeleton } from "@/components/ui/skeleton";
 export function DashboardSkeleton() {
   return (
     <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-      <h1 className="text-2xl font-bold mb-6 text-foreground">Dashboard</h1>
-
       {/* User Profile Section Skeleton */}
       <div className="bg-card border border-border rounded-lg p-6 mb-6">
         <div className="flex justify-between items-center mb-4">

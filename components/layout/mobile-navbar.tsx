@@ -1,9 +1,16 @@
-"use client";
-
 import Link from "next/link";
 import Image from "next/image";
-import { UserButton, useAuth } from "@clerk/nextjs";
-import { Menu } from "lucide-react";
+import {
+  Menu,
+  LogIn,
+  LogOut,
+  Home,
+  CreditCard,
+  LayoutDashboard,
+} from "lucide-react";
+import { ModeToggle } from "./mode-toggle";
+
+import { currentUser } from "@clerk/nextjs/server";
 import {
   Sheet,
   SheetClose,
@@ -14,10 +21,11 @@ import {
   SheetDescription,
 } from "@/components/ui/sheet";
 import { VisuallyHidden } from "@radix-ui/react-visually-hidden";
-import { ModeToggle } from "./mode-toggle";
+import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
+import { SignOutButton } from "@clerk/nextjs";
 
-export function MobileNavbar() {
-  const { isSignedIn } = useAuth();
+export async function MobileNavbar() {
+  const user = await currentUser();
 
   return (
     <div className="md:hidden">
@@ -29,7 +37,7 @@ export function MobileNavbar() {
         </SheetTrigger>
         <SheetContent
           side="left"
-          className="w-64 p-0 bg-background/95 backdrop-blur-sm"
+          className="w-64 p-0 bg-background/95 backdrop-blur-sm flex flex-col"
         >
           <SheetHeader className="px-4 pt-4">
             <VisuallyHidden asChild>
@@ -42,7 +50,7 @@ export function MobileNavbar() {
             </VisuallyHidden>
           </SheetHeader>
 
-          <div className="flex flex-col p-4">
+          <div className="flex flex-col p-4 flex-1">
             <div className="mb-8">
               <SheetClose asChild>
                 <Link href="/" className="flex items-center space-x-3">
@@ -62,39 +70,82 @@ export function MobileNavbar() {
             <div className="flex flex-col space-y-4">
               <SheetClose asChild>
                 <Link
-                  href="/pricing"
-                  className="text-muted-foreground hover:text-foreground transition-colors"
+                  href="/"
+                  className="flex items-center space-x-2 text-muted-foreground hover:text-foreground transition-colors"
                 >
-                  Pricing
+                  <Home className="h-8 w-8 p-1" />
+                  <span>Home</span>
                 </Link>
               </SheetClose>
-              {isSignedIn && (
+              <SheetClose asChild>
+                <Link
+                  href="/pricing"
+                  className="flex items-center space-x-2 text-muted-foreground hover:text-foreground transition-colors"
+                >
+                  <CreditCard className="h-8 w-8 p-1" />
+                  <span>Pricing</span>
+                </Link>
+              </SheetClose>
+              {user && (
                 <SheetClose asChild>
                   <Link
                     href="/dashboard"
-                    className="text-muted-foreground hover:text-foreground transition-colors"
+                    className="flex items-center space-x-2 text-muted-foreground hover:text-foreground transition-colors"
                   >
-                    Dashboard
+                    <LayoutDashboard className="h-8 w-8 p-1" />
+                    <span>Dashboard</span>
                   </Link>
                 </SheetClose>
               )}
-              <div className="pt-2">
-                <ModeToggle />
-              </div>
-              {!isSignedIn ? (
+
+              {user && (
+                <SheetClose asChild>
+                  <SignOutButton>
+                    <div className="flex items-center space-x-2 text-muted-foreground hover:text-foreground transition-colors cursor-pointer">
+                      <LogOut className="h-8 w-8 p-1" />
+                      <span>Sign Out</span>
+                    </div>
+                  </SignOutButton>
+                </SheetClose>
+              )}
+
+              {!user ? (
                 <SheetClose asChild>
                   <Link
                     href="/sign-in"
-                    className="inline-flex bg-primary/90 text-primary-foreground hover:bg-primary px-4 py-2 rounded-lg font-semibold transition-all hover:shadow-lg"
+                    className="flex items-center space-x-2 text-muted-foreground hover:text-foreground transition-colors"
                   >
-                    Sign In
+                    <LogIn className="h-8 w-8 p-1" />
+                    <span>Sign In</span>
                   </Link>
                 </SheetClose>
               ) : (
-                <div className="pt-2">
-                  <UserButton afterSignOutUrl="/" />
-                </div>
+                <SheetClose asChild>
+                  <Link
+                    href="/dashboard"
+                    className="flex items-center space-x-2 text-muted-foreground hover:text-foreground transition-colors"
+                  >
+                    <Avatar className="h-8 w-8">
+                      <AvatarImage
+                        src={user.imageUrl}
+                        alt={user.firstName || "User"}
+                      />
+                      <AvatarFallback>
+                        {(
+                          user.firstName?.[0] ||
+                          user.emailAddresses[0].emailAddress[0] ||
+                          ""
+                        ).toUpperCase()}
+                      </AvatarFallback>
+                    </Avatar>
+                    <span className="truncate">
+                      {user.firstName || user.emailAddresses[0].emailAddress}
+                    </span>
+                  </Link>
+                </SheetClose>
               )}
+
+              <ModeToggle />
             </div>
           </div>
         </SheetContent>

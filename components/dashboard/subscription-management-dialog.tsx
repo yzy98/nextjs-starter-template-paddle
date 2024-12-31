@@ -38,21 +38,24 @@ const actionConfig = {
     title: "Pause Subscription",
     description: "When would you like your subscription to be paused?",
     confirmText: "Pause subscription",
-    confirmClass: "text-yellow-700 border-yellow-500 hover:bg-yellow-50",
+    confirmClass:
+      "text-yellow-700 border-yellow-500 hover:bg-yellow-50 dark:text-yellow-400 dark:border-yellow-400 dark:hover:bg-yellow-950",
     showEffectiveFrom: true,
   },
   resume: {
     title: "Resume Subscription",
     description: "Would you like to resume your subscription?",
     confirmText: "Resume subscription",
-    confirmClass: "text-green-700 border-green-500 hover:bg-green-50",
+    confirmClass:
+      "text-green-700 border-green-500 hover:bg-green-50 dark:text-green-400 dark:border-green-400 dark:hover:bg-green-950",
     showEffectiveFrom: false,
   },
   cancel: {
     title: "Cancel Subscription",
     description: "When would you like your subscription to be canceled?",
     confirmText: "Cancel subscription",
-    confirmClass: "text-red-700 border-red-500 hover:bg-red-50",
+    confirmClass:
+      "text-red-700 border-red-500 hover:bg-red-50 dark:text-red-400 dark:border-red-400 dark:hover:bg-red-950",
     showEffectiveFrom: true,
   },
   upgrade: {
@@ -60,7 +63,8 @@ const actionConfig = {
     description:
       "Would you like to upgrade to our annual plan? You'll save 16% compared to monthly billing.",
     confirmText: "Upgrade to annually",
-    confirmClass: "text-blue-700 border-blue-500 hover:bg-blue-50",
+    confirmClass:
+      "text-blue-700 border-blue-500 hover:bg-blue-50 dark:text-blue-400 dark:border-blue-400 dark:hover:bg-blue-950",
     showEffectiveFrom: false,
   },
   downgrade: {
@@ -68,7 +72,8 @@ const actionConfig = {
     description:
       "Are you sure you want to switch to month billing? You'll lose the annual discount.",
     confirmText: "Downgrade to monthly",
-    confirmClass: "text-orange-700 border-orange-500 hover:bg-orange-50",
+    confirmClass:
+      "text-orange-700 border-orange-500 hover:bg-orange-50 dark:text-orange-400 dark:border-orange-400 dark:hover:bg-orange-950",
     showEffectiveFrom: false,
   },
 } as const;

@@ -1,13 +1,13 @@
-"use client";
-
 import Link from "next/link";
 import Image from "next/image";
-import { UserButton, useAuth } from "@clerk/nextjs";
 import { MobileNavbar } from "./mobile-navbar";
 import { ModeToggle } from "./mode-toggle";
 
-export function Navbar() {
-  const { isSignedIn } = useAuth();
+import { UserButton } from "@clerk/nextjs";
+import { currentUser } from "@clerk/nextjs/server";
+
+export async function Navbar() {
+  const user = await currentUser();
 
   return (
     <nav className="fixed top-0 left-0 right-0 border-b z-50 bg-background/95 backdrop-blur-sm">
@@ -31,7 +31,7 @@ export function Navbar() {
             >
               Pricing
             </Link>
-            {isSignedIn && (
+            {user && (
               <Link
                 href="/dashboard"
                 className="text-muted-foreground hover:text-foreground transition-colors"
@@ -40,7 +40,7 @@ export function Navbar() {
               </Link>
             )}
             <ModeToggle />
-            {!isSignedIn ? (
+            {!user ? (
               <Link
                 href="/sign-in"
                 className="bg-primary/90 text-primary-foreground hover:bg-primary px-4 py-2 rounded-lg font-semibold transition-all hover:shadow-lg"
