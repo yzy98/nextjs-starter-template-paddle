@@ -8,7 +8,7 @@ import { UserProfileSection } from "@/components/dashboard/user-profile-section"
 import { SubscriptionStatusSection } from "@/components/dashboard/subscription-status-section";
 import { SubscriptionHistorySection } from "@/components/dashboard/subscription-history-section";
 import { SubscriptionScheduledBanner } from "@/components/dashboard/subscription-scheduled-banner";
-import { DashboardSkeleton } from "@/components/dashboard/loading-skeleton";
+import { DashboardSkeleton } from "@/components/dashboard/dashboard-skeleton";
 
 type ScheduledChange = {
   action: "pause" | "cancel";

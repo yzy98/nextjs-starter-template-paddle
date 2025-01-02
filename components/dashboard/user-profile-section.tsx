@@ -1,3 +1,5 @@
+import { LogOut, MoreHorizontal, Settings } from "lucide-react";
+
 import { useUser, useClerk } from "@clerk/nextjs";
 import {
   DropdownMenu,
@@ -6,8 +8,8 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { Button } from "@/components/ui/button";
-import { LogOut, MoreHorizontal, Settings } from "lucide-react";
 import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
+import { Badge } from "@/components/ui/badge";
 
 interface UserProfileSectionProps {
   accountType?: string;
@@ -38,15 +40,15 @@ export function UserProfileSection({
                   {user.firstName} {user.lastName}
                 </h2>
               )}
-              <span
-                className={`inline-block px-2 py-0.5 text-xs font-medium rounded-full ${
+              <Badge
+                variant={
                   accountType.toLowerCase() === "premium"
-                    ? "bg-gradient-to-r from-blue-600 to-purple-600 text-white dark:from-blue-400 dark:to-purple-400 shadow-sm"
-                    : "bg-gray-100 text-gray-800 dark:bg-gray-800 dark:text-gray-300"
-                }`}
+                    ? "premium"
+                    : "secondary"
+                }
               >
                 {accountType.toUpperCase()}
-              </span>
+              </Badge>
             </div>
             <p className="text-muted-foreground">
               {user.primaryEmailAddress?.emailAddress}

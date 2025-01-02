@@ -2,6 +2,7 @@ import { Button } from "@/components/ui/button";
 import { formatDate, formatPrice } from "@/lib/utils";
 import { SubscriptionActions } from "./subscription-actions";
 import { Subscription, Price, Product } from "@prisma/client";
+import { Badge } from "../ui/badge";
 
 interface SubscriptionWithDetails extends Subscription {
   product: Product;
@@ -10,23 +11,6 @@ interface SubscriptionWithDetails extends Subscription {
 
 interface SubscriptionStatusSectionProps {
   subscription: SubscriptionWithDetails | undefined;
-}
-
-export function getStatusBadgeColor(status: string) {
-  switch (status.toLowerCase()) {
-    case "active":
-      return "bg-[hsl(var(--chart-2)/0.2)] text-[hsl(var(--chart-2))]";
-    case "trialing":
-      return "bg-[hsl(var(--chart-1)/0.2)] text-[hsl(var(--chart-1))]";
-    case "past_due":
-      return "bg-[hsl(var(--chart-4)/0.2)] text-[hsl(var(--chart-4))]";
-    case "paused":
-      return "bg-muted text-muted-foreground";
-    case "canceled":
-      return "bg-destructive/20 text-destructive";
-    default:
-      return "bg-muted text-muted-foreground";
-  }
 }
 
 export function getStatusText(status: string) {
@@ -67,13 +51,7 @@ export function SubscriptionStatusSection({
       {subscription ? (
         <div className="space-y-4">
           <div className="flex items-center">
-            <span
-              className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-sm font-medium ${getStatusBadgeColor(
-                subscription.status
-              )}`}
-            >
-              {getStatusText(subscription.status)}
-            </span>
+            <Badge variant="active">{getStatusText(subscription.status)}</Badge>
           </div>
           <div className="border-t border-border pt-4">
             <p className="text-foreground font-medium">

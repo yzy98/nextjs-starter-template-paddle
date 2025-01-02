@@ -6,11 +6,11 @@ export const homeConfig = {
     buttons: {
       primary: {
         text: "Get Started",
-        href: "/docs/getting-started",
+        href: "/pricing",
       },
       secondary: {
-        text: "View on GitHub",
-        href: "https://github.com/yourusername/nextjs-saas-starter",
+        text: "My Dashboard",
+        href: "/dashboard",
       },
     },
   },

@@ -1,13 +1,11 @@
-import { Subscription, Price, Product } from "@prisma/client";
-import { formatDate, formatPrice } from "@/lib/utils";
-import {
-  getStatusBadgeColor,
-  getStatusText,
-} from "./subscription-status-section";
 import { useState } from "react";
-import { Button } from "@/components/ui/button";
 import { History } from "lucide-react";
+import { getStatusText } from "./subscription-status-section";
 
+import { formatDate, formatPrice } from "@/lib/utils";
+import { Subscription, Price, Product } from "@prisma/client";
+import { Button } from "@/components/ui/button";
+import { Badge } from "@/components/ui/badge";
 interface SubscriptionWithDetails extends Subscription {
   product: Product;
   price: Price;
@@ -71,13 +69,7 @@ export function SubscriptionHistorySection({
                   </p>
                 )}
               </div>
-              <span
-                className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-sm font-medium ${getStatusBadgeColor(
-                  sub.status
-                )}`}
-              >
-                {getStatusText(sub.status)}
-              </span>
+              <Badge variant="destructive">{getStatusText(sub.status)}</Badge>
             </div>
           </div>
         ))}

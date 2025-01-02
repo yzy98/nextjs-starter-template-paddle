@@ -54,7 +54,6 @@ export const PriceCard = ({ price, product }: PriceCardProps) => {
         <PriceTitle
           title={price?.name ?? product.name}
           imageUrl={product?.image_url ?? undefined}
-          featured={isPremium}
         />
         <PriceAmount
           price={formatPrice(

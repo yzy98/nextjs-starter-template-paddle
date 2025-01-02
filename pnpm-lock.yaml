@@ -8,6 +8,9 @@ dependencies:
   '@clerk/nextjs':
     specifier: ^6.8.1
     version: 6.8.1(next@15.0.4)(react-dom@19.0.0)(react@19.0.0)
+  '@clerk/themes':
+    specifier: ^2.2.3
+    version: 2.2.3
   '@hookform/resolvers':
     specifier: ^3.9.1
     version: 3.9.1(react-hook-form@7.54.1)
@@ -226,8 +229,23 @@ packages:
       swr: 2.3.0(react@19.0.0)
     dev: false
 
+  /@clerk/themes@2.2.3:
+    resolution: {integrity: sha512-pDA5P9IUTLVKYviEtm7BgB+1rcJINDuP9F4LJ5ZH3f/6+LdG09EaVM/9nvGLnNqDJ7XvldzcKes1BpPJuGSCew==}
+    engines: {node: '>=18.17.0'}
+    dependencies:
+      '@clerk/types': 4.40.0
+      tslib: 2.4.1
+    dev: false
+
   /@clerk/types@4.39.0:
     resolution: {integrity: sha512-WWEoXmcob6X80cZZZGobN8aKjHAjAoL0cgVyLX8UeQ+JW4kl1IfUmZQgDBFOafGEm2yUoKlKAP22bWPDqmbTJw==}
+    engines: {node: '>=18.17.0'}
+    dependencies:
+      csstype: 3.1.1
+    dev: false
+
+  /@clerk/types@4.40.0:
+    resolution: {integrity: sha512-9QdllXYujsjYLbvPg9Kq1rWOemX5FB0r6Ijy8HOxwjKN+TPlxUnGcs+t7IwU+M5gdmZ2KV6aA6d1a2q2FlSoiA==}
     engines: {node: '>=18.17.0'}
     dependencies:
       csstype: 3.1.1

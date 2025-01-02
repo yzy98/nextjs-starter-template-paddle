@@ -4,6 +4,7 @@ import prisma from "@/lib/db";
 import { getPaddleInstance } from "@/lib/paddle/get-paddle-instance";
 import { Product, Price } from "@paddle/paddle-node-sdk";
 import { Price as PrismaPrice, Product as PrismaProduct } from "@prisma/client";
+import { unstable_cache } from "next/cache";
 
 export async function getPaddleProducts() {
   const paddle = getPaddleInstance();
@@ -156,21 +157,28 @@ export async function syncPrices() {
   return prices;
 }
 
-export async function getAllProductsAndPrices() {
-  let [products, prices] = await Promise.all([
-    prisma.product.findMany(),
-    prisma.price.findMany(),
-  ]);
+export const getAllProductsAndPrices = unstable_cache(
+  async () => {
+    let [products, prices] = await Promise.all([
+      prisma.product.findMany(),
+      prisma.price.findMany(),
+    ]);
 
-  // If there are no products, sync them from Paddle
-  if (!products.length) {
-    products = await syncProducts();
+    // If there are no products, sync them from Paddle
+    if (!products.length) {
+      products = await syncProducts();
+    }
+
+    // If there are no prices, sync them from Paddle
+    if (!prices.length) {
+      prices = await syncPrices();
+    }
+
+    return { products, prices };
+  },
+  ["products-and-prices"],
+  {
+    revalidate: 3600, // Cache for 1 hour
+    tags: ["products-and-prices"],
   }
-
-  // If there are no prices, sync them from Paddle
-  if (!prices.length) {
-    prices = await syncPrices();
-  }
-
-  return { products, prices };
-}
+);
