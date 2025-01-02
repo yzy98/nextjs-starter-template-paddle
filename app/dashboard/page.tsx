@@ -73,7 +73,7 @@ export default function Dashboard() {
   return (
     <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-4 md:py-8">
       <div className="space-y-4 md:space-y-6">
-        <UserProfileSection />
+        <UserProfileSection accountType={activeSubscription?.product?.name} />
 
         {activeSubscription?.scheduled_change && (
           <SubscriptionScheduledBanner

@@ -155,3 +155,22 @@ export async function syncPrices() {
 
   return prices;
 }
+
+export async function getAllProductsAndPrices() {
+  let [products, prices] = await Promise.all([
+    prisma.product.findMany(),
+    prisma.price.findMany(),
+  ]);
+
+  // If there are no products, sync them from Paddle
+  if (!products.length) {
+    products = await syncProducts();
+  }
+
+  // If there are no prices, sync them from Paddle
+  if (!prices.length) {
+    prices = await syncPrices();
+  }
+
+  return { products, prices };
+}

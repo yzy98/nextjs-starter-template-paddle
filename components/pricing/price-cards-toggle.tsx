@@ -1,21 +1,20 @@
 "use client";
 
-import { useState } from "react";
+import { use, useState } from "react";
 import { Product, Price } from "@prisma/client";
 
 import { PriceCards } from "./price-cards";
 import { Toggle } from "./toggle";
 
 type PriceCardsToggleProps = {
-  products: Product[];
-  prices: Price[];
+  productsAndPricesPromise: Promise<{ products: Product[]; prices: Price[] }>;
 };
 
 export const PriceCardsToggle = ({
-  products,
-  prices,
+  productsAndPricesPromise,
 }: PriceCardsToggleProps) => {
   const [interval, setInterval] = useState<"month" | "year">("month");
+  const { products, prices } = use(productsAndPricesPromise);
 
   const filteredPricesSorted = prices
     .filter((price) => price.billing_cycle_interval === interval)

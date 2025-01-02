@@ -1,21 +1,11 @@
-import prisma from "@/lib/db";
+import { Suspense } from "react";
+
+import { getAllProductsAndPrices } from "./actions";
 import { PriceCardsToggle } from "@/components/pricing/price-cards-toggle";
+import { PriceCardsToggleSkeleton } from "@/components/pricing/price-cards-toggle-skeleton";
 
-import { syncPrices, syncProducts } from "./actions";
-
-export default async function PricingPage() {
-  let allProducts = await prisma.product.findMany();
-  let allPrices = await prisma.price.findMany();
-
-  // If there are no products, sync them from Paddle
-  if (!allProducts.length) {
-    allProducts = await syncProducts();
-  }
-
-  // If there are no prices, sync them from Paddle
-  if (!allPrices.length) {
-    allPrices = await syncPrices();
-  }
+export default function PricingPage() {
+  const productsAndPricesPromise = getAllProductsAndPrices();
 
   return (
     <div className="max-w-7xl mx-auto px-4 py-24">
@@ -27,7 +17,11 @@ export default async function PricingPage() {
       </div>
 
       <div className="flex flex-col md:flex-row gap-8 justify-center">
-        <PriceCardsToggle products={allProducts} prices={allPrices} />
+        <Suspense fallback={<PriceCardsToggleSkeleton />}>
+          <PriceCardsToggle
+            productsAndPricesPromise={productsAndPricesPromise}
+          />
+        </Suspense>
       </div>
     </div>
   );

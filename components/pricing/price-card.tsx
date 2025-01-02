@@ -50,7 +50,7 @@ export const PriceCard = ({ price, product }: PriceCardProps) => {
 
   return (
     <PriceCardContainer className={containerClassName}>
-      <div className={cn("flex gap-6 flex-col p-1", "rounded-xl")}>
+      <div className="flex gap-6 flex-col p-1 rounded-xl">
         <PriceTitle
           title={price?.name ?? product.name}
           imageUrl={product?.image_url ?? undefined}
@@ -64,16 +64,14 @@ export const PriceCard = ({ price, product }: PriceCardProps) => {
           interval={price?.billing_cycle_interval ?? undefined}
           frequency={price?.billing_cycle_frequency ?? undefined}
         />
-        <div className={"px-8"}>
-          <Separator className={"bg-border"} />
+        <div className="px-8">
+          <Separator className="bg-border" />
         </div>
-        <div
-          className={"px-8 text-[16px] leading-relaxed text-muted-foreground"}
-        >
+        <div className="px-8 text-[16px] leading-relaxed text-muted-foreground">
           {price.description}
         </div>
       </div>
-      <div className={"p-8 pt-6"}>
+      <div className="p-8 pt-6">
         <Button
           className={buttonClassName}
           onClick={handleClick}

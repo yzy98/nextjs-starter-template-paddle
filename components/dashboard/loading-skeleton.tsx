@@ -13,7 +13,7 @@ export function DashboardSkeleton() {
               <Skeleton className="h-4 w-32" />
             </div>
           </div>
-          <Skeleton className="h-9 w-24" />
+          <Skeleton className="h-9 w-9" />
         </div>
       </div>
 

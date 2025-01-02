@@ -20,34 +20,18 @@ export const PriceTitle = ({ title, imageUrl, featured }: PriceTitleProps) => {
         }
       )}
     >
-      <div className={"flex items-center gap-3"}>
+      <div className="flex items-center gap-3">
         {imageUrl && (
           <div className="relative w-10 h-10">
             <Image src={imageUrl} fill className="object-contain" alt={title} />
           </div>
         )}
-        <p
-          className={cn(
-            "text-[22px] leading-[32px] font-semibold",
-            "text-foreground"
-          )}
-        >
+        <p className="text-[22px] leading-[32px] font-semibold text-foreground">
           {title}
         </p>
       </div>
       {featured && (
-        <div
-          className={cn(
-            "flex items-center px-3 py-1",
-            "rounded-full",
-            "border border-primary",
-            "bg-primary/10",
-            "text-primary",
-            "text-[14px] font-medium",
-            "h-[32px] leading-[21px]",
-            "featured-card-badge"
-          )}
-        >
+        <div className="flex items-center px-3 py-1 rounded-full border border-primary bg-primary/10 text-primary text-[14px] font-medium h-[32px] leading-[21px] featured-card-badge">
           Most popular
         </div>
       )}
