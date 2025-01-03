@@ -3,6 +3,8 @@ import { Suspense } from "react";
 import { getAllProductsAndPrices } from "./actions";
 import { PriceCardsToggle } from "@/components/pricing/price-cards-toggle";
 import { PriceCardsToggleSkeleton } from "@/components/pricing/price-cards-toggle-skeleton";
+import { PlanComparison } from "@/components/pricing/plan-comparison";
+import { PlanComparisonSkeleton } from "@/components/pricing/plan-comparison-skeleton";
 
 export default function PricingPage() {
   const productsAndPricesPromise = getAllProductsAndPrices();
@@ -21,6 +23,13 @@ export default function PricingPage() {
           <PriceCardsToggle
             productsAndPricesPromise={productsAndPricesPromise}
           />
+        </Suspense>
+      </div>
+
+      <div className="mt-24">
+        <h2 className="text-3xl font-bold text-center mb-12">Compare Plans</h2>
+        <Suspense fallback={<PlanComparisonSkeleton />}>
+          <PlanComparison productsAndPricesPromise={productsAndPricesPromise} />
         </Suspense>
       </div>
     </div>

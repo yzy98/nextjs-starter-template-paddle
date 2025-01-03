@@ -21,7 +21,17 @@ export function PriceCardsToggleSkeleton() {
               <div className={"px-8"}>
                 <Separator className={"bg-border"} />
               </div>
-              <Skeleton className="h-[16px] mx-8 mt-2 w-[150px] lg:w-[250px]" />
+              <div className="px-8 min-h-[200px] min-w-[250px] lg:min-w-[350px]">
+                <Skeleton className="h-[24px] w-[180px] mb-6" />
+                <div className="space-y-4">
+                  {[...Array(4)].map((_, i) => (
+                    <div key={i} className="flex items-center gap-2">
+                      <Skeleton className="size-4 rounded-full" />
+                      <Skeleton className="h-[20px] w-[200px]" />
+                    </div>
+                  ))}
+                </div>
+              </div>
             </div>
             <div className="p-8 pt-6">
               <Skeleton className="h-[40px] w-full rounded-md" />

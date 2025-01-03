@@ -1,14 +1,16 @@
-import { cn, formatPrice } from "@/lib/utils";
-import { Price, Product } from "@prisma/client";
-import { Separator } from "@/components/ui/separator";
-import { Button } from "@/components/ui/button";
-import { BackgroundGradient } from "@/components/ui/background-gradient";
-import { useToast } from "@/hooks/use-toast";
+import { redirect } from "next/navigation";
 import { useUser } from "@clerk/nextjs";
+import { Price, Product } from "@prisma/client";
+
+import { cn, formatPrice } from "@/lib/utils";
+import { useToast } from "@/hooks/use-toast";
 
 import { PriceTitle } from "./price-title";
 import { PriceAmount } from "./price-amount";
-import { redirect } from "next/navigation";
+import { PriceFeatures } from "./price-features";
+import { Separator } from "@/components/ui/separator";
+import { Button } from "@/components/ui/button";
+import { BackgroundGradient } from "@/components/ui/background-gradient";
 
 type PriceCardProps = {
   price: Price;
@@ -23,8 +25,8 @@ export const PriceCard = ({ price, product }: PriceCardProps) => {
 
   const PriceCardContainer = isPremium ? BackgroundGradient : "div";
   const containerClassName = isPremium
-    ? "rounded-[22px] bg-card/90"
-    : "rounded-[22px] bg-card/90 border border-border";
+    ? "rounded-[22px] bg-card/70"
+    : "rounded-[22px] bg-card/70 border border-border";
 
   const handleClick = (e: React.MouseEvent) => {
     if (!user) {
@@ -66,9 +68,10 @@ export const PriceCard = ({ price, product }: PriceCardProps) => {
         <div className="px-8">
           <Separator className="bg-border" />
         </div>
-        <div className="px-8 text-[16px] leading-relaxed text-muted-foreground">
-          {price.description}
-        </div>
+        <PriceFeatures
+          description={product.description ?? ""}
+          isPremium={isPremium}
+        />
       </div>
       <div className="p-8 pt-6">
         <Button
