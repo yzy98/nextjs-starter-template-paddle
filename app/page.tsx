@@ -1,38 +1,72 @@
-import { homeConfig } from "@/config/home.config";
-
 export default function Home() {
-  const { hero, features, stats } = homeConfig;
-
   return (
     <div className="min-h-screen bg-gradient-to-b from-secondary/50 to-background">
       <div className="container mx-auto px-4 py-20">
         {/* Hero Section */}
         <div className="text-center">
           <h1 className="text-5xl md:text-6xl font-bold text-foreground mb-6 drop-shadow-sm">
-            {hero.title}
+            NextJS Starter Template Paddle
           </h1>
           <p className="text-xl text-muted-foreground mb-8 max-w-3xl mx-auto">
-            {hero.description}
+            A modern, full-stack SaaS starter template with built-in
+            authentication, database, UI components, and payment processing.
           </p>
           <div className="flex gap-4 justify-center">
             <a
-              href={hero.buttons.primary.href}
+              href="/pricing"
               className="bg-primary/90 text-primary-foreground hover:bg-primary px-8 py-3 rounded-lg font-semibold transition-all hover:shadow-lg"
             >
-              {hero.buttons.primary.text}
+              Get Started
             </a>
             <a
-              href={hero.buttons.secondary.href}
+              href="/dashboard"
               className="bg-secondary/80 text-secondary-foreground hover:bg-secondary px-8 py-3 rounded-lg font-semibold transition-all hover:shadow-lg"
             >
-              {hero.buttons.secondary.text}
+              My Dashboard
             </a>
           </div>
         </div>
 
         {/* Features Section */}
         <div className="grid md:grid-cols-3 gap-8 mt-20">
-          {features.map((feature, index) => (
+          {[
+            {
+              icon: "⚡",
+              title: "Next.js 14",
+              description:
+                "The React framework for production-grade applications.",
+            },
+            {
+              icon: "🎯",
+              title: "Tailwind CSS",
+              description:
+                "Utility-first CSS framework for rapid UI development.",
+            },
+            {
+              icon: "🎨",
+              title: "Shadcn UI",
+              description:
+                "Beautiful, accessible UI components out of the box.",
+            },
+            {
+              icon: "🔐",
+              title: "Clerk Authentication",
+              description:
+                "Secure, feature-rich authentication and user management.",
+            },
+            {
+              icon: "🗄️",
+              title: "Supabase Database",
+              description:
+                "Powerful PostgreSQL database with real-time capabilities.",
+            },
+            {
+              icon: "💳",
+              title: "Paddle Payments",
+              description:
+                "Complete payment and subscription management system.",
+            },
+          ].map((feature, index) => (
             <div
               key={index}
               className="backdrop-blur-sm bg-card/50 text-card-foreground p-6 rounded-xl 
@@ -49,7 +83,12 @@ export default function Home() {
 
         {/* Stats Section */}
         <div className="mt-20 grid grid-cols-2 md:grid-cols-4 gap-8">
-          {stats.map((stat, index) => (
+          {[
+            { value: "10K+", label: "Downloads" },
+            { value: "24/7", label: "Support" },
+            { value: "v2.0", label: "Version" },
+            { value: "4.9/5", label: "Rating" },
+          ].map((stat, index) => (
             <div
               key={index}
               className="text-center backdrop-blur-sm bg-card/30 p-6 rounded-lg"
