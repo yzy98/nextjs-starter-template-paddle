@@ -55,6 +55,10 @@ You can go to your Supabase project dashboard to check if all User, Product, Pri
 - 🔄 Real-time webhook handling
 - 🚀 Type-safe ORM with Prisma
 
+## Architecture
+
+![Architecture](./public/images/architecture.png)
+
 ## Project Structure
 
 ```
