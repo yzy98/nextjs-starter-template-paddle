@@ -37,7 +37,7 @@ export async function MobileNavbar() {
         </SheetTrigger>
         <SheetContent
           side="left"
-          className="w-64 p-0 bg-background/95 backdrop-blur-sm flex flex-col"
+          className="w-64 p-0 bg-background/95 backdrop-blur-xs flex flex-col"
         >
           <SheetHeader className="px-4 pt-4">
             <VisuallyHidden asChild>
