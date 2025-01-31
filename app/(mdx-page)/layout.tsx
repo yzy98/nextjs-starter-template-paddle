@@ -15,7 +15,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
       prose-headings:font-bold
       prose-a:text-blue-600
       prose-a:no-underline
-      hover:prose-a:text-blue-500
+      prose-a:hover:text-blue-500
       prose-img:rounded-lg
       prose-pre:bg-gray-800
       prose-pre:rounded-lg

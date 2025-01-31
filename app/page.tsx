@@ -1,10 +1,10 @@
 export default function Home() {
   return (
-    <div className="min-h-screen bg-gradient-to-b from-secondary/50 to-background">
+    <div className="min-h-screen bg-linear-to-b from-secondary/50 to-background">
       <div className="container mx-auto px-4 py-20">
         {/* Hero Section */}
         <div className="text-center">
-          <h1 className="text-5xl md:text-6xl font-bold text-foreground mb-6 drop-shadow-sm">
+          <h1 className="text-5xl md:text-6xl font-bold text-foreground mb-6 drop-shadow-xs">
             NextJS Starter Template Paddle
           </h1>
           <p className="text-xl text-muted-foreground mb-8 max-w-3xl mx-auto">
@@ -69,7 +69,7 @@ export default function Home() {
           ].map((feature, index) => (
             <div
               key={index}
-              className="backdrop-blur-sm bg-card/50 text-card-foreground p-6 rounded-xl 
+              className="backdrop-blur-xs bg-card/50 text-card-foreground p-6 rounded-xl 
                         hover:bg-card/80 transition-all hover:shadow-lg hover:scale-[1.02]"
             >
               <div className="text-primary/90 text-3xl mb-4">
@@ -91,7 +91,7 @@ export default function Home() {
           ].map((stat, index) => (
             <div
               key={index}
-              className="text-center backdrop-blur-sm bg-card/30 p-6 rounded-lg"
+              className="text-center backdrop-blur-xs bg-card/30 p-6 rounded-lg"
             >
               <div className="text-3xl md:text-4xl font-bold text-foreground mb-2">
                 {stat.value}

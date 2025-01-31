@@ -38,7 +38,7 @@ export function PlanComparison({
           <tr className="border-b border-border">
             <th className="text-left py-4 px-6">Plan</th>
             <th className="text-center py-4 px-6">Free</th>
-            <th className="text-center py-4 px-6 bg-clip-text text-transparent bg-gradient-to-r from-blue-600 to-purple-600 dark:from-blue-400 dark:to-purple-400">
+            <th className="text-center py-4 px-6 bg-clip-text text-transparent bg-linear-to-r from-blue-600 to-purple-600 dark:from-blue-400 dark:to-purple-400">
               Premium
             </th>
           </tr>
