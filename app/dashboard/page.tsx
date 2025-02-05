@@ -1,14 +1,15 @@
 "use client";
 
-import useSWR from "swr";
 import { useRouter } from "next/navigation";
-import { Subscription, Product, Price, User } from "@prisma/client";
 
-import { UserProfileSection } from "@/components/dashboard/user-profile-section";
-import { SubscriptionStatusSection } from "@/components/dashboard/subscription-status-section";
+import { Subscription, Product, Price, User } from "@prisma/client";
+import useSWR from "swr";
+
+import { DashboardSkeleton } from "@/components/dashboard/dashboard-skeleton";
 import { SubscriptionHistorySection } from "@/components/dashboard/subscription-history-section";
 import { SubscriptionScheduledBanner } from "@/components/dashboard/subscription-scheduled-banner";
-import { DashboardSkeleton } from "@/components/dashboard/dashboard-skeleton";
+import { SubscriptionStatusSection } from "@/components/dashboard/subscription-status-section";
+import { UserProfileSection } from "@/components/dashboard/user-profile-section";
 
 type ScheduledChange = {
   action: "pause" | "cancel";

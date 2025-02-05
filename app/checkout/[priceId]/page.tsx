@@ -1,6 +1,8 @@
-import { CheckoutContents } from "@/components/checkout/checkout-contents";
-import { currentUser } from "@clerk/nextjs/server";
 import { redirect } from "next/navigation";
+
+import { currentUser } from "@clerk/nextjs/server";
+
+import { CheckoutContents } from "@/components/checkout/checkout-contents";
 
 export default async function CheckoutPage() {
   const user = await currentUser();

@@ -1,9 +1,9 @@
 import "./globals.css";
-import { Toaster } from "@/components/ui/toaster";
-import { Navbar } from "@/components/layout/navbar";
 import { Footer } from "@/components/layout/footer";
-import { ThemeProvider } from "@/components/providers/theme-provider";
+import { Navbar } from "@/components/layout/navbar";
 import { ClerkThemeProvider } from "@/components/providers/clerk-theme-provider";
+import { ThemeProvider } from "@/components/providers/theme-provider";
+import { Toaster } from "@/components/ui/toaster";
 
 export default function RootLayout({
   children,

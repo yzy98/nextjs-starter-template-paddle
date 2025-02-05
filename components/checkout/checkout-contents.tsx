@@ -1,6 +1,9 @@
 "use client";
 
-import { PriceSection } from "@/components/checkout/price-section";
+import { useEffect, useState } from "react";
+
+import { useParams } from "next/navigation";
+
 import {
   Environments,
   initializePaddle,
@@ -8,10 +11,9 @@ import {
   Theme,
 } from "@paddle/paddle-js";
 import { CheckoutEventsData } from "@paddle/paddle-js/types/checkout/events";
-
-import { useEffect, useState } from "react";
-import { useParams } from "next/navigation";
 import { useTheme } from "next-themes";
+
+import { PriceSection } from "@/components/checkout/price-section";
 
 interface PathParams {
   priceId: string;
@@ -62,7 +64,7 @@ export function CheckoutContents({ userEmail, userId }: Props) {
         }
       });
     }
-  }, []);
+  });
 
   useEffect(() => {
     if (paddle?.Initialized) {

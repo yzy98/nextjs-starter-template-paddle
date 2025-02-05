@@ -1,10 +1,12 @@
-import Link from "next/link";
 import Image from "next/image";
-import { MobileNavbar } from "./mobile-navbar";
-import { ModeToggle } from "./mode-toggle";
+import Link from "next/link";
 
 import { UserButton } from "@clerk/nextjs";
 import { currentUser } from "@clerk/nextjs/server";
+
+import { MobileNavbar } from "./mobile-navbar";
+import { ModeToggle } from "./mode-toggle";
+
 
 export async function Navbar() {
   const user = await currentUser();

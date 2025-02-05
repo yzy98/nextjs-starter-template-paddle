@@ -1,5 +1,3 @@
-import { cn } from "@/lib/utils";
-
 type PriceAmountProps = {
   price: string;
   interval?: string;

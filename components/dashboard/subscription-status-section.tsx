@@ -1,8 +1,11 @@
+import { Subscription, Price, Product } from "@prisma/client";
+
 import { Button } from "@/components/ui/button";
 import { formatDate, formatPrice } from "@/lib/utils";
-import { SubscriptionActions } from "./subscription-actions";
-import { Subscription, Price, Product } from "@prisma/client";
+
 import { Badge } from "../ui/badge";
+
+import { SubscriptionActions } from "./subscription-actions";
 
 interface SubscriptionWithDetails extends Subscription {
   product: Product;
@@ -85,7 +88,7 @@ export function SubscriptionStatusSection({
       ) : (
         <div className="space-y-4">
           <p className="text-muted-foreground">
-            You don't have an active subscription.
+            You don&apos; have an active subscription.
           </p>
           <Button asChild>
             <a href="/pricing">View Plans</a>

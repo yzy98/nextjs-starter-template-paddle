@@ -1,16 +1,18 @@
 import { redirect } from "next/navigation";
+
 import { useUser } from "@clerk/nextjs";
 import { Price, Product } from "@prisma/client";
 
-import { cn, formatPrice } from "@/lib/utils";
+import { BackgroundGradient } from "@/components/ui/background-gradient";
+import { Button } from "@/components/ui/button";
+import { Separator } from "@/components/ui/separator";
 import { useToast } from "@/hooks/use-toast";
+import { cn, formatPrice } from "@/lib/utils";
 
-import { PriceTitle } from "./price-title";
 import { PriceAmount } from "./price-amount";
 import { PriceFeatures } from "./price-features";
-import { Separator } from "@/components/ui/separator";
-import { Button } from "@/components/ui/button";
-import { BackgroundGradient } from "@/components/ui/background-gradient";
+import { PriceTitle } from "./price-title";
+
 
 type PriceCardProps = {
   price: Price;

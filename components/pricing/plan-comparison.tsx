@@ -1,8 +1,9 @@
 "use client";
 
+import { use } from "react";
+
 import { Price, Product } from "@prisma/client";
 import { CircleCheck } from "lucide-react";
-import { use } from "react";
 
 interface PlanComparisonProps {
   productsAndPricesPromise: Promise<{

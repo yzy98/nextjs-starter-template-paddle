@@ -1,10 +1,11 @@
 import { Suspense } from "react";
 
-import { getAllProductsAndPrices } from "./actions";
-import { PriceCardsToggle } from "@/components/pricing/price-cards-toggle";
-import { PriceCardsToggleSkeleton } from "@/components/pricing/price-cards-toggle-skeleton";
 import { PlanComparison } from "@/components/pricing/plan-comparison";
 import { PlanComparisonSkeleton } from "@/components/pricing/plan-comparison-skeleton";
+import { PriceCardsToggle } from "@/components/pricing/price-cards-toggle";
+import { PriceCardsToggleSkeleton } from "@/components/pricing/price-cards-toggle-skeleton";
+
+import { getAllProductsAndPrices } from "./actions";
 
 export default function PricingPage() {
   const productsAndPricesPromise = getAllProductsAndPrices();
@@ -14,7 +15,7 @@ export default function PricingPage() {
       <div className="text-center mb-16">
         <h1 className="text-4xl font-bold mb-4">Simple, Transparent Pricing</h1>
         <p className="text-xl text-gray-600">
-          Choose the plan that's right for you
+          Choose the plan that&apos; right for you
         </p>
       </div>
 

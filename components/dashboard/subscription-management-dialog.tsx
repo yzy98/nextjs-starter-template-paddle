@@ -1,5 +1,12 @@
 "use client";
 
+import { useState } from "react";
+
+import {
+  manageSubscription,
+  type EffectiveFrom,
+} from "@/app/dashboard/actions";
+import { Button } from "@/components/ui/button";
 import {
   Dialog,
   DialogContent,
@@ -8,14 +15,8 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
-import { Button } from "@/components/ui/button";
-import { useState } from "react";
-import {
-  manageSubscription,
-  type EffectiveFrom,
-} from "@/app/dashboard/actions";
-import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Label } from "@/components/ui/label";
+import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { useToast } from "@/hooks/use-toast";
 
 export type SubscriptionAction =
@@ -142,7 +143,7 @@ export function SubscriptionManagementDialog({
                   </Label>
                   <p className="text-sm text-muted-foreground">
                     Changes will take effect at the start of your next billing
-                    cycle. You'll maintain access until then.
+                    cycle. You&apos;ll maintain access until then.
                   </p>
                 </div>
               </div>

@@ -1,11 +1,14 @@
 import { useState } from "react";
+
+import { Subscription, Price, Product } from "@prisma/client";
 import { History } from "lucide-react";
+
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import { formatDate, formatPrice } from "@/lib/utils";
+
 import { getStatusText } from "./subscription-status-section";
 
-import { formatDate, formatPrice } from "@/lib/utils";
-import { Subscription, Price, Product } from "@prisma/client";
-import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
 interface SubscriptionWithDetails extends Subscription {
   product: Product;
   price: Price;

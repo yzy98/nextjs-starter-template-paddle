@@ -1,15 +1,16 @@
-import { LogOut, MoreHorizontal, Settings } from "lucide-react";
 
 import { useUser, useClerk } from "@clerk/nextjs";
+import { LogOut, MoreHorizontal, Settings } from "lucide-react";
+
+import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { Button } from "@/components/ui/button";
-import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
-import { Badge } from "@/components/ui/badge";
 
 interface UserProfileSectionProps {
   accountType?: string;

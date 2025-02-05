@@ -1,7 +1,9 @@
 "use client";
 
-import { CheckIcon } from "lucide-react";
 import Link from "next/link";
+
+import { CheckIcon } from "lucide-react";
+
 import { Button } from "@/components/ui/button";
 import { useConfetti } from "@/hooks/use-confetti";
 

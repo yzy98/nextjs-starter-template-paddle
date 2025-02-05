@@ -1,8 +1,9 @@
 "use server";
 
+import { auth } from "@clerk/nextjs/server";
+
 import prisma from "@/lib/db";
 import { getPaddleInstance } from "@/lib/paddle/get-paddle-instance";
-import { auth } from "@clerk/nextjs/server";
 
 export type EffectiveFrom = "immediately" | "next_billing_period";
 

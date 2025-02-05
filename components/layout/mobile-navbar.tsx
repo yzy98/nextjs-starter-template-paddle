@@ -1,5 +1,9 @@
-import Link from "next/link";
 import Image from "next/image";
+import Link from "next/link";
+
+import { SignOutButton } from "@clerk/nextjs";
+import { currentUser } from "@clerk/nextjs/server";
+import { VisuallyHidden } from "@radix-ui/react-visually-hidden";
 import {
   Menu,
   LogIn,
@@ -8,9 +12,8 @@ import {
   CreditCard,
   LayoutDashboard,
 } from "lucide-react";
-import { ModeToggle } from "./mode-toggle";
 
-import { currentUser } from "@clerk/nextjs/server";
+import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
 import {
   Sheet,
   SheetClose,
@@ -20,9 +23,11 @@ import {
   SheetTitle,
   SheetDescription,
 } from "@/components/ui/sheet";
-import { VisuallyHidden } from "@radix-ui/react-visually-hidden";
-import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
-import { SignOutButton } from "@clerk/nextjs";
+
+import { ModeToggle } from "./mode-toggle";
+
+
+
 
 export async function MobileNavbar() {
   const user = await currentUser();

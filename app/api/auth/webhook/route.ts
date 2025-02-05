@@ -1,12 +1,12 @@
-import { WebhookEvent } from "@clerk/nextjs/server";
-
-import { Webhook } from "svix";
 import { headers } from "next/headers";
 import { NextResponse } from "next/server";
 
+import { WebhookEvent } from "@clerk/nextjs/server";
+import { Webhook } from "svix";
+
 import { userCreate } from "@/lib/data/user/user-create";
-import { userUpdate } from "@/lib/data/user/user-update";
 import { userDelete } from "@/lib/data/user/user-delete";
+import { userUpdate } from "@/lib/data/user/user-update";
 
 export async function POST(req: Request) {
   const WEBHOOK_SECRET = process.env.CLERK_WEBHOOK_SECRET;

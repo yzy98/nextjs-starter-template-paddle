@@ -1,6 +1,7 @@
 "use client";
 
 import { use, useState } from "react";
+
 import { Product, Price } from "@prisma/client";
 
 import { PriceCards } from "./price-cards";

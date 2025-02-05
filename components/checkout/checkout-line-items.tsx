@@ -1,7 +1,8 @@
-import { Separator } from "@/components/ui/separator";
 import { CheckoutEventsData } from "@paddle/paddle-js/types/checkout/events";
-import { formatMoney } from "@/lib/utils";
+
+import { Separator } from "@/components/ui/separator";
 import { Skeleton } from "@/components/ui/skeleton";
+import { formatMoney } from "@/lib/utils";
 
 interface LoadingTextProps {
   value: number | undefined;
