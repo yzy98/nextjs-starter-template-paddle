@@ -38,7 +38,6 @@ export function SubscriptionScheduledBanner({
       toast({
         title: "Error",
         description: `Failed to cancel scheduled ${action}`,
-        variant: "destructive",
       });
     } finally {
       setIsLoading(false);

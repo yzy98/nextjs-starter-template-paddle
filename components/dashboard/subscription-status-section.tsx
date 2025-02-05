@@ -60,7 +60,7 @@ export function SubscriptionStatusSection({
             <p className="text-muted-foreground">
               Price:{" "}
               {formatPrice(
-                subscription.price_amount,
+                subscription.price_amount.toString(),
                 subscription.price_currency
               )}
               /{subscription.billing_cycle_interval.toLowerCase()}

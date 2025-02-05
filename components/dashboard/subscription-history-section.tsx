@@ -50,8 +50,8 @@ export function SubscriptionHistorySection({
                   {sub.product.name}
                 </p>
                 <p className="text-sm text-muted-foreground">
-                  {formatPrice(sub.price_amount, sub.price_currency)}/
-                  {sub.billing_cycle_interval.toLowerCase()}
+                  {formatPrice(sub.price_amount.toString(), sub.price_currency)}
+                  /{sub.billing_cycle_interval.toLowerCase()}
                 </p>
                 {sub.starts_at && (
                   <p className="text-sm text-muted-foreground">

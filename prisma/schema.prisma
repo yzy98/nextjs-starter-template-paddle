@@ -35,8 +35,8 @@ model Product {
   description       String?
   tax_category      String
   image_url         String?
-  created_at        String
-  updated_at        String
+  created_at        DateTime
+  updated_at        DateTime
 
   prices            Price[]
   subscriptions     Subscription[]
@@ -53,10 +53,10 @@ model Price {
   trial_period_interval     String?
   trial_period_frequency    Int?
   tax_mode                  String
-  unit_price_amount         String
+  unit_price_amount         Int
   unit_price_currency       String
-  created_at                String
-  updated_at                String
+  created_at                DateTime
+  updated_at                DateTime
 
   // Relations
   product                   Product   @relation(fields: [product_id], references: [paddle_product_id])
@@ -76,20 +76,20 @@ model Subscription {
   status                       String
 
   // Billing details
-  price_amount                 String
+  price_amount                 Int
   price_currency               String
   collection_mode              String
   billing_cycle_interval       String
   billing_cycle_frequency      Int
 
   // Timestamps
-  starts_at                     String?
-  renews_at                     String?
-  ends_at                       String?
-  trial_starts_at               String?
-  trial_ends_at                 String?
-  canceled_at                  String?
-  scheduled_change              Json?
+  starts_at                    DateTime?
+  renews_at                    DateTime?
+  ends_at                      DateTime?
+  trial_starts_at              DateTime?
+  trial_ends_at                DateTime?
+  canceled_at                  DateTime?
+  scheduled_change             Json?
 
   // Relations
   user                         User      @relation(fields: [user_id], references: [clerk_id], onDelete: Cascade)

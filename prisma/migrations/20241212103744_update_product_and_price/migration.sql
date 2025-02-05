@@ -1,8 +1,0 @@
--- AlterTable
-ALTER TABLE "Price" ALTER COLUMN "created_at" SET DATA TYPE TEXT,
-ALTER COLUMN "updated_at" SET DATA TYPE TEXT;
-
--- AlterTable
-ALTER TABLE "Product" ALTER COLUMN "type" DROP NOT NULL,
-ALTER COLUMN "created_at" SET DATA TYPE TEXT,
-ALTER COLUMN "updated_at" SET DATA TYPE TEXT;

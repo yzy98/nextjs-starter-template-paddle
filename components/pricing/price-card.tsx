@@ -34,7 +34,6 @@ export const PriceCard = ({ price, product }: PriceCardProps) => {
       toast({
         title: "Authentication required",
         description: "Please sign in to continue with your purchase.",
-        variant: "destructive",
       });
     }
 
@@ -59,7 +58,7 @@ export const PriceCard = ({ price, product }: PriceCardProps) => {
         />
         <PriceAmount
           price={formatPrice(
-            price.unit_price_amount,
+            price.unit_price_amount.toString(),
             price.unit_price_currency
           )}
           interval={price?.billing_cycle_interval ?? undefined}

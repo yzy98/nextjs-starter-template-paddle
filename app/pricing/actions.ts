@@ -1,10 +1,12 @@
 "use server";
 
-import prisma from "@/lib/db";
-import { getPaddleInstance } from "@/lib/paddle/get-paddle-instance";
+import { unstable_cache } from "next/cache";
+
 import { Product, Price } from "@paddle/paddle-node-sdk";
 import { Price as PrismaPrice, Product as PrismaProduct } from "@prisma/client";
-import { unstable_cache } from "next/cache";
+
+import prisma from "@/lib/db";
+import { getPaddleInstance } from "@/lib/paddle/get-paddle-instance";
 
 export async function getPaddleProducts() {
   const paddle = getPaddleInstance();
@@ -77,8 +79,8 @@ export async function syncProducts() {
     const description = paddleProduct?.description;
     const tax_category = paddleProduct?.taxCategory;
     const image_url = paddleProduct?.imageUrl;
-    const created_at = paddleProduct.createdAt;
-    const updated_at = paddleProduct.updatedAt;
+    const created_at = new Date(paddleProduct.createdAt);
+    const updated_at = new Date(paddleProduct.updatedAt);
 
     await addProduct({
       paddle_product_id,
@@ -132,10 +134,10 @@ export async function syncPrices() {
     const trial_period_interval = paddlePrice?.trialPeriod?.interval ?? null;
     const trial_period_frequency = paddlePrice?.trialPeriod?.frequency ?? null;
     const tax_mode = paddlePrice.taxMode;
-    const unit_price_amount = paddlePrice.unitPrice.amount;
+    const unit_price_amount = parseInt(paddlePrice.unitPrice.amount);
     const unit_price_currency = paddlePrice.unitPrice.currencyCode;
-    const created_at = paddlePrice.createdAt;
-    const updated_at = paddlePrice.updatedAt;
+    const created_at = new Date(paddlePrice.createdAt);
+    const updated_at = new Date(paddlePrice.updatedAt);
 
     await addPrice({
       paddle_price_id,

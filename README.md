@@ -40,7 +40,7 @@ You need to initialize Clerk, Supabase and Paddle projects.
 3. **Initialize Database**
 
 ```bash
-pnpm dlx prisma migrate dev --name init
+pnpm db:push
 ```
 
 You can go to your Supabase project dashboard to check if all User, Product, Price and Subscription tables have been created.

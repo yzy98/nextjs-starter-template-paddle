@@ -1,6 +1,7 @@
+import { Prisma } from "@prisma/client";
+
 import prisma from "@/lib/db";
 import { isPaddleSubscriptionEvent, isPaddleEvent } from "@/lib/typeguards";
-import { Prisma } from "@prisma/client";
 
 export const subscriptionCancel = async (data: any) => {
   if (!isPaddleEvent(data) || !isPaddleSubscriptionEvent(data)) {
@@ -14,9 +15,15 @@ export const subscriptionCancel = async (data: any) => {
       },
       data: {
         status: data.data.status,
-        renews_at: data.data.next_billed_at,
-        ends_at: data.data?.current_billing_period?.ends_at ?? null,
-        canceled_at: data.data.canceled_at,
+        renews_at: data.data.next_billed_at
+          ? new Date(data.data.next_billed_at)
+          : null,
+        ends_at: data.data?.current_billing_period?.ends_at
+          ? new Date(data.data.current_billing_period.ends_at)
+          : null,
+        canceled_at: data.data.canceled_at
+          ? new Date(data.data.canceled_at)
+          : null,
         scheduled_change: data.data?.scheduled_change ?? Prisma.DbNull,
       },
     });
