@@ -4,9 +4,7 @@ import { NextResponse } from "next/server";
 import { WebhookEvent } from "@clerk/nextjs/server";
 import { Webhook } from "svix";
 
-import { userCreate } from "@/lib/data/user/user-create";
-import { userDelete } from "@/lib/data/user/user-delete";
-import { userUpdate } from "@/lib/data/user/user-update";
+import { MUTATIONS } from "@/server/db/mutations";
 
 export async function POST(req: Request) {
   const WEBHOOK_SECRET = process.env.CLERK_WEBHOOK_SECRET;
@@ -60,7 +58,7 @@ export async function POST(req: Request) {
   switch (eventType) {
     case "user.created":
       try {
-        await userCreate({
+        await MUTATIONS.upsertUser({
           email: payload?.data?.email_addresses?.[0]?.email_address,
           first_name: payload?.data?.first_name,
           last_name: payload?.data?.last_name,
@@ -83,7 +81,7 @@ export async function POST(req: Request) {
 
     case "user.updated":
       try {
-        await userUpdate({
+        await MUTATIONS.upsertUser({
           email: payload?.data?.email_addresses?.[0]?.email_address,
           first_name: payload?.data?.first_name,
           last_name: payload?.data?.last_name,
@@ -106,7 +104,7 @@ export async function POST(req: Request) {
 
     case "user.deleted":
       try {
-        await userDelete({
+        await MUTATIONS.deleteUser({
           clerk_id: payload?.data?.id,
         });
 

@@ -5,8 +5,8 @@ import { unstable_cache } from "next/cache";
 import { Product, Price } from "@paddle/paddle-node-sdk";
 import { Price as PrismaPrice, Product as PrismaProduct } from "@prisma/client";
 
-import prisma from "@/lib/db";
-import { getPaddleInstance } from "@/lib/paddle/get-paddle-instance";
+import prisma from "@/server/db";
+import { getPaddleInstance } from "@/server/paddle";
 
 export async function getPaddleProducts() {
   const paddle = getPaddleInstance();
