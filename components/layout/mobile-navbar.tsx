@@ -1,19 +1,10 @@
 import Image from "next/image";
 import Link from "next/link";
 
-import { SignOutButton } from "@clerk/nextjs";
-import { currentUser } from "@clerk/nextjs/server";
+import { SignedIn, SignedOut, SignInButton, UserButton } from "@clerk/nextjs";
 import { VisuallyHidden } from "@radix-ui/react-visually-hidden";
-import {
-  Menu,
-  LogIn,
-  LogOut,
-  Home,
-  CreditCard,
-  LayoutDashboard,
-} from "lucide-react";
+import { Menu, LogIn, Home, CreditCard, LayoutDashboard } from "lucide-react";
 
-import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
 import {
   Sheet,
   SheetClose,
@@ -26,12 +17,7 @@ import {
 
 import { ModeToggle } from "./mode-toggle";
 
-
-
-
-export async function MobileNavbar() {
-  const user = await currentUser();
-
+export function MobileNavbar() {
   return (
     <div className="md:hidden">
       <Sheet>
@@ -91,7 +77,7 @@ export async function MobileNavbar() {
                   <span>Pricing</span>
                 </Link>
               </SheetClose>
-              {user && (
+              <SignedIn>
                 <SheetClose asChild>
                   <Link
                     href="/dashboard"
@@ -101,55 +87,24 @@ export async function MobileNavbar() {
                     <span>Dashboard</span>
                   </Link>
                 </SheetClose>
-              )}
-
-              {user && (
-                <SheetClose asChild>
-                  <SignOutButton>
+                <UserButton
+                  appearance={{
+                    elements: {
+                      userButtonPopoverCard: { pointerEvents: "initial" },
+                    },
+                  }}
+                />
+              </SignedIn>
+              <SignedOut>
+                <SheetClose>
+                  <SignInButton>
                     <div className="flex items-center space-x-2 text-muted-foreground hover:text-foreground transition-colors cursor-pointer">
-                      <LogOut className="h-8 w-8 p-1" />
-                      <span>Sign Out</span>
+                      <LogIn className="h-8 w-8 p-1" />
+                      <span>Sign In</span>
                     </div>
-                  </SignOutButton>
+                  </SignInButton>
                 </SheetClose>
-              )}
-
-              {!user ? (
-                <SheetClose asChild>
-                  <Link
-                    href="/sign-in"
-                    className="flex items-center space-x-2 text-muted-foreground hover:text-foreground transition-colors"
-                  >
-                    <LogIn className="h-8 w-8 p-1" />
-                    <span>Sign In</span>
-                  </Link>
-                </SheetClose>
-              ) : (
-                <SheetClose asChild>
-                  <Link
-                    href="/dashboard"
-                    className="flex items-center space-x-2 text-muted-foreground hover:text-foreground transition-colors"
-                  >
-                    <Avatar className="h-8 w-8">
-                      <AvatarImage
-                        src={user.imageUrl}
-                        alt={user.firstName || "User"}
-                      />
-                      <AvatarFallback>
-                        {(
-                          user.firstName?.[0] ||
-                          user.emailAddresses[0].emailAddress[0] ||
-                          ""
-                        ).toUpperCase()}
-                      </AvatarFallback>
-                    </Avatar>
-                    <span className="truncate">
-                      {user.firstName || user.emailAddresses[0].emailAddress}
-                    </span>
-                  </Link>
-                </SheetClose>
-              )}
-
+              </SignedOut>
               <ModeToggle />
             </div>
           </div>

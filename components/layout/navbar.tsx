@@ -1,16 +1,14 @@
 import Image from "next/image";
 import Link from "next/link";
 
-import { UserButton } from "@clerk/nextjs";
-import { currentUser } from "@clerk/nextjs/server";
+import { SignedIn, SignedOut, SignInButton, UserButton } from "@clerk/nextjs";
+
+import { Button } from "@/components/ui/button";
 
 import { MobileNavbar } from "./mobile-navbar";
 import { ModeToggle } from "./mode-toggle";
 
-
-export async function Navbar() {
-  const user = await currentUser();
-
+export function Navbar() {
   return (
     <nav className="fixed top-0 left-0 right-0 border-b z-50 bg-background/95 backdrop-blur-xs">
       <div className="mx-auto px-4 sm:px-6 lg:px-8">
@@ -33,25 +31,23 @@ export async function Navbar() {
             >
               Pricing
             </Link>
-            {user && (
+            <SignedIn>
               <Link
                 href="/dashboard"
                 className="text-muted-foreground hover:text-foreground transition-colors"
               >
                 Dashboard
               </Link>
-            )}
+            </SignedIn>
             <ModeToggle />
-            {!user ? (
-              <Link
-                href="/sign-in"
-                className="bg-primary/90 text-primary-foreground hover:bg-primary px-4 py-2 rounded-lg font-semibold transition-all hover:shadow-lg"
-              >
-                Sign In
-              </Link>
-            ) : (
+            <SignedOut>
+              <SignInButton>
+                <Button>Sign in</Button>
+              </SignInButton>
+            </SignedOut>
+            <SignedIn>
               <UserButton />
-            )}
+            </SignedIn>
           </div>
 
           {/* Mobile Navigation */}
