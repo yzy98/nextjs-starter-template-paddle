@@ -4,6 +4,8 @@
   "private": true,
   "scripts": {
     "dev": "next dev",
+    "dev:webhook": "dotenvx run -- sh -c 'ngrok http --url=$NGROK_DOMAIN 3000'",
+    "dev:all": "concurrently \"pnpm run dev\" \"pnpm run dev:webhook\"",
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
@@ -51,12 +53,14 @@
     "tailwindcss-animate": "^1.0.7"
   },
   "devDependencies": {
+    "@dotenvx/dotenvx": "^1.35.0",
     "@tailwindcss/postcss": "^4.0.0",
     "@tailwindcss/typography": "^0.5.15",
     "@types/canvas-confetti": "^1.9.0",
     "@types/node": "^20",
     "@types/react": "^19",
     "@types/react-dom": "^19",
+    "concurrently": "^9.1.2",
     "eslint": "^8",
     "eslint-config-next": "15.0.4",
     "postcss": "^8",
