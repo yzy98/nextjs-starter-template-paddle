@@ -105,29 +105,45 @@ You can go to your Supabase project dashboard to check if all User, Product, Pri
 
 ## Webhook Setup
 
-1. Install ngrok for local development:
+1. Sign up / in **_[Ngrok](https://dashboard.ngrok.com/signup)_**
+1. Install ngrok in your local machine
+
+using `homebrew`
+
+```bash
+brew install ngrok
+```
+
+or `npm`
 
 ```bash
 npm install -g ngrok
-ngrok http 3000
 ```
 
-2. Configure Clerk webhook endpoint with the ngrok URL:
+3. Authenticate your ngrok agent
 
-   - URL: `<ngrok-url>/api/auth/webhook`
-   - Events: `user.created`, `user.deleted`, `user.updated`
+```bash
+ngrok config add-authtoken $YOUR_AUTHTOKEN
+```
 
-3. Configure Paddle webhook endpoint with the ngrok URL:
-   - URL: `<ngrok-url>/api/billing/webhook`
-   - Events: `subscription.created`, `subscription.updated`, `subscription.canceled`
+4. Get a static domain in **_[Ngrok Dashboard](https://dashboard.ngrok.com/domains)_**, copy the domain as value of `NGROK_DOMAIN` inside `.env`
+5. Configure Clerk webhook endpoint with the ngrok URL:
+
+- URL: `<ngrok-domain>/api/auth/webhook`
+- Events: `user.created`, `user.deleted`, `user.updated`
+
+6. Configure Paddle webhook endpoint with the ngrok URL:
+
+- URL: `<ngrok-domain>/api/billing/webhook`
+- Events: `subscription.created`, `subscription.updated`, `subscription.canceled`
 
 ## Run the project
 
 ```bash
-pnpm dev
+pnpm dev:all
 ```
 
-You can now visit `http://localhost:3000` to see the project.
+You can now visit `http://localhost:3000` to see the project and test webhooks.
 
 ## Contributing
 
