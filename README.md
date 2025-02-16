@@ -4,15 +4,17 @@ A modern full-stack starter template with authentication, database, payments, an
 
 ## Tech Stack
 
-| Category  | Technology            |
-| --------- | --------------------- |
-| Framework | Next.js               |
-| CSS       | Tailwind CSS          |
-| UI        | Shadcn UI             |
-| Auth      | Clerk                 |
-| Database  | Supabase (PostgreSQL) |
-| ORM       | Prisma                |
-| Payments  | Paddle                |
+| Category       | Technology          |
+| -------------- | ------------------- |
+| Framework      | Next.js             |
+| Styling        | Tailwind CSS        |
+| Components     | Shadcn UI           |
+| Authentication | Clerk               |
+| Database       | Supabase PostgreSQL |
+| ORM            | Prisma              |
+| Payments       | Paddle              |
+| Rate Limiting  | Upstash             |
+| API Layer      | tRPC                |
 
 ## Getting Started
 
@@ -35,7 +37,7 @@ pnpm install
 2. **Set up .env**
 
 copy `.env.example` to `.env`, and fill in the values according to the comments in the `.env.example` file.
-You need to initialize Clerk, Supabase and Paddle projects.
+You need to initialize Clerk, Supabase, Paddle and Upstash projects.
 
 3. **Initialize Database**
 
@@ -54,6 +56,8 @@ You can go to your Supabase project dashboard to check if all User, Product, Pri
 - 💳 Payment processing with Paddle
 - 🔄 Real-time webhook handling
 - 🚀 Type-safe ORM with Prisma
+- ⚡️ TRPC for end-to-end type-safe API
+- 🛡️ Upstash for rate limiting
 
 ## Architecture
 
@@ -89,15 +93,14 @@ You can go to your Supabase project dashboard to check if all User, Product, Pri
 │   └── providers/
 ├── markdowns/
 ├── lib/
-│   ├── data/
-│   │   └── subscription/
-│   │   └── user/
-│   ├── paddle/get-paddle-instance.ts
-│   ├── db.ts
-│   └── typeguards.ts
 │   └── utils.ts
 ├── prisma/
 │   └── schema.prisma
+├── trpc/
+├── server/
+│   └── db/
+│   └── paddle/
+│   └── redis/
 ├── middleware.ts
 ├── .env
 └── .env.example
