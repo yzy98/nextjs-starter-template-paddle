@@ -11,12 +11,23 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
+import {
+  Drawer,
+  DrawerClose,
+  DrawerContent,
+  DrawerDescription,
+  DrawerFooter,
+  DrawerHeader,
+  DrawerTitle,
+} from "@/components/ui/drawer";
 import { Label } from "@/components/ui/label";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import {
   EffectiveFrom,
   useManageSubscription,
 } from "@/hooks/use-manage-subscription";
+import { useMediaQuery } from "@/hooks/use-media-query";
+import { cn } from "@/lib/utils";
 
 export type SubscriptionAction = "cancel" | "upgrade" | "downgrade" | null;
 
@@ -63,6 +74,7 @@ export function SubscriptionManagementDialog({
   subscriptionId,
 }: SubscriptionManagementDialogProps) {
   const { manageSubscription, isPending } = useManageSubscription();
+  const isDesktop = useMediaQuery("(min-width: 768px)");
   const [effectiveFrom, setEffectiveFrom] = useState<EffectiveFrom>(
     "next_billing_period"
   );
@@ -84,58 +96,92 @@ export function SubscriptionManagementDialog({
     );
   };
 
-  return (
-    <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent>
-        <DialogHeader>
-          <DialogTitle>{config.title}</DialogTitle>
-          <DialogDescription>{config.description}</DialogDescription>
-        </DialogHeader>
-
-        {config.showEffectiveFrom && (
-          <div className="space-y-4">
-            <RadioGroup
-              value={effectiveFrom}
-              onValueChange={(value) =>
-                setEffectiveFrom(value as EffectiveFrom)
-              }
-              className="gap-4"
-            >
-              <div className="flex items-start space-x-3">
-                <RadioGroupItem
-                  value="next_billing_period"
-                  id="next_billing_period"
-                />
-                <div className="grid gap-1.5">
-                  <Label htmlFor="next_billing_period" className="font-medium">
-                    At next billing period
-                  </Label>
-                  <p className="text-sm text-muted-foreground">
-                    Changes will take effect at the start of your next billing
-                    cycle. You&apos;ll maintain access until then.
-                  </p>
-                </div>
-              </div>
-              <div className="flex items-start space-x-3">
-                <RadioGroupItem value="immediately" id="immediately" />
-                <div className="grid gap-1.5">
-                  <Label htmlFor="immediately" className="font-medium">
-                    Immediately
-                  </Label>
-                  <p className="text-sm text-muted-foreground">
-                    Changes will take effect immediately. Any unused time will
-                    be forfeited.
-                  </p>
-                </div>
-              </div>
-            </RadioGroup>
+  const effectiveFromOptions = config.showEffectiveFrom ? (
+    <div className={cn("space-y-4", !isDesktop && "px-4")}>
+      <RadioGroup
+        value={effectiveFrom}
+        onValueChange={(value) => setEffectiveFrom(value as EffectiveFrom)}
+        className="gap-4"
+      >
+        <div className="flex items-start space-x-3">
+          <RadioGroupItem
+            value="next_billing_period"
+            id="next_billing_period"
+          />
+          <div className="grid gap-1.5">
+            <Label htmlFor="next_billing_period" className="font-medium">
+              At next billing period
+            </Label>
+            <p className="text-sm text-muted-foreground">
+              Changes will take effect at the start of your next billing cycle.
+              You&apos;ll maintain access until then.
+            </p>
           </div>
-        )}
+        </div>
+        <div className="flex items-start space-x-3">
+          <RadioGroupItem value="immediately" id="immediately" />
+          <div className="grid gap-1.5">
+            <Label htmlFor="immediately" className="font-medium">
+              Immediately
+            </Label>
+            <p className="text-sm text-muted-foreground">
+              Changes will take effect immediately. Any unused time will be
+              forfeited.
+            </p>
+          </div>
+        </div>
+      </RadioGroup>
+    </div>
+  ) : null;
 
-        <DialogFooter>
-          <Button variant="outline" onClick={onClose} disabled={isPending}>
-            Cancel
-          </Button>
+  if (isDesktop) {
+    return (
+      <Dialog open={isOpen} onOpenChange={onClose}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>{config.title}</DialogTitle>
+            <DialogDescription>{config.description}</DialogDescription>
+          </DialogHeader>
+          {effectiveFromOptions}
+          <DialogFooter>
+            <Button variant="outline" onClick={onClose} disabled={isPending}>
+              Cancel
+            </Button>
+            <Button
+              variant="outline"
+              className={config.confirmClass}
+              onClick={handleAction}
+              disabled={isPending}
+            >
+              {isPending ? (
+                <>
+                  <span className="loading loading-spinner loading-sm mr-2"></span>
+                  Processing...
+                </>
+              ) : (
+                config.confirmText
+              )}
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+    );
+  }
+
+  return (
+    <Drawer open={isOpen} onOpenChange={onClose}>
+      <DrawerContent>
+        <DrawerHeader className="text-left">
+          <DrawerTitle>{config.title}</DrawerTitle>
+          <DrawerDescription>{config.description}</DrawerDescription>
+        </DrawerHeader>
+        {effectiveFromOptions}
+        <DrawerFooter className="pt-2">
+          <DrawerClose asChild>
+            <Button variant="outline" disabled={isPending}>
+              Cancel
+            </Button>
+          </DrawerClose>
           <Button
             variant="outline"
             className={config.confirmClass}
@@ -151,8 +197,8 @@ export function SubscriptionManagementDialog({
               config.confirmText
             )}
           </Button>
-        </DialogFooter>
-      </DialogContent>
-    </Dialog>
+        </DrawerFooter>
+      </DrawerContent>
+    </Drawer>
   );
 }
