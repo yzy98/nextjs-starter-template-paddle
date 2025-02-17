@@ -14,7 +14,7 @@ interface UpsertUserParams {
   clerk_id: string;
 }
 
-export const MUTATIONS = {
+export const DB_MUTATIONS = {
   /**
    * Create or update single record in DB User table
    */

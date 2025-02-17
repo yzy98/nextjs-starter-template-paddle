@@ -1,6 +1,6 @@
 import crypto from "crypto";
 
-import { MUTATIONS } from "@/server/db/mutations";
+import { DB_MUTATIONS } from "@/server/db/mutations";
 import {
   isPaddleEvent,
   isPaddleSubscriptionEvent,
@@ -75,13 +75,13 @@ export async function POST(request: Request) {
     if (isPaddleSubscriptionEvent(eventData)) {
       switch (eventData.event_type) {
         case "subscription.created":
-          await MUTATIONS.createSubscription(eventData);
+          await DB_MUTATIONS.createSubscription(eventData);
           break;
         case "subscription.updated":
-          await MUTATIONS.updateSubscription(eventData);
+          await DB_MUTATIONS.updateSubscription(eventData);
           break;
         case "subscription.canceled":
-          await MUTATIONS.cancelSubscription(eventData);
+          await DB_MUTATIONS.cancelSubscription(eventData);
           break;
         default:
           return Response.json(

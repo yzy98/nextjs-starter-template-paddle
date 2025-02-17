@@ -2,10 +2,6 @@
 
 import { useState } from "react";
 
-import {
-  manageSubscription,
-  type EffectiveFrom,
-} from "@/app/dashboard/actions";
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
@@ -17,15 +13,12 @@ import {
 } from "@/components/ui/dialog";
 import { Label } from "@/components/ui/label";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
-import { useToast } from "@/hooks/use-toast";
+import {
+  EffectiveFrom,
+  useManageSubscription,
+} from "@/hooks/use-manage-subscription";
 
-export type SubscriptionAction =
-  | "pause"
-  | "resume"
-  | "cancel"
-  | "upgrade"
-  | "downgrade"
-  | null;
+export type SubscriptionAction = "cancel" | "upgrade" | "downgrade" | null;
 
 interface SubscriptionManagementDialogProps {
   isOpen: boolean;
@@ -35,22 +28,6 @@ interface SubscriptionManagementDialogProps {
 }
 
 const actionConfig = {
-  pause: {
-    title: "Pause Subscription",
-    description: "When would you like your subscription to be paused?",
-    confirmText: "Pause subscription",
-    confirmClass:
-      "text-yellow-700 border-yellow-500 hover:bg-yellow-50 dark:text-yellow-400 dark:border-yellow-400 dark:hover:bg-yellow-950",
-    showEffectiveFrom: true,
-  },
-  resume: {
-    title: "Resume Subscription",
-    description: "Would you like to resume your subscription?",
-    confirmText: "Resume subscription",
-    confirmClass:
-      "text-green-700 border-green-500 hover:bg-green-50 dark:text-green-400 dark:border-green-400 dark:hover:bg-green-950",
-    showEffectiveFrom: false,
-  },
   cancel: {
     title: "Cancel Subscription",
     description: "When would you like your subscription to be canceled?",
@@ -85,8 +62,7 @@ export function SubscriptionManagementDialog({
   action,
   subscriptionId,
 }: SubscriptionManagementDialogProps) {
-  const { toast } = useToast();
-  const [isLoading, setIsLoading] = useState(false);
+  const { manageSubscription, isPending } = useManageSubscription();
   const [effectiveFrom, setEffectiveFrom] = useState<EffectiveFrom>(
     "next_billing_period"
   );
@@ -95,24 +71,17 @@ export function SubscriptionManagementDialog({
 
   const config = actionConfig[action];
 
-  const handleAction = async () => {
-    setIsLoading(true);
-    try {
-      await manageSubscription(action, subscriptionId, effectiveFrom);
-      toast({
-        title: "Subscription updated",
-        description: `Successfully ${action}ed subscription`,
-      });
-      onClose();
-    } catch (error) {
-      toast({
-        title: "Subscription not updated",
-        description: `Failed to ${action} subscription`,
-      });
-      console.error("Subscription action error:", error);
-    } finally {
-      setIsLoading(false);
-    }
+  const handleAction = () => {
+    manageSubscription(
+      {
+        action,
+        subscriptionId,
+        effectiveFrom,
+      },
+      {
+        onSuccess: onClose,
+      }
+    );
   };
 
   return (
@@ -164,16 +133,16 @@ export function SubscriptionManagementDialog({
         )}
 
         <DialogFooter>
-          <Button variant="outline" onClick={onClose} disabled={isLoading}>
+          <Button variant="outline" onClick={onClose} disabled={isPending}>
             Cancel
           </Button>
           <Button
             variant="outline"
             className={config.confirmClass}
             onClick={handleAction}
-            disabled={isLoading}
+            disabled={isPending}
           >
-            {isLoading ? (
+            {isPending ? (
               <>
                 <span className="loading loading-spinner loading-sm mr-2"></span>
                 Processing...

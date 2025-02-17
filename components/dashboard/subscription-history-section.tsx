@@ -1,28 +1,29 @@
+"use client";
+
 import { useState } from "react";
 
-import { Subscription, Price, Product } from "@prisma/client";
+import { type inferProcedureOutput } from "@trpc/server";
 import { History } from "lucide-react";
 
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
+import { Skeleton } from "@/components/ui/skeleton";
+import { ITEMS_PER_PAGE } from "@/lib/constants";
 import { formatDate, formatPrice } from "@/lib/utils";
+import { getStatusText } from "@/lib/utils";
+import { AppRouter } from "@/trpc/routers/_app";
 
-import { getStatusText } from "./subscription-status-section";
-
-interface SubscriptionWithDetails extends Subscription {
-  product: Product;
-  price: Price;
-}
+type SubscriptionOutput = inferProcedureOutput<
+  AppRouter["subscriptions"]["getInactive"]
+>;
 
 interface SubscriptionHistorySectionProps {
-  subscriptions: SubscriptionWithDetails[];
+  subscriptions: SubscriptionOutput;
 }
 
-const ITEMS_PER_PAGE = 5; // Show 5 items initially
-
-export function SubscriptionHistorySection({
+export const SubscriptionHistorySection = ({
   subscriptions,
-}: SubscriptionHistorySectionProps) {
+}: SubscriptionHistorySectionProps) => {
   const [displayCount, setDisplayCount] = useState(ITEMS_PER_PAGE);
 
   if (subscriptions.length === 0) return null;
@@ -90,4 +91,26 @@ export function SubscriptionHistorySection({
       )}
     </div>
   );
-}
+};
+
+export const SubscriptionHistorySectionSkeleton = () => {
+  return (
+    <div className="bg-card border border-border rounded-lg p-6 mt-6">
+      <Skeleton className="h-6 w-48 mb-4" />
+      <div className="space-y-4">
+        {[1, 2].map((i) => (
+          <div key={i} className="border-b border-border pb-4 last:border-b-0">
+            <div className="flex justify-between items-start">
+              <div className="space-y-2">
+                <Skeleton className="h-5 w-48" />
+                <Skeleton className="h-4 w-32" />
+                <Skeleton className="h-4 w-40" />
+              </div>
+              <Skeleton className="h-6 w-24" />
+            </div>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+};

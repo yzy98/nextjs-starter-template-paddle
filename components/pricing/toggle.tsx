@@ -19,14 +19,12 @@ export function Toggle({ prices, setInterval, interval }: ToggleProps) {
   });
 
   const calculateSavings = () => {
-    const monthlyPrice = parseInt(
+    const monthlyPrice =
       prices.find((p) => p.billing_cycle_interval === "month")
-        ?.unit_price_amount || "0"
-    );
-    const yearlyPrice = parseInt(
+        ?.unit_price_amount || 0;
+    const yearlyPrice =
       prices.find((p) => p.billing_cycle_interval === "year")
-        ?.unit_price_amount || "0"
-    );
+        ?.unit_price_amount || 0;
     const monthlyCost = monthlyPrice * 12;
     const yearlyCost = yearlyPrice;
     const savings = ((monthlyCost - yearlyCost) / monthlyCost) * 100;

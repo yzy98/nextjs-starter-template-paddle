@@ -25,8 +25,8 @@ export default function CheckoutSuccessPage() {
         </p>
 
         <div className="pt-6">
-          <Link href="/">
-            <Button className="w-full">Return to Home</Button>
+          <Link href="/dashboard">
+            <Button className="w-full">Go to Dashboard</Button>
           </Link>
         </div>
       </div>
