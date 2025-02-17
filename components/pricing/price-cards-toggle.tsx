@@ -19,9 +19,7 @@ export const PriceCardsToggle = ({
 
   const filteredPricesSorted = prices
     .filter((price) => price.billing_cycle_interval === interval)
-    .sort(
-      (a, b) => parseInt(a.unit_price_amount) - parseInt(b.unit_price_amount)
-    );
+    .sort((a, b) => a.unit_price_amount - b.unit_price_amount);
 
   return (
     <div className="mx-auto max-w-7xl relative px-[32px] flex flex-col items-center justify-between">

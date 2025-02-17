@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 
-import { MoreHorizontal, Play, ArrowUp, ArrowDown, X } from "lucide-react";
+import { MoreHorizontal, ArrowUp, ArrowDown, X } from "lucide-react";
 
 import {
   SubscriptionManagementDialog,
@@ -45,35 +45,11 @@ export function SubscriptionActions({
     <>
       <DropdownMenu>
         <DropdownMenuTrigger asChild>
-          <Button
-            variant="outline"
-            size="icon"
-            disabled={!!scheduledChange}
-            title={
-              scheduledChange
-                ? scheduledChange.action === "cancel"
-                  ? "Cancellation scheduled"
-                  : `Pause scheduled for ${new Date(
-                      scheduledChange.effective_at
-                    ).toLocaleDateString()}`
-                : undefined
-            }
-          >
+          <Button variant="outline" size="icon" disabled={!!scheduledChange}>
             <MoreHorizontal className="size-4" />
           </Button>
         </DropdownMenuTrigger>
         <DropdownMenuContent align="end">
-          {/* {status === "past_due" && (
-            <DropdownMenuItem asChild>
-              <a
-                href={`/subscription/update-payment/${subscriptionId}`}
-                className="flex items-center justify-center gap-2 p-2"
-              >
-                <CreditCard className="size-4" />
-                Update Payment
-              </a>
-            </DropdownMenuItem>
-          )} */}
           {status === "active" && !scheduledChange && (
             <>
               {billingInterval === "month" && (
@@ -108,15 +84,6 @@ export function SubscriptionActions({
                 Cancel
               </DropdownMenuItem>
             </>
-          )}
-          {status === "paused" && !scheduledChange && (
-            <DropdownMenuItem
-              className="text-green-700 flex items-center justify-start gap-2 p-2 cursor-pointer"
-              onClick={() => setDialogState({ isOpen: true, action: "resume" })}
-            >
-              <Play className="size-4" />
-              Resume
-            </DropdownMenuItem>
           )}
         </DropdownMenuContent>
       </DropdownMenu>

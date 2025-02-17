@@ -1,5 +1,5 @@
-
 import { useUser, useClerk } from "@clerk/nextjs";
+import { type inferProcedureOutput } from "@trpc/server";
 import { LogOut, MoreHorizontal, Settings } from "lucide-react";
 
 import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
@@ -11,18 +11,27 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import { Skeleton } from "@/components/ui/skeleton";
+import { type AppRouter } from "@/trpc/routers/_app";
+
+type SubscriptionOutput = inferProcedureOutput<
+  AppRouter["subscriptions"]["getActive"]
+>;
 
 interface UserProfileSectionProps {
-  accountType?: string;
+  activeSubscription: SubscriptionOutput;
 }
 
-export function UserProfileSection({
-  accountType = "free",
-}: UserProfileSectionProps) {
+export const UserProfileSection = ({
+  activeSubscription,
+}: UserProfileSectionProps) => {
   const { user } = useUser();
   const { signOut, openUserProfile } = useClerk();
 
   if (!user) return null;
+
+  const accountType =
+    activeSubscription?.product?.name?.toLowerCase() || "free";
 
   return (
     <div className="bg-card border border-border rounded-lg p-4 md:p-6">
@@ -42,11 +51,7 @@ export function UserProfileSection({
                 </h2>
               )}
               <Badge
-                variant={
-                  accountType.toLowerCase() === "premium"
-                    ? "premium"
-                    : "secondary"
-                }
+                variant={accountType === "premium" ? "premium" : "secondary"}
               >
                 {accountType.toUpperCase()}
               </Badge>
@@ -82,4 +87,21 @@ export function UserProfileSection({
       </div>
     </div>
   );
-}
+};
+
+export const UserProfileSectionSkeleton = () => {
+  return (
+    <div className="bg-card border border-border rounded-lg p-6 mb-6">
+      <div className="flex justify-between items-center mb-4">
+        <div className="flex items-center space-x-4">
+          <Skeleton className="h-16 w-16 rounded-full" />
+          <div className="space-y-2">
+            <Skeleton className="h-6 w-48" />
+            <Skeleton className="h-4 w-32" />
+          </div>
+        </div>
+        <Skeleton className="h-9 w-9" />
+      </div>
+    </div>
+  );
+};

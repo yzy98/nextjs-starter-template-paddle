@@ -36,3 +36,18 @@ export const formatDate = (dateString: string | Date | null) => {
     day: "numeric",
   });
 };
+
+export const getStatusText = (status: string) => {
+  switch (status.toLowerCase()) {
+    case "trialing":
+      return "Trial Period";
+    case "past_due":
+      return "Payment Due";
+    case "paused":
+      return "Paused";
+    case "canceled":
+      return "Canceled";
+    default:
+      return status.charAt(0).toUpperCase() + status.slice(1);
+  }
+};

@@ -1,8 +1,8 @@
 import { createTRPCRouter } from "@/trpc/init";
-import { pricesRouter } from "@/trpc/routers/prices";
+import { subscriptionsRouter } from "./subscriptions";
 
 export const appRouter = createTRPCRouter({
-  prices: pricesRouter,
+  subscriptions: subscriptionsRouter,
 });
 
 // export type definition of API

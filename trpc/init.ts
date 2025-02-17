@@ -1,4 +1,4 @@
-import { QUERIES } from "@/server/db/queries";
+import { DB_QUERIES } from "@/server/db/queries";
 import { ratelimit } from "@/server/redis/ratelimit";
 import { auth } from "@clerk/nextjs/server";
 import { initTRPC, TRPCError } from "@trpc/server";
@@ -40,7 +40,7 @@ export const protectedProcedure = t.procedure.use(async (opts) => {
   }
 
   // Get the user from the database
-  const user = await QUERIES.getUserByClerkId(ctx.clerkUserId);
+  const user = await DB_QUERIES.getUserByClerkId(ctx.clerkUserId);
 
   if (!user) {
     throw new TRPCError({ code: "UNAUTHORIZED" });

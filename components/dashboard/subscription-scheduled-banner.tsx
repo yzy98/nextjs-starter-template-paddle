@@ -1,49 +1,41 @@
-"use client";
+import { inferProcedureOutput } from "@trpc/server";
 
-import { useState } from "react";
-
-import { manageSubscription } from "@/app/dashboard/actions";
 import { Button } from "@/components/ui/button";
-import { useToast } from "@/hooks/use-toast";
+import { useManageSubscription } from "@/hooks/use-manage-subscription";
 import { formatDate } from "@/lib/utils";
+import { AppRouter } from "@/trpc/routers/_app";
 
-
-interface SubscriptionScheduledBannerProps {
+type ScheduledChange = {
   action: "pause" | "cancel";
-  effectiveDate: string;
-  subscriptionId: string;
+  effective_at: string;
+  resume_at: string | null;
+};
+
+type SubscriptionOutput = inferProcedureOutput<
+  AppRouter["subscriptions"]["getActive"]
+>;
+interface SubscriptionScheduledBannerProps {
+  activeSubscription: SubscriptionOutput;
 }
 
-export function SubscriptionScheduledBanner({
-  action,
-  effectiveDate,
-  subscriptionId,
-}: SubscriptionScheduledBannerProps) {
-  const { toast } = useToast();
-  const [isLoading, setIsLoading] = useState(false);
+export const SubscriptionScheduledBanner = ({
+  activeSubscription,
+}: SubscriptionScheduledBannerProps) => {
+  const { manageSubscription, isPending } = useManageSubscription();
 
-  const handleCancelAction = async () => {
-    setIsLoading(true);
-    try {
-      // You'll need to implement this server action
-      await manageSubscription(
-        "scheduled_cancel",
-        subscriptionId,
-        "immediately"
-      );
-      toast({
-        title: "Subscription updated",
-        description: `Successfully canceled scheduled ${action}`,
-      });
-    } catch (error) {
-      console.error("Error cancelling scheduled subscription:", error);
-      toast({
-        title: "Error",
-        description: `Failed to cancel scheduled ${action}`,
-      });
-    } finally {
-      setIsLoading(false);
-    }
+  if (!activeSubscription?.scheduled_change) return null;
+
+  const action = (activeSubscription.scheduled_change as ScheduledChange)
+    .action;
+  const effectiveDate = (activeSubscription.scheduled_change as ScheduledChange)
+    .effective_at;
+
+  const handleCancelAction = () => {
+    manageSubscription({
+      action: "scheduled_cancel",
+      subscriptionId: activeSubscription.paddle_subscription_id,
+      effectiveFrom: "immediately",
+    });
   };
 
   return (
@@ -76,10 +68,10 @@ export function SubscriptionScheduledBanner({
       <Button
         variant="outline"
         onClick={handleCancelAction}
-        disabled={isLoading}
+        disabled={isPending}
       >
-        {isLoading ? "Processing..." : `Don't ${action}`}
+        {isPending ? "Processing..." : `Don't ${action}`}
       </Button>
     </div>
   );
-}
+};
