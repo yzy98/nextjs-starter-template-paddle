@@ -1,12 +1,28 @@
 import { create } from "zustand";
 
+export type SortDirection = "asc" | "desc";
+export type SortField =
+  | "plan"
+  | "interval"
+  | "price"
+  | "status"
+  | "start"
+  | "end";
+
+export interface InactiveSubscriptionsSortParams {
+  direction: SortDirection;
+  field: SortField;
+}
+
 interface InactiveSubscriptionsState {
   currentPage: number;
+  sortParams?: InactiveSubscriptionsSortParams;
 }
 
 interface InactiveSubscriptionsActions {
   nextPage: () => void;
   previousPage: () => void;
+  sortFn: (params: InactiveSubscriptionsSortParams) => void;
 }
 
 interface InactiveSubscriptionsStore
@@ -24,5 +40,7 @@ export const useInactiveSubscriptionsStore = create<InactiveSubscriptionsStore>(
     nextPage: () => set((state) => ({ currentPage: state.currentPage + 1 })),
     previousPage: () =>
       set((state) => ({ currentPage: state.currentPage - 1 })),
+    sortFn: (params: InactiveSubscriptionsSortParams) =>
+      set(() => ({ sortParams: params })),
   })
 );

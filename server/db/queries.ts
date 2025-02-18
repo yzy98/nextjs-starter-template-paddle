@@ -1,4 +1,6 @@
+import { SORT_FIELD_MAPPING } from "@/lib/constants";
 import prisma from "@/server/db";
+import { InactiveSubscriptionsSortParams } from "@/stores/use-inactive-subscriptions-store";
 
 export const DB_QUERIES = {
   /**
@@ -50,10 +52,27 @@ export const DB_QUERIES = {
   getUserInactiveSubscriptions: function (
     clerkId: string,
     limit: number,
-    page: number
+    page: number,
+    sortParams?: InactiveSubscriptionsSortParams
   ) {
     const activeStatuses = ["active", "trialing", "past_due", "paused"];
+
+    // Pagination
+    const take = limit;
     const skip = (page - 1) * limit;
+
+    // Sort
+    const orderBy = sortParams
+      ? sortParams.field === "plan"
+        ? {
+            product: {
+              name: sortParams.direction,
+            },
+          }
+        : {
+            [SORT_FIELD_MAPPING[sortParams.field]]: sortParams.direction,
+          }
+      : undefined;
 
     return prisma.subscription.findMany({
       where: {
@@ -66,8 +85,9 @@ export const DB_QUERIES = {
         price: true,
         product: true,
       },
-      take: limit,
-      skip: skip,
+      orderBy,
+      take,
+      skip,
     });
   },
   getInactiveSubscriptionsCount: function (clerkId: string) {

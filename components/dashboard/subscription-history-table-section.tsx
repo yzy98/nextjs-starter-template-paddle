@@ -1,22 +1,24 @@
 "use client";
 
 import { type inferProcedureOutput } from "@trpc/server";
-import { ArrowUpDown } from "lucide-react";
 
 import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
 import {
   Table,
   TableBody,
   TableCell,
-  TableHead,
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { SUBSCRIPTION_HISTORY_PAGE_SIZE } from "@/lib/constants";
-import { formatDate, formatPrice, getStatusText } from "@/lib/utils";
+import {
+  SUBSCRIPTION_HISTORY_FIELDS,
+  SUBSCRIPTION_HISTORY_PAGE_SIZE,
+} from "@/lib/constants";
+import { formatPrice, getStatusText } from "@/lib/utils";
 import { AppRouter } from "@/trpc/routers/_app";
+
+import { SubscriptionHistoryTableHead } from "./subscription-history-table-head";
 
 type SubscriptionOutput = inferProcedureOutput<
   AppRouter["subscriptions"]["getInactive"]
@@ -30,42 +32,9 @@ const SubscriptionHistoryTableHeader = () => {
   return (
     <TableHeader>
       <TableRow>
-        <TableHead>
-          <Button variant="ghost" className="h-8 p-0">
-            Product
-            <ArrowUpDown className="size-4" />
-          </Button>
-        </TableHead>
-        <TableHead>
-          <Button variant="ghost" className="h-8 p-0">
-            Interval
-            <ArrowUpDown className="size-4" />
-          </Button>
-        </TableHead>
-        <TableHead>
-          <Button variant="ghost" className="h-8 p-0">
-            Price
-            <ArrowUpDown className="size-4" />
-          </Button>
-        </TableHead>
-        <TableHead>
-          <Button variant="ghost" className="h-8 p-0">
-            Start Date
-            <ArrowUpDown className="size-4" />
-          </Button>
-        </TableHead>
-        <TableHead>
-          <Button variant="ghost" className="h-8 p-0">
-            End Date
-            <ArrowUpDown className="size-4" />
-          </Button>
-        </TableHead>
-        <TableHead>
-          <Button variant="ghost" className="h-8 p-0">
-            Status
-            <ArrowUpDown className="size-4" />
-          </Button>
-        </TableHead>
+        {SUBSCRIPTION_HISTORY_FIELDS.map((field, index) => (
+          <SubscriptionHistoryTableHead key={index} field={field} />
+        ))}
       </TableRow>
     </TableHeader>
   );
