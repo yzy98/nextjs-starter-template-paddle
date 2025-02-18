@@ -16,7 +16,6 @@ import {
   UserProfileSectionSkeleton,
 } from "./user-profile-section";
 
-
 export const ActiveSubscriptionSections = () => {
   return (
     <ErrorBoundary fallback={<div>Error</div>}>
@@ -33,7 +32,6 @@ const ActiveSubscriptionSectionsSuspense = () => {
   return (
     <>
       <UserProfileSection activeSubscription={activeSubscription} />
-      <SubscriptionScheduledBanner activeSubscription={activeSubscription} />
       <SubscriptionStatusSection activeSubscription={activeSubscription} />
     </>
   );

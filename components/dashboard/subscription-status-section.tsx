@@ -7,6 +7,9 @@ import { formatDate, formatPrice, getStatusText } from "@/lib/utils";
 import { AppRouter } from "@/trpc/routers/_app";
 
 import { SubscriptionActions } from "./subscription-actions";
+import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
+import { Table, TableBody, TableCell, TableRow } from "@/components/ui/table";
+import { SubscriptionScheduledBanner } from "./subscription-scheduled-banner";
 
 type SubscriptionOutput = inferProcedureOutput<
   AppRouter["subscriptions"]["getActive"]
@@ -20,11 +23,13 @@ export const SubscriptionStatusSection = ({
   activeSubscription,
 }: SubscriptionStatusSectionProps) => {
   return (
-    <div className="bg-card border border-border rounded-lg p-4 md:p-6">
-      <div className="flex justify-between items-center mb-4">
-        <h2 className="text-xl font-semibold text-foreground">
-          Subscription Status
-        </h2>
+    <Card>
+      <CardHeader className="flex flex-row items-center justify-between">
+        <CardTitle>
+          <span className="text-xl font-semibold text-foreground">
+            Subscription Status
+          </span>
+        </CardTitle>
         {activeSubscription && (
           <div className="flex space-x-2">
             <SubscriptionActions
@@ -35,72 +40,112 @@ export const SubscriptionStatusSection = ({
             />
           </div>
         )}
-      </div>
-      {activeSubscription ? (
-        <div className="space-y-4">
-          <div className="flex items-center">
-            <Badge variant="active">
-              {getStatusText(activeSubscription.status)}
-            </Badge>
+      </CardHeader>
+      <CardContent>
+        {activeSubscription ? (
+          <div className="space-y-4">
+            <SubscriptionScheduledBanner
+              activeSubscription={activeSubscription}
+            />
+            <div className="rounded-md border">
+              <Table>
+                <TableBody>
+                  <TableRow>
+                    <TableCell>Status</TableCell>
+                    <TableCell className="text-right">
+                      <Badge variant="active" className="ml-auto">
+                        {getStatusText(activeSubscription.status)}
+                      </Badge>
+                    </TableCell>
+                  </TableRow>
+                  <TableRow>
+                    <TableCell>Plan</TableCell>
+                    <TableCell className="text-right">
+                      {activeSubscription.product.name}
+                    </TableCell>
+                  </TableRow>
+                  <TableRow>
+                    <TableCell>Price</TableCell>
+                    <TableCell className="text-right">
+                      {formatPrice(
+                        activeSubscription.price_amount.toString(),
+                        activeSubscription.price_currency
+                      )}
+                      /{activeSubscription.billing_cycle_interval.toLowerCase()}
+                    </TableCell>
+                  </TableRow>
+                  {activeSubscription.trial_ends_at && (
+                    <TableRow>
+                      <TableCell>Trial Period</TableCell>
+                      <TableCell className="text-right">
+                        Ends {formatDate(activeSubscription.trial_ends_at)}
+                      </TableCell>
+                    </TableRow>
+                  )}
+                  {activeSubscription.renews_at && (
+                    <TableRow>
+                      <TableCell>Next Payment</TableCell>
+                      <TableCell className="text-right">
+                        {formatDate(activeSubscription.renews_at)}
+                      </TableCell>
+                    </TableRow>
+                  )}
+                  {activeSubscription.ends_at && (
+                    <TableRow>
+                      <TableCell>Subscription End</TableCell>
+                      <TableCell className="text-right">
+                        {formatDate(activeSubscription.ends_at)}
+                      </TableCell>
+                    </TableRow>
+                  )}
+                </TableBody>
+              </Table>
+            </div>
           </div>
-          <div className="border-t border-border pt-4">
-            <p className="text-foreground font-medium">
-              Plan: {activeSubscription.product.name}
+        ) : (
+          <div className="space-y-3">
+            <p className="text-sm text-muted-foreground">
+              You don&apos;t have an active subscription.
             </p>
-            <p className="text-muted-foreground">
-              Price:{" "}
-              {formatPrice(
-                activeSubscription.price_amount.toString(),
-                activeSubscription.price_currency
-              )}
-              /{activeSubscription.billing_cycle_interval.toLowerCase()}
-            </p>
-            {activeSubscription.trial_ends_at && (
-              <p className="text-muted-foreground">
-                Trial ends: {formatDate(activeSubscription.trial_ends_at)}
-              </p>
-            )}
-            {activeSubscription.renews_at && (
-              <p className="text-muted-foreground">
-                Next billing date: {formatDate(activeSubscription.renews_at)}
-              </p>
-            )}
-            {activeSubscription.ends_at && (
-              <p className="text-muted-foreground">
-                Subscription ends: {formatDate(activeSubscription.ends_at)}
-              </p>
-            )}
+            <Button asChild>
+              <a href="/pricing">View Plans</a>
+            </Button>
           </div>
-        </div>
-      ) : (
-        <div className="space-y-4">
-          <p className="text-muted-foreground">
-            You don&apos; have an active subscription.
-          </p>
-          <Button asChild>
-            <a href="/pricing">View Plans</a>
-          </Button>
-        </div>
-      )}
-    </div>
+        )}
+      </CardContent>
+    </Card>
   );
 };
 
 export const SubscriptionStatusSectionSkeleton = () => {
   return (
-    <div className="bg-card border border-border rounded-lg p-6">
-      <div className="flex justify-between items-center mb-4">
-        <Skeleton className="h-6 w-48" />
+    <Card>
+      <CardHeader className="flex flex-row items-center justify-between">
+        <CardTitle>
+          <span className="text-xl font-semibold text-foreground">
+            Subscription Status
+          </span>
+        </CardTitle>
         <Skeleton className="h-9 w-9" />
-      </div>
-      <div className="space-y-4">
-        <Skeleton className="h-6 w-24" />
-        <div className="border-t border-border pt-4 space-y-2">
-          <Skeleton className="h-5 w-64" />
-          <Skeleton className="h-5 w-48" />
-          <Skeleton className="h-5 w-56" />
+      </CardHeader>
+      <CardContent>
+        <div className="rounded-md border">
+          <Table>
+            <TableBody>
+              {Array.from({ length: 5 }).map((_, i) => (
+                <TableRow key={i}>
+                  <TableCell>
+                    <Skeleton className="h-5 w-24" />
+                  </TableCell>
+                  <TableCell className="text-right">
+                    <Skeleton className="h-5 w-32 ml-auto" />
+                  </TableCell>
+                </TableRow>
+              ))}
+            </TableBody>
+          </Table>
         </div>
-      </div>
-    </div>
+      </CardContent>
+    </Card>
   );
 };

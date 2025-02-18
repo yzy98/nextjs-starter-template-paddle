@@ -1,7 +1,9 @@
 "use client";
 
 import { type inferProcedureOutput } from "@trpc/server";
+import { ClipboardList } from "lucide-react";
 
+import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { Badge } from "@/components/ui/badge";
 import { Skeleton } from "@/components/ui/skeleton";
 import {
@@ -17,6 +19,7 @@ import {
 } from "@/lib/constants";
 import { formatPrice, getStatusText } from "@/lib/utils";
 import { AppRouter } from "@/trpc/routers/_app";
+
 
 import { SubscriptionHistoryTableHead } from "./subscription-history-table-head";
 
@@ -43,6 +46,19 @@ const SubscriptionHistoryTableHeader = () => {
 export const SubscriptionHistoryTableSection = ({
   subscriptions,
 }: SubscriptionHistorySectionTableProps) => {
+  if (subscriptions.length === 0) {
+    return (
+      <Alert>
+        <ClipboardList className="size-4" />
+        <AlertTitle>No subscription history!</AlertTitle>
+        <AlertDescription>
+          Your subscription history will appear here when they end or are
+          canceled.
+        </AlertDescription>
+      </Alert>
+    );
+  }
+
   return (
     <div className="rounded-md border">
       <Table>

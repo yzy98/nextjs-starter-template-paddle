@@ -16,9 +16,14 @@ export const SubscriptionHistoryPagination = ({
 }: {
   totalCount: number;
 }) => {
-  const totalPages = Math.ceil(totalCount / SUBSCRIPTION_HISTORY_PAGE_SIZE);
   const { currentPage, nextPage, previousPage } =
     useInactiveSubscriptionsStore();
+
+  if (totalCount === 0) {
+    return null;
+  }
+
+  const totalPages = Math.ceil(totalCount / SUBSCRIPTION_HISTORY_PAGE_SIZE);
 
   const handlePrevClick = (e: React.MouseEvent) => {
     e.preventDefault();
