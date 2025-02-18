@@ -31,22 +31,54 @@ export const DB_QUERIES = {
       },
     });
   },
-  getUserSubscriptions: function (
-    clerkId: string,
-    status: "active" | "inactive"
-  ) {
+  getUserActiveSubscriptions: function (clerkId: string) {
     const activeStatuses = ["active", "trialing", "past_due", "paused"];
-    const statusCondition =
-      status === "active" ? { in: activeStatuses } : { notIn: activeStatuses };
 
     return prisma.subscription.findMany({
       where: {
         user_id: clerkId,
-        status: statusCondition,
+        status: {
+          in: activeStatuses,
+        },
       },
       include: {
         price: true,
         product: true,
+      },
+    });
+  },
+  getUserInactiveSubscriptions: function (
+    clerkId: string,
+    limit: number,
+    page: number
+  ) {
+    const activeStatuses = ["active", "trialing", "past_due", "paused"];
+    const skip = (page - 1) * limit;
+
+    return prisma.subscription.findMany({
+      where: {
+        user_id: clerkId,
+        status: {
+          notIn: activeStatuses,
+        },
+      },
+      include: {
+        price: true,
+        product: true,
+      },
+      take: limit,
+      skip: skip,
+    });
+  },
+  getInactiveSubscriptionsCount: function (clerkId: string) {
+    const activeStatuses = ["active", "trialing", "past_due", "paused"];
+
+    return prisma.subscription.count({
+      where: {
+        user_id: clerkId,
+        status: {
+          notIn: activeStatuses,
+        },
       },
     });
   },

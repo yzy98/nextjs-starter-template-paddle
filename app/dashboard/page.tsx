@@ -1,10 +1,15 @@
 import { ActiveSubscriptionSections } from "@/components/dashboard/active-subscription-sections";
 import { InactiveSubscriptionSections } from "@/components/dashboard/inactive-subscription-sections";
+import { SUBSCRIPTION_HISTORY_PAGE_SIZE } from "@/lib/constants";
 import { HydrateClient, trpc } from "@/trpc/server";
 
 export default async function Dashboard() {
   void trpc.subscriptions.getActive.prefetch();
-  void trpc.subscriptions.getInactive.prefetch();
+  void trpc.subscriptions.getInactive.prefetch({
+    limit: SUBSCRIPTION_HISTORY_PAGE_SIZE,
+    page: 1,
+  });
+  void trpc.subscriptions.countInactive.prefetch();
 
   return (
     <HydrateClient>

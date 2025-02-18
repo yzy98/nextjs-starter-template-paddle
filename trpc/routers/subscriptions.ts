@@ -3,6 +3,7 @@ import { PADDLE_MUTATIONS } from "@/server/paddle/mutations";
 import { createTRPCRouter, protectedProcedure } from "../init";
 import { TRPCError } from "@trpc/server";
 import { z } from "zod";
+import { SUBSCRIPTION_HISTORY_PAGE_SIZE } from "@/lib/constants";
 
 export const subscriptionsRouter = createTRPCRouter({
   getActive: protectedProcedure.query(async ({ ctx }) => {
@@ -13,7 +14,7 @@ export const subscriptionsRouter = createTRPCRouter({
     }
 
     try {
-      const data = await DB_QUERIES.getUserSubscriptions(clerkUserId, "active");
+      const data = await DB_QUERIES.getUserActiveSubscriptions(clerkUserId);
       return data[0] || null;
     } catch (error) {
       throw new TRPCError({
@@ -23,7 +24,42 @@ export const subscriptionsRouter = createTRPCRouter({
       });
     }
   }),
-  getInactive: protectedProcedure.query(async ({ ctx }) => {
+  getInactive: protectedProcedure
+    .input(
+      z.object({
+        limit: z
+          .number()
+          .min(1)
+          .max(100)
+          .default(SUBSCRIPTION_HISTORY_PAGE_SIZE),
+        page: z.number().min(1).default(1),
+      })
+    )
+    .query(async ({ ctx, input }) => {
+      const { clerkUserId } = ctx;
+      const { limit, page } = input;
+
+      if (!clerkUserId) {
+        throw new TRPCError({ code: "UNAUTHORIZED" });
+      }
+
+      try {
+        const data = await DB_QUERIES.getUserInactiveSubscriptions(
+          clerkUserId,
+          limit,
+          page
+        );
+
+        return data;
+      } catch (error) {
+        throw new TRPCError({
+          code: "INTERNAL_SERVER_ERROR",
+          message: "Failed to fetch inactive subscriptions",
+          cause: error,
+        });
+      }
+    }),
+  countInactive: protectedProcedure.query(async ({ ctx }) => {
     const { clerkUserId } = ctx;
 
     if (!clerkUserId) {
@@ -31,17 +67,10 @@ export const subscriptionsRouter = createTRPCRouter({
     }
 
     try {
-      const data = await DB_QUERIES.getUserSubscriptions(
-        clerkUserId,
-        "inactive"
-      );
+      const data = await DB_QUERIES.getInactiveSubscriptionsCount(clerkUserId);
       return data;
     } catch (error) {
-      throw new TRPCError({
-        code: "INTERNAL_SERVER_ERROR",
-        message: "Failed to fetch inactive subscriptions",
-        cause: error,
-      });
+      throw new TRPCError({ code: "INTERNAL_SERVER_ERROR" });
     }
   }),
   manage: protectedProcedure

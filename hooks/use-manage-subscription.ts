@@ -13,6 +13,7 @@ export const useManageSubscription = () => {
         // Invalidate the active and inactive subscriptions queries
         utils.subscriptions.getActive.invalidate();
         utils.subscriptions.getInactive.invalidate();
+        utils.subscriptions.countInactive.invalidate();
 
         toast({
           title: "Subscription updated",
