@@ -1,5 +1,5 @@
 import { inferProcedureOutput } from "@trpc/server";
-import { History } from "lucide-react";
+import { CalendarDays } from "lucide-react";
 
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { Button } from "@/components/ui/button";
@@ -41,26 +41,29 @@ export const SubscriptionScheduledBanner = ({
   };
 
   return (
-    <Alert variant="destructive">
-      <History className="size-4" />
-      <AlertTitle>Scheduled {action}!</AlertTitle>
-      <AlertDescription>
-        <div className="flex items-center justify-between gap-4">
-          <span>
+    <Alert
+      className="flex justify-between items-center gap-4"
+      variant="destructive"
+    >
+      <div className="flex gap-2">
+        <CalendarDays className="size-4 shrink-0" />
+        <div>
+          <AlertTitle>Scheduled {action}</AlertTitle>
+          <AlertDescription>
             This subscription is scheduled to be {action}d on{" "}
             {formatDate(effectiveDate)}
-          </span>
-          <Button
-            variant="destructive"
-            onClick={handleCancelAction}
-            disabled={isPending}
-            size="sm"
-            className="shrink-0 cursor-pointer"
-          >
-            {isPending ? "Processing..." : `Don't ${action}`}
-          </Button>
+          </AlertDescription>
         </div>
-      </AlertDescription>
+      </div>
+      <Button
+        variant="destructive"
+        onClick={handleCancelAction}
+        disabled={isPending}
+        size="sm"
+        className="shrink-0 cursor-pointer"
+      >
+        {isPending ? "Processing..." : `Don't ${action}`}
+      </Button>
     </Alert>
   );
 };
