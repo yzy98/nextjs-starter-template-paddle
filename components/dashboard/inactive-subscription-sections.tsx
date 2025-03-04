@@ -2,6 +2,7 @@
 
 import { Suspense } from "react";
 
+import { useSuspenseQuery } from "@tanstack/react-query";
 import { ErrorBoundary } from "react-error-boundary";
 
 import {
@@ -14,7 +15,6 @@ import {
 import { SUBSCRIPTION_HISTORY_PAGE_SIZE } from "@/lib/constants";
 import { useInactiveSubscriptionsStore } from "@/stores/use-inactive-subscriptions-store";
 import { useTRPC } from "@/trpc/client";
-import { useSuspenseQuery } from "@tanstack/react-query";
 
 import {
   SubscriptionHistoryPagination,

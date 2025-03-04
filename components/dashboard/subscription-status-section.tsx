@@ -2,13 +2,13 @@ import { inferProcedureOutput } from "@trpc/server";
 
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
+import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
+import { Table, TableBody, TableCell, TableRow } from "@/components/ui/table";
 import { formatDate, formatPrice, getStatusText } from "@/lib/utils";
 import { AppRouter } from "@/trpc/routers/_app";
 
 import { SubscriptionActions } from "./subscription-actions";
-import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
-import { Table, TableBody, TableCell, TableRow } from "@/components/ui/table";
 import { SubscriptionScheduledBanner } from "./subscription-scheduled-banner";
 
 type SubscriptionOutput = inferProcedureOutput<

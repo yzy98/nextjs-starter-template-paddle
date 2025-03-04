@@ -2,10 +2,10 @@
 
 import { Suspense } from "react";
 
+import { useSuspenseQuery } from "@tanstack/react-query";
 import { ErrorBoundary } from "react-error-boundary";
 
 import { useTRPC } from "@/trpc/client";
-import { useSuspenseQuery } from "@tanstack/react-query";
 
 import {
   SubscriptionStatusSection,
