@@ -4,9 +4,9 @@ import { Suspense } from "react";
 
 import { ErrorBoundary } from "react-error-boundary";
 
-import { trpc } from "@/trpc/client";
+import { useTRPC } from "@/trpc/client";
+import { useSuspenseQuery } from "@tanstack/react-query";
 
-import { SubscriptionScheduledBanner } from "./subscription-scheduled-banner";
 import {
   SubscriptionStatusSection,
   SubscriptionStatusSectionSkeleton,
@@ -27,7 +27,10 @@ export const ActiveSubscriptionSections = () => {
 };
 
 const ActiveSubscriptionSectionsSuspense = () => {
-  const [activeSubscription] = trpc.subscriptions.getActive.useSuspenseQuery();
+  const trpc = useTRPC();
+  const { data: activeSubscription } = useSuspenseQuery(
+    trpc.subscriptions.getActive.queryOptions()
+  );
 
   return (
     <>

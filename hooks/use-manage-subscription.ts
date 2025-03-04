@@ -1,24 +1,38 @@
-import { trpc } from "@/trpc/client";
+import { useTRPC } from "@/trpc/client";
 import { useToast } from "@/hooks/use-toast";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 
 export type EffectiveFrom = "immediately" | "next_billing_period";
 
 export const useManageSubscription = () => {
   const { toast } = useToast();
-  const utils = trpc.useUtils();
 
-  const { mutate: manageSubscription, isPending } =
-    trpc.subscriptions.manage.useMutation({
-      onSuccess: (_, variables) => {
-        // Invalidate the active and inactive subscriptions queries
-        utils.subscriptions.getActive.invalidate();
-        utils.subscriptions.getInactive.invalidate();
-        utils.subscriptions.countInactive.invalidate();
+  const trpc = useTRPC();
+  const queryClient = useQueryClient();
 
-        toast({
-          title: "Subscription updated",
-          description: `Successfully ${variables.action}ed subscription`,
-        });
+  const { mutate: manageSubscription, isPending } = useMutation(
+    trpc.subscriptions.manage.mutationOptions({
+      onSuccess: async (_, variables) => {
+        try {
+          await Promise.all([
+            queryClient.invalidateQueries({
+              queryKey: trpc.subscriptions.getActive.queryKey(),
+            }),
+            queryClient.invalidateQueries({
+              queryKey: trpc.subscriptions.getInactive.queryKey(),
+            }),
+            queryClient.invalidateQueries({
+              queryKey: trpc.subscriptions.countInactive.queryKey(),
+            }),
+          ]);
+
+          toast({
+            title: "Subscription updated",
+            description: `Successfully ${variables.action}ed subscription`,
+          });
+        } catch (error) {
+          throw new Error("Failed to invalidate queries");
+        }
       },
       onError: (error, variables) => {
         toast({
@@ -27,7 +41,8 @@ export const useManageSubscription = () => {
         });
         console.error("Subscription action error:", error);
       },
-    });
+    })
+  );
 
   return {
     manageSubscription,
