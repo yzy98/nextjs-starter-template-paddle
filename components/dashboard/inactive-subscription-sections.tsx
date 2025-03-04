@@ -13,7 +13,8 @@ import {
 } from "@/components/ui/card";
 import { SUBSCRIPTION_HISTORY_PAGE_SIZE } from "@/lib/constants";
 import { useInactiveSubscriptionsStore } from "@/stores/use-inactive-subscriptions-store";
-import { trpc } from "@/trpc/client";
+import { useTRPC } from "@/trpc/client";
+import { useSuspenseQuery } from "@tanstack/react-query";
 
 import {
   SubscriptionHistoryPagination,
@@ -53,18 +54,24 @@ export const InactiveSubscriptionSections = () => {
 };
 
 const SubscriptionHistoryTableSectionSuspense = () => {
+  const trpc = useTRPC();
   const { currentPage, sortParams } = useInactiveSubscriptionsStore();
-  const [subscriptions] = trpc.subscriptions.getInactive.useSuspenseQuery({
-    limit: SUBSCRIPTION_HISTORY_PAGE_SIZE,
-    page: currentPage,
-    sortParams,
-  });
+  const { data: subscriptions } = useSuspenseQuery(
+    trpc.subscriptions.getInactive.queryOptions({
+      limit: SUBSCRIPTION_HISTORY_PAGE_SIZE,
+      page: currentPage,
+      sortParams,
+    })
+  );
 
   return <SubscriptionHistoryTableSection subscriptions={subscriptions} />;
 };
 
 const SubscriptionHistoryPaginationSuspense = () => {
-  const [totalCount] = trpc.subscriptions.countInactive.useSuspenseQuery();
+  const trpc = useTRPC();
+  const { data: totalCount } = useSuspenseQuery(
+    trpc.subscriptions.countInactive.queryOptions()
+  );
 
   return <SubscriptionHistoryPagination totalCount={totalCount} />;
 };

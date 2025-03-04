@@ -4,17 +4,17 @@ A modern full-stack starter template with authentication, database, payments, an
 
 ## Tech Stack
 
-| Category       | Technology          |
-| -------------- | ------------------- |
-| Framework      | Next.js             |
-| Styling        | Tailwind CSS        |
-| Components     | Shadcn UI           |
-| Authentication | Clerk               |
-| Database       | Supabase PostgreSQL |
-| ORM            | Prisma              |
-| Payments       | Paddle              |
-| Rate Limiting  | Upstash             |
-| API Layer      | tRPC                |
+| Category       | Technology                  |
+| -------------- | --------------------------- |
+| Framework      | Next.js                     |
+| Styling        | Tailwind CSS                |
+| Components     | Shadcn UI                   |
+| Authentication | Clerk                       |
+| Database       | Supabase PostgreSQL         |
+| ORM            | Prisma                      |
+| Payments       | Paddle                      |
+| Rate Limiting  | Upstash                     |
+| API Layer      | tRPC + TanStack React Query |
 
 ## Getting Started
 
