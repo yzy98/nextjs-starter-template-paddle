@@ -25,17 +25,16 @@ export const SubscriptionScheduledBanner = ({
 }: SubscriptionScheduledBannerProps) => {
   const { manageSubscription, isPending } = useManageSubscription();
 
-  if (!activeSubscription?.scheduled_change) return null;
+  if (!activeSubscription?.scheduledChange) return null;
 
-  const action = (activeSubscription.scheduled_change as ScheduledChange)
-    .action;
-  const effectiveDate = (activeSubscription.scheduled_change as ScheduledChange)
+  const action = (activeSubscription.scheduledChange as ScheduledChange).action;
+  const effectiveDate = (activeSubscription.scheduledChange as ScheduledChange)
     .effective_at;
 
   const handleCancelAction = () => {
     manageSubscription({
       action: "scheduled_cancel",
-      subscriptionId: activeSubscription.paddle_subscription_id,
+      subscriptionId: activeSubscription.paddleSubscriptionId,
       effectiveFrom: "immediately",
     });
   };

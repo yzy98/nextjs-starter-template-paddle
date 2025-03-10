@@ -1,14 +1,16 @@
 "use client";
 
 import { use } from "react";
-
-import { Price, Product } from "@prisma/client";
 import { CircleCheck } from "lucide-react";
+import { products, prices } from "@/server/db/schema";
+
+type SelectProduct = typeof products.$inferSelect;
+type SelectPrice = typeof prices.$inferSelect;
 
 interface PlanComparisonProps {
   productsAndPricesPromise: Promise<{
-    products: Product[];
-    prices: Price[];
+    products: SelectProduct[];
+    prices: SelectPrice[];
   }>;
 }
 

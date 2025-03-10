@@ -34,9 +34,9 @@ export const SubscriptionStatusSection = ({
           <div className="flex space-x-2">
             <SubscriptionActions
               status={activeSubscription.status.toLowerCase()}
-              subscriptionId={activeSubscription.paddle_subscription_id}
-              billingInterval={activeSubscription.billing_cycle_interval.toLowerCase()}
-              scheduledChange={activeSubscription.scheduled_change as any}
+              subscriptionId={activeSubscription.paddleSubscriptionId}
+              billingInterval={activeSubscription.billingCycleInterval.toLowerCase()}
+              scheduledChange={activeSubscription.scheduledChange as any}
             />
           </div>
         )}
@@ -61,40 +61,40 @@ export const SubscriptionStatusSection = ({
                   <TableRow>
                     <TableCell>Plan</TableCell>
                     <TableCell className="text-right">
-                      {activeSubscription.product.name}
+                      {activeSubscription.productName}
                     </TableCell>
                   </TableRow>
                   <TableRow>
                     <TableCell>Price</TableCell>
                     <TableCell className="text-right">
                       {formatPrice(
-                        activeSubscription.price_amount.toString(),
-                        activeSubscription.price_currency
+                        activeSubscription.priceAmount.toString(),
+                        activeSubscription.priceCurrency
                       )}
-                      /{activeSubscription.billing_cycle_interval.toLowerCase()}
+                      /{activeSubscription.billingCycleInterval.toLowerCase()}
                     </TableCell>
                   </TableRow>
-                  {activeSubscription.trial_ends_at && (
+                  {activeSubscription.trialEndsAt && (
                     <TableRow>
                       <TableCell>Trial Period</TableCell>
                       <TableCell className="text-right">
-                        Ends {formatDate(activeSubscription.trial_ends_at)}
+                        Ends {formatDate(activeSubscription.trialEndsAt)}
                       </TableCell>
                     </TableRow>
                   )}
-                  {activeSubscription.renews_at && (
+                  {activeSubscription.renewsAt && (
                     <TableRow>
                       <TableCell>Next Payment</TableCell>
                       <TableCell className="text-right">
-                        {formatDate(activeSubscription.renews_at)}
+                        {formatDate(activeSubscription.renewsAt)}
                       </TableCell>
                     </TableRow>
                   )}
-                  {activeSubscription.ends_at && (
+                  {activeSubscription.endsAt && (
                     <TableRow>
                       <TableCell>Subscription End</TableCell>
                       <TableCell className="text-right">
-                        {formatDate(activeSubscription.ends_at)}
+                        {formatDate(activeSubscription.endsAt)}
                       </TableCell>
                     </TableRow>
                   )}

@@ -123,14 +123,16 @@ export const subscriptionsRouter = createTRPCRouter({
           );
           break;
         case "downgrade":
-          const monthlyPrice = await DB_QUERIES.getPriceByInterval(
+          const monthlyPrices = await DB_QUERIES.getPriceByInterval(
             subscriptionId,
             "month"
           );
 
-          if (!monthlyPrice) {
+          if (!monthlyPrices || monthlyPrices.length === 0) {
             throw new TRPCError({ code: "BAD_REQUEST" });
           }
+
+          const monthlyPrice = monthlyPrices[0];
 
           subscriptionResponse = await PADDLE_MUTATIONS.updateSubscription(
             subscriptionId,
@@ -139,7 +141,7 @@ export const subscriptionsRouter = createTRPCRouter({
               onPaymentFailure: "prevent_change",
               items: [
                 {
-                  priceId: monthlyPrice.paddle_price_id,
+                  priceId: monthlyPrice.price.paddlePriceId,
                   quantity: 1,
                 },
               ],
@@ -147,14 +149,16 @@ export const subscriptionsRouter = createTRPCRouter({
           );
           break;
         case "upgrade":
-          const yearlyPrice = await DB_QUERIES.getPriceByInterval(
+          const yearlyPrices = await DB_QUERIES.getPriceByInterval(
             subscriptionId,
             "year"
           );
 
-          if (!yearlyPrice) {
+          if (!yearlyPrices || yearlyPrices.length === 0) {
             throw new TRPCError({ code: "BAD_REQUEST" });
           }
+
+          const yearlyPrice = yearlyPrices[0];
 
           subscriptionResponse = await PADDLE_MUTATIONS.updateSubscription(
             subscriptionId,
@@ -163,7 +167,7 @@ export const subscriptionsRouter = createTRPCRouter({
               onPaymentFailure: "prevent_change",
               items: [
                 {
-                  priceId: yearlyPrice.paddle_price_id,
+                  priceId: yearlyPrice.price.paddlePriceId,
                   quantity: 1,
                 },
               ],

@@ -20,7 +20,6 @@ import {
 import { formatPrice, getStatusText } from "@/lib/utils";
 import { AppRouter } from "@/trpc/routers/_app";
 
-
 import { SubscriptionHistoryTableHead } from "./subscription-history-table-head";
 
 type SubscriptionOutput = inferProcedureOutput<
@@ -66,19 +65,19 @@ export const SubscriptionHistoryTableSection = ({
         <TableBody>
           {subscriptions.map((sub) => (
             <TableRow key={sub.id}>
-              <TableCell className="font-medium">{sub.product.name}</TableCell>
+              <TableCell className="font-medium">{sub.productName}</TableCell>
               <TableCell>
-                {sub?.billing_cycle_interval === "month" ? "Monthly" : "Yearly"}
+                {sub?.billingCycleInterval === "month" ? "Monthly" : "Yearly"}
               </TableCell>
               <TableCell>
-                {formatPrice(sub.price_amount.toString(), sub.price_currency)}
+                {formatPrice(sub.priceAmount.toString(), sub.priceCurrency)}
               </TableCell>
               <TableCell>
-                {sub?.starts_at?.toLocaleDateString() || "-"}
+                {sub?.startsAt?.toLocaleDateString() || "-"}
               </TableCell>
               <TableCell>
-                {sub?.ends_at?.toLocaleDateString() ||
-                  sub?.canceled_at?.toLocaleDateString() ||
+                {sub?.endsAt?.toLocaleDateString() ||
+                  sub?.canceledAt?.toLocaleDateString() ||
                   "-"}
               </TableCell>
               <TableCell>

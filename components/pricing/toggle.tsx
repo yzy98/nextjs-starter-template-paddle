@@ -1,17 +1,19 @@
-import { Price } from "@prisma/client";
+import { prices } from "@/server/db/schema";
 
 import { Badge } from "@/components/ui/badge";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
+type SelectPrice = typeof prices.$inferSelect;
+
 interface ToggleProps {
-  prices: Price[];
+  prices: SelectPrice[];
   interval: "month" | "year";
   setInterval: (interval: "month" | "year") => void;
 }
 
 export function Toggle({ prices, setInterval, interval }: ToggleProps) {
   const billingIntervalsSorted = [
-    ...new Set(prices.map((price) => price.billing_cycle_interval)),
+    ...new Set(prices.map((price) => price.billingCycleInterval)),
   ].sort((a, b) => {
     if (a === "month") return -1;
     if (b === "month") return 1;
@@ -20,11 +22,11 @@ export function Toggle({ prices, setInterval, interval }: ToggleProps) {
 
   const calculateSavings = () => {
     const monthlyPrice =
-      prices.find((p) => p.billing_cycle_interval === "month")
-        ?.unit_price_amount || 0;
+      prices.find((p) => p.billingCycleInterval === "month")?.unitPriceAmount ||
+      0;
     const yearlyPrice =
-      prices.find((p) => p.billing_cycle_interval === "year")
-        ?.unit_price_amount || 0;
+      prices.find((p) => p.billingCycleInterval === "year")?.unitPriceAmount ||
+      0;
     const monthlyCost = monthlyPrice * 12;
     const yearlyCost = yearlyPrice;
     const savings = ((monthlyCost - yearlyCost) / monthlyCost) * 100;

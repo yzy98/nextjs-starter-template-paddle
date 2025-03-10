@@ -1,30 +1,70 @@
-import prisma from "@/server/db";
-import { Prisma, Subscription } from "@prisma/client";
+import { db } from "@/server/db";
 
 import {
   isPaddleEvent,
   isPaddleSubscriptionEvent,
 } from "@/server/paddle/typeguards";
+import { prices, products, subscriptions, users } from "./schema";
+import { eq } from "drizzle-orm";
 
-interface UpsertUserParams {
-  email: string;
-  first_name?: string;
-  last_name?: string;
-  profile_image_url?: string;
-  clerk_id: string;
-}
+type InsertProduct = typeof products.$inferInsert;
+type InsertPrice = typeof prices.$inferInsert;
+type InsertUser = typeof users.$inferInsert;
+type InsertSubscription = typeof subscriptions.$inferInsert;
 
 export const DB_MUTATIONS = {
   /**
+   * Create or update single record in DB Product table
+   */
+  upsertProduct: async function (upsertProduct: InsertProduct) {
+    try {
+      const result = await db
+        .insert(products)
+        .values({ ...upsertProduct })
+        .onConflictDoUpdate({
+          target: products.paddleProductId,
+          set: { ...upsertProduct },
+        })
+        .returning();
+
+      return result[0];
+    } catch (error: any) {
+      console.error("Error upserting product:", error);
+      throw new Error(error.message);
+    }
+  },
+  /**
+   * Create or update single record in DB Price table
+   */
+  upsertPrice: async function (upsertPrice: InsertPrice) {
+    try {
+      const result = await db
+        .insert(prices)
+        .values({ ...upsertPrice })
+        .onConflictDoUpdate({
+          target: prices.paddlePriceId,
+          set: { ...upsertPrice },
+        })
+        .returning();
+
+      return result[0];
+    } catch (error: any) {
+      console.error("Error upserting price:", error);
+      throw new Error(error.message);
+    }
+  },
+  /**
    * Create or update single record in DB User table
    */
-  upsertUser: async function (upsertUserParams: UpsertUserParams) {
+  upsertUser: async function (upsertUser: InsertUser) {
     try {
-      await prisma.user.upsert({
-        where: { clerk_id: upsertUserParams.clerk_id },
-        update: { ...upsertUserParams },
-        create: { ...upsertUserParams },
-      });
+      await db
+        .insert(users)
+        .values({ ...upsertUser })
+        .onConflictDoUpdate({
+          target: users.clerkId,
+          set: { ...upsertUser },
+        });
     } catch (error: any) {
       console.error("Error creating or updating user:", error);
       throw new Error(error.message);
@@ -35,11 +75,7 @@ export const DB_MUTATIONS = {
    */
   deleteUser: async function ({ clerk_id }: { clerk_id: string }) {
     try {
-      await prisma.user.delete({
-        where: {
-          clerk_id,
-        },
-      });
+      await db.delete(users).where(eq(users.clerkId, clerk_id));
     } catch (error: any) {
       console.error("Error deleting user:", error);
       throw new Error(error.message);
@@ -53,47 +89,38 @@ export const DB_MUTATIONS = {
       throw new Error("Invalid subscription event data");
     }
 
-    const updateData: Omit<
-      Subscription,
-      "id" | "scheduled_change" | "canceled_at"
-    > = {
-      paddle_subscription_id: data.data.id,
-      user_id: data.data?.custom_data?.user_id ?? "",
-      price_id: data.data.items[0].price.id,
-      product_id: data.data.items[0].product.id,
+    const updateData: InsertSubscription = {
+      paddleSubscriptionId: data.data.id,
+      userId: data.data?.custom_data?.user_id ?? "",
+      priceId: data.data.items[0].price.id,
+      productId: data.data.items[0].product.id,
       status: data.data.status,
-      price_amount: parseInt(data.data.items[0].price.unit_price.amount),
-      price_currency: data.data.currency_code,
-      collection_mode: data.data.collection_mode,
-      billing_cycle_interval: data.data.billing_cycle.interval,
-      billing_cycle_frequency: data.data.billing_cycle.frequency,
-      starts_at: data.data.started_at ? new Date(data.data.started_at) : null,
-      renews_at: data.data.next_billed_at
+      priceAmount: parseInt(data.data.items[0].price.unit_price.amount),
+      priceCurrency: data.data.currency_code,
+      collectionMode: data.data.collection_mode,
+      billingCycleInterval: data.data.billing_cycle.interval,
+      billingCycleFrequency: data.data.billing_cycle.frequency,
+      startsAt: data.data.started_at ? new Date(data.data.started_at) : null,
+      renewsAt: data.data.next_billed_at
         ? new Date(data.data.next_billed_at)
         : null,
-      ends_at: data.data?.current_billing_period?.ends_at
+      endsAt: data.data?.current_billing_period?.ends_at
         ? new Date(data.data.current_billing_period.ends_at)
         : null,
-      trial_starts_at: data.data.items[0].trial_dates?.starts_at
+      trialStartsAt: data.data.items[0].trial_dates?.starts_at
         ? new Date(data.data.items[0].trial_dates.starts_at)
         : null,
-      trial_ends_at: data.data.items[0].trial_dates?.ends_at
+      trialEndsAt: data.data.items[0].trial_dates?.ends_at
         ? new Date(data.data.items[0].trial_dates.ends_at)
         : null,
     };
 
     try {
-      await prisma.subscription.upsert({
-        where: {
-          paddle_subscription_id: updateData.paddle_subscription_id,
-        },
-        update: updateData,
-        create: updateData,
-      });
+      await db.insert(subscriptions).values(updateData);
     } catch (error) {
       console.error("Error creating subscription", error);
       throw new Error(
-        `Failed to upsert Subscription #${updateData.paddle_subscription_id} to the database.`
+        `Failed to upsert Subscription #${updateData.paddleSubscriptionId} to the database.`
       );
     }
   },
@@ -106,37 +133,35 @@ export const DB_MUTATIONS = {
     }
 
     try {
-      await prisma.subscription.update({
-        where: {
-          paddle_subscription_id: data.data.id,
-        },
-        data: {
-          price_id: data.data.items[0].price.id,
-          product_id: data.data.items[0].product.id,
-          price_amount: parseInt(data.data.items[0].price.unit_price.amount),
-          price_currency: data.data.currency_code,
-          collection_mode: data.data.collection_mode,
-          billing_cycle_interval: data.data.billing_cycle.interval,
-          billing_cycle_frequency: data.data.billing_cycle.frequency,
+      await db
+        .update(subscriptions)
+        .set({
+          priceId: data.data.items[0].price.id,
+          productId: data.data.items[0].product.id,
+          priceAmount: parseInt(data.data.items[0].price.unit_price.amount),
+          priceCurrency: data.data.currency_code,
+          collectionMode: data.data.collection_mode,
+          billingCycleInterval: data.data.billing_cycle.interval,
+          billingCycleFrequency: data.data.billing_cycle.frequency,
           status: data.data.status,
-          starts_at: data.data.started_at
+          startsAt: data.data.started_at
             ? new Date(data.data.started_at)
             : null,
-          renews_at: data.data.next_billed_at
+          renewsAt: data.data.next_billed_at
             ? new Date(data.data.next_billed_at)
             : null,
-          ends_at: data.data?.current_billing_period?.ends_at
+          endsAt: data.data?.current_billing_period?.ends_at
             ? new Date(data.data.current_billing_period.ends_at)
             : null,
-          trial_starts_at: data.data.items[0].trial_dates?.starts_at
+          trialStartsAt: data.data.items[0].trial_dates?.starts_at
             ? new Date(data.data.items[0].trial_dates.starts_at)
             : null,
-          trial_ends_at: data.data.items[0].trial_dates?.ends_at
+          trialEndsAt: data.data.items[0].trial_dates?.ends_at
             ? new Date(data.data.items[0].trial_dates.ends_at)
             : null,
-          scheduled_change: data.data?.scheduled_change ?? Prisma.DbNull,
-        },
-      });
+          scheduledChange: data.data?.scheduled_change ?? null,
+        })
+        .where(eq(subscriptions.paddleSubscriptionId, data.data.id));
     } catch (error) {
       console.error("Error updating subscription", error);
       throw new Error(
@@ -153,24 +178,22 @@ export const DB_MUTATIONS = {
     }
 
     try {
-      await prisma.subscription.update({
-        where: {
-          paddle_subscription_id: data.data.id,
-        },
-        data: {
+      await db
+        .update(subscriptions)
+        .set({
           status: data.data.status,
-          renews_at: data.data.next_billed_at
+          renewsAt: data.data.next_billed_at
             ? new Date(data.data.next_billed_at)
             : null,
-          ends_at: data.data?.current_billing_period?.ends_at
+          endsAt: data.data?.current_billing_period?.ends_at
             ? new Date(data.data.current_billing_period.ends_at)
             : null,
-          canceled_at: data.data.canceled_at
+          canceledAt: data.data.canceled_at
             ? new Date(data.data.canceled_at)
             : null,
-          scheduled_change: data.data?.scheduled_change ?? Prisma.DbNull,
-        },
-      });
+          scheduledChange: data.data?.scheduled_change ?? null,
+        })
+        .where(eq(subscriptions.paddleSubscriptionId, data.data.id));
     } catch (error) {
       console.error("Error cancelling subscription", error);
       throw new Error(

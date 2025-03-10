@@ -10,11 +10,10 @@ export const SUBSCRIPTION_HISTORY_FIELDS: SortField[] = [
   "end",
   "status",
 ];
-export const SORT_FIELD_MAPPING: Record<SortField, string> = {
-  plan: "product",
-  interval: "billing_cycle_interval",
-  price: "price_amount",
-  status: "status",
-  start: "starts_at",
-  end: "ends_at",
-};
+
+export const ACTIVE_SUBSCRIPTION_STATUSES = [
+  "active",
+  "trialing",
+  "past_due",
+  "paused",
+];

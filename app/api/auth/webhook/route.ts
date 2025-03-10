@@ -60,10 +60,10 @@ export async function POST(req: Request) {
       try {
         await DB_MUTATIONS.upsertUser({
           email: payload?.data?.email_addresses?.[0]?.email_address,
-          first_name: payload?.data?.first_name,
-          last_name: payload?.data?.last_name,
-          profile_image_url: payload?.data?.profile_image_url,
-          clerk_id: payload?.data?.id,
+          firstName: payload?.data?.first_name,
+          lastName: payload?.data?.last_name,
+          profileImageUrl: payload?.data?.profile_image_url,
+          clerkId: payload?.data?.id,
         });
 
         console.log("User created:", payload?.data);
@@ -83,10 +83,10 @@ export async function POST(req: Request) {
       try {
         await DB_MUTATIONS.upsertUser({
           email: payload?.data?.email_addresses?.[0]?.email_address,
-          first_name: payload?.data?.first_name,
-          last_name: payload?.data?.last_name,
-          profile_image_url: payload?.data?.profile_image_url,
-          clerk_id: payload?.data?.id,
+          firstName: payload?.data?.first_name,
+          lastName: payload?.data?.last_name,
+          profileImageUrl: payload?.data?.profile_image_url,
+          clerkId: payload?.data?.id,
         });
 
         console.log("User updated:", payload?.data);
