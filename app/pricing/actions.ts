@@ -3,10 +3,13 @@
 import { unstable_cache } from "next/cache";
 
 import { Product, Price } from "@paddle/paddle-node-sdk";
-import { Price as PrismaPrice, Product as PrismaProduct } from "@prisma/client";
-
-import prisma from "@/server/db";
 import { getPaddleInstance } from "@/server/paddle";
+import { DB_QUERIES } from "@/server/db/queries";
+import { prices, products } from "@/server/db/schema";
+import { DB_MUTATIONS } from "@/server/db/mutations";
+
+type InsertProduct = typeof products.$inferInsert;
+type InsertPrice = typeof prices.$inferInsert;
 
 export async function getPaddleProducts() {
   const paddle = getPaddleInstance();
@@ -48,19 +51,13 @@ export async function getPaddlePrices() {
 
 export async function syncProducts() {
   // Fetch all products from db
-  const products = await prisma.product.findMany();
+  const products = await DB_QUERIES.getProducts();
 
   // Helper function to add a product to the products array and sync it with the db
-  async function addProduct(product: Omit<PrismaProduct, "id">) {
+  async function addProduct(product: InsertProduct) {
     console.log(`Syncing product ${product.name} with the database...`);
-
-    const result = await prisma.product.upsert({
-      where: { paddle_product_id: product.paddle_product_id },
-      update: product,
-      create: product,
-    });
-
-    console.log(`Product ${product.name} synced with the database.`);
+    const result = await DB_MUTATIONS.upsertProduct(product);
+    console.log(`Product ${result.name} synced with the database.`);
     products.push(result);
   }
 
@@ -73,24 +70,24 @@ export async function syncProducts() {
       continue;
     }
 
-    const paddle_product_id = paddleProduct.id;
+    const paddleProductId = paddleProduct.id;
     const name = paddleProduct.name;
     const type = paddleProduct.type;
     const description = paddleProduct?.description;
-    const tax_category = paddleProduct?.taxCategory;
-    const image_url = paddleProduct?.imageUrl;
-    const created_at = new Date(paddleProduct.createdAt);
-    const updated_at = new Date(paddleProduct.updatedAt);
+    const taxCategory = paddleProduct?.taxCategory;
+    const imageUrl = paddleProduct?.imageUrl;
+    const createdAt = new Date(paddleProduct.createdAt);
+    const updatedAt = new Date(paddleProduct.updatedAt);
 
     await addProduct({
-      paddle_product_id,
+      paddleProductId,
       name,
       type,
       description,
-      tax_category,
-      image_url,
-      created_at,
-      updated_at,
+      taxCategory,
+      imageUrl,
+      createdAt,
+      updatedAt,
     });
   }
 
@@ -99,19 +96,13 @@ export async function syncProducts() {
 
 export async function syncPrices() {
   // Fetch all prices from db
-  const prices = await prisma.price.findMany();
+  const prices = await DB_QUERIES.getPrices();
 
   // Helper function to add a price to the prices array and sync it with the db
-  async function addPrice(price: Omit<PrismaPrice, "id">) {
+  async function addPrice(price: InsertPrice) {
     console.log(`Syncing price ${price.name} with the database...`);
-
-    const result = await prisma.price.upsert({
-      where: { paddle_price_id: price.paddle_price_id },
-      update: price,
-      create: price,
-    });
-
-    console.log(`Price ${price.name} synced with the database.`);
+    const result = await DB_MUTATIONS.upsertPrice(price);
+    console.log(`Price ${result.name} synced with the database.`);
     prices.push(result);
   }
 
@@ -124,35 +115,34 @@ export async function syncPrices() {
       continue;
     }
 
-    const paddle_price_id = paddlePrice.id;
-    const product_id = paddlePrice.productId;
+    const paddlePriceId = paddlePrice.id;
+    const productId = paddlePrice.productId;
     const description = paddlePrice.description;
     const name = paddlePrice?.name;
-    const billing_cycle_interval = paddlePrice?.billingCycle?.interval ?? null;
-    const billing_cycle_frequency =
-      paddlePrice?.billingCycle?.frequency ?? null;
-    const trial_period_interval = paddlePrice?.trialPeriod?.interval ?? null;
-    const trial_period_frequency = paddlePrice?.trialPeriod?.frequency ?? null;
-    const tax_mode = paddlePrice.taxMode;
-    const unit_price_amount = parseInt(paddlePrice.unitPrice.amount);
-    const unit_price_currency = paddlePrice.unitPrice.currencyCode;
-    const created_at = new Date(paddlePrice.createdAt);
-    const updated_at = new Date(paddlePrice.updatedAt);
+    const billingCycleInterval = paddlePrice?.billingCycle?.interval ?? null;
+    const billingCycleFrequency = paddlePrice?.billingCycle?.frequency ?? null;
+    const trialPeriodInterval = paddlePrice?.trialPeriod?.interval ?? null;
+    const trialPeriodFrequency = paddlePrice?.trialPeriod?.frequency ?? null;
+    const taxMode = paddlePrice.taxMode;
+    const unitPriceAmount = parseInt(paddlePrice.unitPrice.amount);
+    const unitPriceCurrency = paddlePrice.unitPrice.currencyCode;
+    const createdAt = new Date(paddlePrice.createdAt);
+    const updatedAt = new Date(paddlePrice.updatedAt);
 
     await addPrice({
-      paddle_price_id,
-      product_id,
+      paddlePriceId,
+      productId,
       description,
       name,
-      billing_cycle_interval,
-      billing_cycle_frequency,
-      trial_period_interval,
-      trial_period_frequency,
-      tax_mode,
-      unit_price_amount,
-      unit_price_currency,
-      created_at,
-      updated_at,
+      billingCycleInterval,
+      billingCycleFrequency,
+      trialPeriodInterval,
+      trialPeriodFrequency,
+      taxMode,
+      unitPriceAmount,
+      unitPriceCurrency,
+      createdAt,
+      updatedAt,
     });
   }
 
@@ -162,8 +152,8 @@ export async function syncPrices() {
 export const getAllProductsAndPrices = unstable_cache(
   async () => {
     let [products, prices] = await Promise.all([
-      prisma.product.findMany(),
-      prisma.price.findMany(),
+      DB_QUERIES.getProducts(),
+      DB_QUERIES.getPrices(),
     ]);
 
     // If there are no products, sync them from Paddle

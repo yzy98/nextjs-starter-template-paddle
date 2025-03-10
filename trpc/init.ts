@@ -40,14 +40,16 @@ export const protectedProcedure = t.procedure.use(async (opts) => {
   }
 
   // Get the user from the database
-  const user = await DB_QUERIES.getUserByClerkId(ctx.clerkUserId);
+  const users = await DB_QUERIES.getUserByClerkId(ctx.clerkUserId);
 
-  if (!user) {
+  if (!users || users.length === 0) {
     throw new TRPCError({ code: "UNAUTHORIZED" });
   }
 
+  const user = users[0];
+
   // Check if the user is rate limited
-  const { success } = await ratelimit.limit(user.clerk_id);
+  const { success } = await ratelimit.limit(user.clerkId);
 
   if (!success) {
     throw new TRPCError({ code: "TOO_MANY_REQUESTS" });

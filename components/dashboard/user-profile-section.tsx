@@ -31,8 +31,7 @@ export const UserProfileSection = ({
 
   if (!user) return null;
 
-  const accountType =
-    activeSubscription?.product?.name?.toLowerCase() || "free";
+  const accountType = activeSubscription?.productName?.toLowerCase() || "free";
 
   return (
     <Card>

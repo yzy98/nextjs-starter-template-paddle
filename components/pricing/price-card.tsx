@@ -1,7 +1,6 @@
 import { redirect } from "next/navigation";
 
 import { useUser } from "@clerk/nextjs";
-import { Price, Product } from "@prisma/client";
 
 import { BackgroundGradient } from "@/components/ui/background-gradient";
 import { Button } from "@/components/ui/button";
@@ -12,11 +11,14 @@ import { cn, formatPrice } from "@/lib/utils";
 import { PriceAmount } from "./price-amount";
 import { PriceFeatures } from "./price-features";
 import { PriceTitle } from "./price-title";
+import { products, prices } from "@/server/db/schema";
 
+type SelectProduct = typeof products.$inferSelect;
+type SelectPrice = typeof prices.$inferSelect;
 
 type PriceCardProps = {
-  price: Price;
-  product: Product;
+  price: SelectPrice;
+  product: SelectProduct;
 };
 
 export const PriceCard = ({ price, product }: PriceCardProps) => {
@@ -39,7 +41,7 @@ export const PriceCard = ({ price, product }: PriceCardProps) => {
       });
     }
 
-    redirect(`/checkout/${price.paddle_price_id}`);
+    redirect(`/checkout/${price.paddlePriceId}`);
   };
 
   const buttonClassName = cn(
@@ -56,15 +58,15 @@ export const PriceCard = ({ price, product }: PriceCardProps) => {
       <div className="flex gap-6 flex-col p-1 rounded-xl">
         <PriceTitle
           title={price?.name ?? product.name}
-          imageUrl={product?.image_url ?? undefined}
+          imageUrl={product?.imageUrl ?? undefined}
         />
         <PriceAmount
           price={formatPrice(
-            price.unit_price_amount.toString(),
-            price.unit_price_currency
+            price.unitPriceAmount.toString(),
+            price.unitPriceCurrency
           )}
-          interval={price?.billing_cycle_interval ?? undefined}
-          frequency={price?.billing_cycle_frequency ?? undefined}
+          interval={price?.billingCycleInterval ?? undefined}
+          frequency={price?.billingCycleFrequency ?? undefined}
         />
         <div className="px-8">
           <Separator className="bg-border" />
