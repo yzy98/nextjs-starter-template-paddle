@@ -1,6 +1,5 @@
 import { ACTIVE_SUBSCRIPTION_STATUSES } from "@/lib/constants";
 import { db } from "@/server/db";
-import { InactiveSubscriptionsSortParams } from "@/stores/use-inactive-subscriptions-store";
 import { and, asc, desc, eq, inArray, notInArray } from "drizzle-orm";
 import { prices, products, subscriptions, users } from "./schema";
 
@@ -85,11 +84,18 @@ export const DB_QUERIES = {
     clerkId: string,
     limit: number,
     page: number,
-    sortParams?: InactiveSubscriptionsSortParams
+    sortingId?:
+      | "productName"
+      | "billingCycleInterval"
+      | "priceAmount"
+      | "startsAt"
+      | "endsAt"
+      | "status",
+    sortingDirection?: "asc" | "desc"
   ) {
     // Pagination
     const take = limit;
-    const skip = (page - 1) * limit;
+    const skip = page * limit;
 
     let query = db
       .select({
@@ -120,33 +126,15 @@ export const DB_QUERIES = {
       .offset(skip);
 
     // Add sorting if provided
-    if (sortParams) {
-      if (sortParams.field === "plan") {
+    if (sortingId && sortingDirection) {
+      if (sortingId === "productName") {
         return query.orderBy(
-          sortParams.direction === "asc"
-            ? asc(products.name)
-            : desc(products.name)
+          sortingDirection === "asc" ? asc(products.name) : desc(products.name)
         );
       } else {
-        const column = (() => {
-          switch (sortParams.field) {
-            case "status":
-              return subscriptions.status;
-            case "interval":
-              return subscriptions.billingCycleInterval;
-            case "price":
-              return subscriptions.priceAmount;
-            case "start":
-              return subscriptions.startsAt;
-            case "end":
-              return subscriptions.endsAt;
-            default:
-              return subscriptions.id;
-          }
-        })();
-
+        const column = subscriptions[sortingId];
         return query.orderBy(
-          sortParams.direction === "asc" ? asc(column) : desc(column)
+          sortingDirection === "asc" ? asc(column) : desc(column)
         );
       }
     }

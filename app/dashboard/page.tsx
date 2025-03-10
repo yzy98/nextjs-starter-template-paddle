@@ -8,7 +8,7 @@ export default async function Dashboard() {
   prefetch(
     trpc.subscriptions.getInactive.queryOptions({
       limit: SUBSCRIPTION_HISTORY_PAGE_SIZE,
-      page: 1,
+      page: 0,
     })
   );
   prefetch(trpc.subscriptions.countInactive.queryOptions());

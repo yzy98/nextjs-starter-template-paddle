@@ -32,25 +32,23 @@ export const subscriptionsRouter = createTRPCRouter({
           .min(1)
           .max(100)
           .default(SUBSCRIPTION_HISTORY_PAGE_SIZE),
-        page: z.number().min(1).default(1),
-        sortParams: z
-          .object({
-            field: z.enum([
-              "plan",
-              "interval",
-              "price",
-              "status",
-              "start",
-              "end",
-            ]),
-            direction: z.enum(["asc", "desc"]),
-          })
+        page: z.number().min(0).default(0),
+        sortingId: z
+          .enum([
+            "productName",
+            "billingCycleInterval",
+            "priceAmount",
+            "startsAt",
+            "endsAt",
+            "status",
+          ])
           .optional(),
+        sortingDirection: z.enum(["asc", "desc"]).optional(),
       })
     )
     .query(async ({ ctx, input }) => {
       const { clerkUserId } = ctx;
-      const { limit, page, sortParams } = input;
+      const { limit, page, sortingId, sortingDirection } = input;
 
       if (!clerkUserId) {
         throw new TRPCError({ code: "UNAUTHORIZED" });
@@ -61,7 +59,8 @@ export const subscriptionsRouter = createTRPCRouter({
           clerkUserId,
           limit,
           page,
-          sortParams
+          sortingId,
+          sortingDirection
         );
 
         return data;

@@ -7,11 +7,11 @@ import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
 import { useToast } from "@/hooks/use-toast";
 import { cn, formatPrice } from "@/lib/utils";
+import { products, prices } from "@/server/db/schema";
 
 import { PriceAmount } from "./price-amount";
 import { PriceFeatures } from "./price-features";
 import { PriceTitle } from "./price-title";
-import { products, prices } from "@/server/db/schema";
 
 type SelectProduct = typeof products.$inferSelect;
 type SelectPrice = typeof prices.$inferSelect;

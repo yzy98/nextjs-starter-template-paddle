@@ -3,10 +3,11 @@
 import { unstable_cache } from "next/cache";
 
 import { Product, Price } from "@paddle/paddle-node-sdk";
-import { getPaddleInstance } from "@/server/paddle";
+
+import { DB_MUTATIONS } from "@/server/db/mutations";
 import { DB_QUERIES } from "@/server/db/queries";
 import { prices, products } from "@/server/db/schema";
-import { DB_MUTATIONS } from "@/server/db/mutations";
+import { getPaddleInstance } from "@/server/paddle";
 
 type InsertProduct = typeof products.$inferInsert;
 type InsertPrice = typeof prices.$inferInsert;
