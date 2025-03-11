@@ -1,7 +1,7 @@
-import { prices } from "@/server/db/schema";
 
 import { Badge } from "@/components/ui/badge";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { prices } from "@/server/db/schema";
 
 type SelectPrice = typeof prices.$inferSelect;
 

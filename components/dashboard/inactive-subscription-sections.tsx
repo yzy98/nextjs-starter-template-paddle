@@ -5,25 +5,14 @@ import { Suspense } from "react";
 import { useSuspenseQuery } from "@tanstack/react-query";
 import { ErrorBoundary } from "react-error-boundary";
 
-import {
-  Card,
-  CardContent,
-  CardFooter,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
-import { SUBSCRIPTION_HISTORY_PAGE_SIZE } from "@/lib/constants";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { useInactiveSubscriptionsStore } from "@/stores/use-inactive-subscriptions-store";
 import { useTRPC } from "@/trpc/client";
 
 import {
-  SubscriptionHistoryPagination,
-  SubscriptionHistoryPaginationSkeleton,
-} from "./subscription-history-pagination";
-import {
-  SubscriptionHistoryTableSection,
-  SubscriptionHistoryTableSectionSkeleton,
-} from "./subscription-history-table-section";
+  InactiveSubscriptionsTable,
+  InactiveSubscriptionsTableSkeleton,
+} from "./inactive-subscriptions/table";
 
 export const InactiveSubscriptionSections = () => {
   return (
@@ -37,41 +26,50 @@ export const InactiveSubscriptionSections = () => {
       </CardHeader>
       <CardContent>
         <ErrorBoundary fallback={<div>Error</div>}>
-          <Suspense fallback={<SubscriptionHistoryTableSectionSkeleton />}>
-            <SubscriptionHistoryTableSectionSuspense />
+          <Suspense fallback={<InactiveSubscriptionsTableSkeleton />}>
+            <InactiveSubscriptionsTableSuspense />
           </Suspense>
         </ErrorBoundary>
       </CardContent>
-      <CardFooter>
-        <ErrorBoundary fallback={<div>Error</div>}>
-          <Suspense fallback={<SubscriptionHistoryPaginationSkeleton />}>
-            <SubscriptionHistoryPaginationSuspense />
-          </Suspense>
-        </ErrorBoundary>
-      </CardFooter>
     </Card>
   );
 };
 
-const SubscriptionHistoryTableSectionSuspense = () => {
+const InactiveSubscriptionsTableSuspense = () => {
   const trpc = useTRPC();
-  const { currentPage, sortParams } = useInactiveSubscriptionsStore();
+  const { pagination, sorting, globalFilter } = useInactiveSubscriptionsStore();
+
   const { data: subscriptions } = useSuspenseQuery(
     trpc.subscriptions.getInactive.queryOptions({
-      limit: SUBSCRIPTION_HISTORY_PAGE_SIZE,
-      page: currentPage,
-      sortParams,
+      limit: pagination.pageSize,
+      page: pagination.pageIndex,
+      ...(sorting.length > 0 && {
+        sortingId: sorting[0].id as
+          | "productName"
+          | "billingCycleInterval"
+          | "priceAmount"
+          | "startsAt"
+          | "endsAt"
+          | "status",
+        sortingDirection: sorting[0].desc ? "desc" : "asc",
+      }),
+      ...(globalFilter.length > 0 && {
+        globalFilter: globalFilter as string,
+      }),
+    })
+  );
+  const { data: totalCount } = useSuspenseQuery(
+    trpc.subscriptions.countInactive.queryOptions({
+      ...(globalFilter.length > 0 && {
+        globalFilter: globalFilter as string,
+      }),
     })
   );
 
-  return <SubscriptionHistoryTableSection subscriptions={subscriptions} />;
-};
-
-const SubscriptionHistoryPaginationSuspense = () => {
-  const trpc = useTRPC();
-  const { data: totalCount } = useSuspenseQuery(
-    trpc.subscriptions.countInactive.queryOptions()
+  return (
+    <InactiveSubscriptionsTable
+      subscriptions={subscriptions}
+      totalCount={totalCount}
+    />
   );
-
-  return <SubscriptionHistoryPagination totalCount={totalCount} />;
 };

@@ -1,7 +1,17 @@
 import { ACTIVE_SUBSCRIPTION_STATUSES } from "@/lib/constants";
 import { db } from "@/server/db";
-import { InactiveSubscriptionsSortParams } from "@/stores/use-inactive-subscriptions-store";
-import { and, asc, desc, eq, inArray, notInArray } from "drizzle-orm";
+import {
+  and,
+  asc,
+  desc,
+  eq,
+  ilike,
+  inArray,
+  notInArray,
+  or,
+  sql,
+  count,
+} from "drizzle-orm";
 import { prices, products, subscriptions, users } from "./schema";
 
 export const DB_QUERIES = {
@@ -81,15 +91,30 @@ export const DB_QUERIES = {
   /**
    * Fetch a user's inactive subscriptions
    */
-  getUserInactiveSubscriptions: function (
-    clerkId: string,
-    limit: number,
-    page: number,
-    sortParams?: InactiveSubscriptionsSortParams
-  ) {
+  getUserInactiveSubscriptions: function ({
+    clerkUserId,
+    limit,
+    page,
+    sortingId,
+    sortingDirection,
+    globalFilter,
+  }: {
+    clerkUserId: string;
+    limit: number;
+    page: number;
+    sortingId?:
+      | "productName"
+      | "billingCycleInterval"
+      | "priceAmount"
+      | "startsAt"
+      | "endsAt"
+      | "status";
+    sortingDirection?: "asc" | "desc";
+    globalFilter?: string;
+  }) {
     // Pagination
     const take = limit;
-    const skip = (page - 1) * limit;
+    const skip = page * limit;
 
     let query = db
       .select({
@@ -112,41 +137,47 @@ export const DB_QUERIES = {
       )
       .where(
         and(
-          eq(subscriptions.userId, clerkId),
-          notInArray(subscriptions.status, ACTIVE_SUBSCRIPTION_STATUSES)
+          eq(subscriptions.userId, clerkUserId),
+          notInArray(subscriptions.status, ACTIVE_SUBSCRIPTION_STATUSES),
+          ...(globalFilter && globalFilter.length > 0
+            ? [
+                or(
+                  ilike(products.name, `%${globalFilter}%`),
+                  ilike(subscriptions.status, `%${globalFilter}%`),
+                  ilike(
+                    subscriptions.billingCycleInterval,
+                    `%${globalFilter}%`
+                  ),
+                  ilike(
+                    sql`CAST(${subscriptions.priceAmount} AS TEXT)`,
+                    `%${globalFilter}%`
+                  ),
+                  ilike(
+                    sql`CAST(${subscriptions.startsAt} AS TEXT)`,
+                    `%${globalFilter}%`
+                  ),
+                  ilike(
+                    sql`CAST(${subscriptions.endsAt} AS TEXT)`,
+                    `%${globalFilter}%`
+                  )
+                ),
+              ]
+            : [])
         )
       )
       .limit(take)
       .offset(skip);
 
     // Add sorting if provided
-    if (sortParams) {
-      if (sortParams.field === "plan") {
+    if (sortingId && sortingDirection) {
+      if (sortingId === "productName") {
         return query.orderBy(
-          sortParams.direction === "asc"
-            ? asc(products.name)
-            : desc(products.name)
+          sortingDirection === "asc" ? asc(products.name) : desc(products.name)
         );
       } else {
-        const column = (() => {
-          switch (sortParams.field) {
-            case "status":
-              return subscriptions.status;
-            case "interval":
-              return subscriptions.billingCycleInterval;
-            case "price":
-              return subscriptions.priceAmount;
-            case "start":
-              return subscriptions.startsAt;
-            case "end":
-              return subscriptions.endsAt;
-            default:
-              return subscriptions.id;
-          }
-        })();
-
+        const column = subscriptions[sortingId];
         return query.orderBy(
-          sortParams.direction === "asc" ? asc(column) : desc(column)
+          sortingDirection === "asc" ? asc(column) : desc(column)
         );
       }
     }
@@ -156,13 +187,50 @@ export const DB_QUERIES = {
   /**
    * Fetch the count of a user's inactive subscriptions
    */
-  getInactiveSubscriptionsCount: function (clerkId: string) {
-    return db.$count(
-      subscriptions,
-      and(
-        eq(subscriptions.userId, clerkId),
-        notInArray(subscriptions.status, ACTIVE_SUBSCRIPTION_STATUSES)
+  getInactiveSubscriptionsCount: async function ({
+    clerkUserId,
+    globalFilter,
+  }: {
+    clerkUserId: string;
+    globalFilter?: string;
+  }) {
+    return db
+      .select({ count: count() })
+      .from(subscriptions)
+      .innerJoin(
+        products,
+        eq(subscriptions.productId, products.paddleProductId)
       )
-    );
+      .where(
+        and(
+          eq(subscriptions.userId, clerkUserId),
+          notInArray(subscriptions.status, ACTIVE_SUBSCRIPTION_STATUSES),
+          ...(globalFilter && globalFilter.length > 0
+            ? [
+                or(
+                  ilike(products.name, `%${globalFilter}%`),
+                  ilike(subscriptions.status, `%${globalFilter}%`),
+                  ilike(
+                    subscriptions.billingCycleInterval,
+                    `%${globalFilter}%`
+                  ),
+                  ilike(
+                    sql`CAST(${subscriptions.priceAmount} AS TEXT)`,
+                    `%${globalFilter}%`
+                  ),
+                  ilike(
+                    sql`CAST(${subscriptions.startsAt} AS TEXT)`,
+                    `%${globalFilter}%`
+                  ),
+                  ilike(
+                    sql`CAST(${subscriptions.endsAt} AS TEXT)`,
+                    `%${globalFilter}%`
+                  )
+                ),
+              ]
+            : [])
+        )
+      )
+      .then((result) => result[0]?.count || 0);
   },
 };

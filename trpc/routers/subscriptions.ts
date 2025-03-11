@@ -32,37 +32,38 @@ export const subscriptionsRouter = createTRPCRouter({
           .min(1)
           .max(100)
           .default(SUBSCRIPTION_HISTORY_PAGE_SIZE),
-        page: z.number().min(1).default(1),
-        sortParams: z
-          .object({
-            field: z.enum([
-              "plan",
-              "interval",
-              "price",
-              "status",
-              "start",
-              "end",
-            ]),
-            direction: z.enum(["asc", "desc"]),
-          })
+        page: z.number().min(0).default(0),
+        sortingId: z
+          .enum([
+            "productName",
+            "billingCycleInterval",
+            "priceAmount",
+            "startsAt",
+            "endsAt",
+            "status",
+          ])
           .optional(),
+        sortingDirection: z.enum(["asc", "desc"]).optional(),
+        globalFilter: z.string().optional(),
       })
     )
     .query(async ({ ctx, input }) => {
       const { clerkUserId } = ctx;
-      const { limit, page, sortParams } = input;
+      const { limit, page, sortingId, sortingDirection, globalFilter } = input;
 
       if (!clerkUserId) {
         throw new TRPCError({ code: "UNAUTHORIZED" });
       }
 
       try {
-        const data = await DB_QUERIES.getUserInactiveSubscriptions(
+        const data = await DB_QUERIES.getUserInactiveSubscriptions({
           clerkUserId,
           limit,
           page,
-          sortParams
-        );
+          sortingId,
+          sortingDirection,
+          globalFilter,
+        });
 
         return data;
       } catch (error) {
@@ -73,20 +74,27 @@ export const subscriptionsRouter = createTRPCRouter({
         });
       }
     }),
-  countInactive: protectedProcedure.query(async ({ ctx }) => {
-    const { clerkUserId } = ctx;
+  countInactive: protectedProcedure
+    .input(z.object({ globalFilter: z.string().optional() }))
+    .query(async ({ ctx, input }) => {
+      const { clerkUserId } = ctx;
 
-    if (!clerkUserId) {
-      throw new TRPCError({ code: "UNAUTHORIZED" });
-    }
+      if (!clerkUserId) {
+        throw new TRPCError({ code: "UNAUTHORIZED" });
+      }
 
-    try {
-      const data = await DB_QUERIES.getInactiveSubscriptionsCount(clerkUserId);
-      return data;
-    } catch (error) {
-      throw new TRPCError({ code: "INTERNAL_SERVER_ERROR" });
-    }
-  }),
+      const { globalFilter } = input;
+
+      try {
+        const data = await DB_QUERIES.getInactiveSubscriptionsCount({
+          clerkUserId,
+          globalFilter,
+        });
+        return data;
+      } catch (error) {
+        throw new TRPCError({ code: "INTERNAL_SERVER_ERROR" });
+      }
+    }),
   manage: protectedProcedure
     .input(
       z.object({

@@ -1,28 +1,22 @@
+import { SUBSCRIPTION_HISTORY_PAGE_SIZE } from "@/lib/constants";
+import {
+  OnChangeFn,
+  PaginationState,
+  SortingState,
+  Updater,
+} from "@tanstack/react-table";
 import { create } from "zustand";
 
-export type SortDirection = "asc" | "desc";
-export type SortField =
-  | "plan"
-  | "interval"
-  | "price"
-  | "status"
-  | "start"
-  | "end";
-
-export interface InactiveSubscriptionsSortParams {
-  direction: SortDirection;
-  field: SortField;
-}
-
 interface InactiveSubscriptionsState {
-  currentPage: number;
-  sortParams?: InactiveSubscriptionsSortParams;
+  pagination: PaginationState;
+  sorting: SortingState;
+  globalFilter: String;
 }
 
 interface InactiveSubscriptionsActions {
-  nextPage: () => void;
-  previousPage: () => void;
-  sortFn: (params: InactiveSubscriptionsSortParams) => void;
+  setPagination: OnChangeFn<PaginationState>;
+  setSorting: OnChangeFn<SortingState>;
+  setGlobalFilter: OnChangeFn<string>;
 }
 
 interface InactiveSubscriptionsStore
@@ -30,17 +24,42 @@ interface InactiveSubscriptionsStore
     InactiveSubscriptionsActions {}
 
 const initialState = {
-  currentPage: 1,
+  pagination: {
+    pageIndex: 0,
+    pageSize: SUBSCRIPTION_HISTORY_PAGE_SIZE,
+  },
+  sorting: [],
+  globalFilter: "",
 };
 
 export const useInactiveSubscriptionsStore = create<InactiveSubscriptionsStore>(
   (set) => ({
     ...initialState,
 
-    nextPage: () => set((state) => ({ currentPage: state.currentPage + 1 })),
-    previousPage: () =>
-      set((state) => ({ currentPage: state.currentPage - 1 })),
-    sortFn: (params: InactiveSubscriptionsSortParams) =>
-      set(() => ({ sortParams: params })),
+    setPagination: (updaterOrValue: Updater<PaginationState>) =>
+      set((state) => {
+        const newPagination =
+          typeof updaterOrValue === "function"
+            ? updaterOrValue(state.pagination)
+            : updaterOrValue;
+
+        return { pagination: newPagination };
+      }),
+    setSorting: (updaterOrValue: Updater<SortingState>) =>
+      set((state) => {
+        const newSorting =
+          typeof updaterOrValue === "function"
+            ? updaterOrValue(state.sorting)
+            : updaterOrValue;
+        return { sorting: newSorting };
+      }),
+    setGlobalFilter: (updaterOrValue: Updater<any>) =>
+      set((state) => {
+        const newGlobalFilter =
+          typeof updaterOrValue === "function"
+            ? updaterOrValue(state.globalFilter)
+            : updaterOrValue;
+        return { globalFilter: newGlobalFilter };
+      }),
   })
 );

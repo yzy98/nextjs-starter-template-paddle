@@ -1,15 +1,4 @@
-import { SortField } from "@/stores/use-inactive-subscriptions-store";
-
-export const ITEMS_PER_PAGE = 5;
-export const SUBSCRIPTION_HISTORY_PAGE_SIZE = 5;
-export const SUBSCRIPTION_HISTORY_FIELDS: SortField[] = [
-  "plan",
-  "interval",
-  "price",
-  "start",
-  "end",
-  "status",
-];
+export const SUBSCRIPTION_HISTORY_PAGE_SIZE = 10;
 
 export const ACTIVE_SUBSCRIPTION_STATUSES = [
   "active",
@@ -17,3 +6,12 @@ export const ACTIVE_SUBSCRIPTION_STATUSES = [
   "past_due",
   "paused",
 ];
+
+export const DATA_TABLE_ID_TITLE_MAP = {
+  productName: "Plan",
+  billingCycleInterval: "Interval",
+  priceAmount: "Price",
+  startsAt: "Start",
+  endsAt: "End",
+  status: "Status",
+};

@@ -1,7 +1,9 @@
 "use client";
 
 import { use } from "react";
+
 import { CircleCheck } from "lucide-react";
+
 import { products, prices } from "@/server/db/schema";
 
 type SelectProduct = typeof products.$inferSelect;
