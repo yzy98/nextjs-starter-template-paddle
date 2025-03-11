@@ -11,7 +11,7 @@ export default async function Dashboard() {
       page: 0,
     })
   );
-  prefetch(trpc.subscriptions.countInactive.queryOptions());
+  prefetch(trpc.subscriptions.countInactive.queryOptions({}));
 
   return (
     <HydrateClient>

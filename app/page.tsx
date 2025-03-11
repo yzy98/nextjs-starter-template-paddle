@@ -56,7 +56,7 @@ export default function Home() {
             },
             {
               icon: "🗄️",
-              title: "Supabase Database",
+              title: "Neon Database",
               description:
                 "Powerful PostgreSQL database with real-time capabilities.",
             },

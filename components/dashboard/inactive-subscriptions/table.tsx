@@ -1,10 +1,12 @@
 import { getCoreRowModel, useReactTable } from "@tanstack/react-table";
 import { inferProcedureOutput } from "@trpc/server";
-import { ClipboardList } from "lucide-react";
 
-import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { DataTable } from "@/components/ui/data-table";
-import { DataTablePagination } from "@/components/ui/data-table-pagination";
+import { DataTableFilter } from "@/components/ui/data-table/data-table-filter";
+import { DataTablePagination } from "@/components/ui/data-table/data-table-pagination";
+import { DataTableViewOptions } from "@/components/ui/data-table/data-table-view-options";
+import { Skeleton } from "@/components/ui/skeleton";
+import { SUBSCRIPTION_HISTORY_PAGE_SIZE } from "@/lib/constants";
 import { useInactiveSubscriptionsStore } from "@/stores/use-inactive-subscriptions-store";
 import { AppRouter } from "@/trpc/routers/_app";
 
@@ -23,8 +25,14 @@ export const InactiveSubscriptionsTable = ({
   subscriptions,
   totalCount,
 }: InactiveSubscriptionsTableProps) => {
-  const { pagination, setPagination, sorting, setSorting } =
-    useInactiveSubscriptionsStore();
+  const {
+    pagination,
+    setPagination,
+    sorting,
+    setSorting,
+    globalFilter,
+    setGlobalFilter,
+  } = useInactiveSubscriptionsStore();
 
   const table = useReactTable({
     data: subscriptions,
@@ -33,32 +41,96 @@ export const InactiveSubscriptionsTable = ({
     state: {
       pagination,
       sorting,
+      globalFilter,
     },
     onPaginationChange: setPagination,
     manualPagination: true,
     onSortingChange: setSorting,
     manualSorting: true,
-    enableMultiSort: false, // TODO: Add multi-sorting
+    enableMultiSort: false,
+    onGlobalFilterChange: setGlobalFilter,
+    manualFiltering: true,
     getCoreRowModel: getCoreRowModel(),
   });
 
-  if (totalCount === 0) {
-    return (
-      <Alert>
-        <ClipboardList className="size-4" />
-        <AlertTitle>No subscription history!</AlertTitle>
-        <AlertDescription>
-          Your subscription history will appear here when they end or are
-          canceled.
-        </AlertDescription>
-      </Alert>
-    );
-  }
-
   return (
-    <div className="space-y-4">
+    <div className="w-full space-y-4">
+      <div className="flex items-center">
+        <DataTableFilter table={table} />
+        <DataTableViewOptions table={table} />
+      </div>
       <DataTable table={table} />
       <DataTablePagination table={table} />
+    </div>
+  );
+};
+
+export const InactiveSubscriptionsTableSkeleton = () => {
+  // Column widths for realistic appearance
+  const columnWidths = [
+    "w-[15%]", // Product Name
+    "w-[10%]", // Status
+    "w-[15%]", // Billing Cycle
+    "w-[15%]", // Price
+    "w-[15%]", // Start Date
+    "w-[15%]", // End Date
+    "w-[5%]", // Actions
+  ];
+
+  return (
+    <div className="w-full space-y-4">
+      <div className="flex items-center justify-between">
+        {/* Filter skeleton */}
+        <Skeleton className="h-10 w-[220px] sm:w-[250px]" />
+
+        {/* View options skeleton */}
+        <Skeleton className="h-10 w-[120px] sm:w-[120px]" />
+      </div>
+
+      {/* Table skeleton */}
+      <div className="rounded-md border overflow-hidden">
+        {/* Table header */}
+        <div className="h-12 border-b bg-muted/30 px-4">
+          <div className="flex h-full items-center gap-4">
+            {columnWidths.map((width, i) => (
+              <Skeleton
+                key={`header-${i}`}
+                className={`h-4 ${width} rounded-md`}
+              />
+            ))}
+          </div>
+        </div>
+
+        {/* Fixed number of skeleton rows */}
+        <div>
+          {Array.from({ length: SUBSCRIPTION_HISTORY_PAGE_SIZE }).map(
+            (_, i) => (
+              <div
+                key={`row-${i}`}
+                className="border-b px-4 py-4 animate-pulse"
+                style={{ animationDelay: `${i * 100}ms` }}
+              >
+                <div className="flex items-center gap-4">
+                  {columnWidths.map((width, j) => (
+                    <Skeleton
+                      key={`cell-${i}-${j}`}
+                      className={`h-5 ${width} rounded-md ${
+                        j === 0 ? "bg-muted/60" : "bg-muted/40"
+                      }`}
+                    />
+                  ))}
+                </div>
+              </div>
+            )
+          )}
+        </div>
+      </div>
+
+      {/* Pagination skeleton */}
+      <div className="flex items-center justify-between px-2">
+        <Skeleton className="h-9 w-[250px]" />
+        <Skeleton className="h-9 w-[120px]" />
+      </div>
     </div>
   );
 };

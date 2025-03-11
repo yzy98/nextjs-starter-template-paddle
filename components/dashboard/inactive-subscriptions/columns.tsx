@@ -5,7 +5,8 @@ import { inferProcedureOutput } from "@trpc/server";
 import { MoreHorizontal } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
-import { DataTableColumnHeader } from "@/components/ui/data-table-column-header";
+import { Checkbox } from "@/components/ui/checkbox";
+import { DataTableColumnHeader } from "@/components/ui/data-table/data-table-column-header";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -14,6 +15,7 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import { DATA_TABLE_ID_TITLE_MAP } from "@/lib/constants";
 import { formatPrice, getStatusText } from "@/lib/utils";
 import { AppRouter } from "@/trpc/routers/_app";
 
@@ -25,15 +27,43 @@ type InactiveSubscription = InactiveSubscriptionsOutput[number];
 
 export const columns: ColumnDef<InactiveSubscription>[] = [
   {
+    id: "select",
+    header: ({ table }) => (
+      <Checkbox
+        checked={
+          table.getIsAllPageRowsSelected() ||
+          (table.getIsSomePageRowsSelected() && "indeterminate")
+        }
+        onCheckedChange={(value) => table.toggleAllPageRowsSelected(!!value)}
+        aria-label="Select all"
+      />
+    ),
+    cell: ({ row }) => (
+      <Checkbox
+        checked={row.getIsSelected()}
+        onCheckedChange={(value) => row.toggleSelected(!!value)}
+        aria-label="Select row"
+      />
+    ),
+    enableSorting: false,
+    enableHiding: false,
+  },
+  {
     accessorKey: "productName",
     header: ({ column }) => (
-      <DataTableColumnHeader column={column} title="Plan" />
+      <DataTableColumnHeader
+        column={column}
+        title={DATA_TABLE_ID_TITLE_MAP["productName"]}
+      />
     ),
   },
   {
     accessorKey: "billingCycleInterval",
     header: ({ column }) => (
-      <DataTableColumnHeader column={column} title="Interval" />
+      <DataTableColumnHeader
+        column={column}
+        title={DATA_TABLE_ID_TITLE_MAP["billingCycleInterval"]}
+      />
     ),
     cell: ({ row }) => {
       const interval = row.getValue("billingCycleInterval");
@@ -43,7 +73,10 @@ export const columns: ColumnDef<InactiveSubscription>[] = [
   {
     accessorKey: "priceAmount",
     header: ({ column }) => (
-      <DataTableColumnHeader column={column} title="Price" />
+      <DataTableColumnHeader
+        column={column}
+        title={DATA_TABLE_ID_TITLE_MAP["priceAmount"]}
+      />
     ),
     cell: ({ row }) => {
       const sub = row.original;
@@ -60,7 +93,10 @@ export const columns: ColumnDef<InactiveSubscription>[] = [
   {
     accessorKey: "startsAt",
     header: ({ column }) => (
-      <DataTableColumnHeader column={column} title="Start" />
+      <DataTableColumnHeader
+        column={column}
+        title={DATA_TABLE_ID_TITLE_MAP["startsAt"]}
+      />
     ),
     cell: ({ row }) => {
       const startDate: Date | null = row.getValue("startsAt");
@@ -72,7 +108,10 @@ export const columns: ColumnDef<InactiveSubscription>[] = [
   {
     accessorKey: "endsAt",
     header: ({ column }) => (
-      <DataTableColumnHeader column={column} title="End" />
+      <DataTableColumnHeader
+        column={column}
+        title={DATA_TABLE_ID_TITLE_MAP["endsAt"]}
+      />
     ),
     cell: ({ row }) => {
       const sub = row.original;
@@ -89,7 +128,10 @@ export const columns: ColumnDef<InactiveSubscription>[] = [
   {
     accessorKey: "status",
     header: ({ column }) => (
-      <DataTableColumnHeader column={column} title="Status" />
+      <DataTableColumnHeader
+        column={column}
+        title={DATA_TABLE_ID_TITLE_MAP["status"]}
+      />
     ),
     cell: ({ row }) => {
       const status: string = row.getValue("status");
@@ -126,5 +168,7 @@ export const columns: ColumnDef<InactiveSubscription>[] = [
         </DropdownMenu>
       );
     },
+    enableHiding: false,
+    enableSorting: false,
   },
 ];

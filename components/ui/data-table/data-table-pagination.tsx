@@ -14,6 +14,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { SUBSCRIPTION_HISTORY_PAGE_SIZE } from "@/lib/constants";
 
 interface DataTablePaginationProps<TData> {
   table: Table<TData>;
@@ -29,7 +30,7 @@ export function DataTablePagination<TData>({
         {table.getFilteredRowModel().rows.length} row(s) selected.
       </div>
       <div className="flex items-center space-x-6 lg:space-x-8">
-        <div className="flex items-center space-x-2">
+        <div className="hidden sm:flex items-center space-x-2">
           <p className="text-sm font-medium">Rows per page</p>
           <Select
             value={`${table.getState().pagination.pageSize}`}
@@ -41,7 +42,10 @@ export function DataTablePagination<TData>({
               <SelectValue placeholder={table.getState().pagination.pageSize} />
             </SelectTrigger>
             <SelectContent side="top">
-              {[1, 2, 3, 4, 5].map((pageSize) => (
+              {Array.from(
+                { length: 5 },
+                (_, i) => SUBSCRIPTION_HISTORY_PAGE_SIZE * (i + 1)
+              ).map((pageSize) => (
                 <SelectItem key={pageSize} value={`${pageSize}`}>
                   {pageSize}
                 </SelectItem>
@@ -53,7 +57,7 @@ export function DataTablePagination<TData>({
           Page {table.getState().pagination.pageIndex + 1} of{" "}
           {table.getPageCount()}
         </div>
-        <div className="flex items-center space-x-2">
+        <div className="flex items-center gap-2">
           <Button
             variant="outline"
             className="hidden h-8 w-8 p-0 lg:flex"

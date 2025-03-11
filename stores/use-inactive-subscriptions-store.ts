@@ -10,11 +10,13 @@ import { create } from "zustand";
 interface InactiveSubscriptionsState {
   pagination: PaginationState;
   sorting: SortingState;
+  globalFilter: String;
 }
 
 interface InactiveSubscriptionsActions {
   setPagination: OnChangeFn<PaginationState>;
   setSorting: OnChangeFn<SortingState>;
+  setGlobalFilter: OnChangeFn<string>;
 }
 
 interface InactiveSubscriptionsStore
@@ -27,6 +29,7 @@ const initialState = {
     pageSize: SUBSCRIPTION_HISTORY_PAGE_SIZE,
   },
   sorting: [],
+  globalFilter: "",
 };
 
 export const useInactiveSubscriptionsStore = create<InactiveSubscriptionsStore>(
@@ -49,6 +52,14 @@ export const useInactiveSubscriptionsStore = create<InactiveSubscriptionsStore>(
             ? updaterOrValue(state.sorting)
             : updaterOrValue;
         return { sorting: newSorting };
+      }),
+    setGlobalFilter: (updaterOrValue: Updater<any>) =>
+      set((state) => {
+        const newGlobalFilter =
+          typeof updaterOrValue === "function"
+            ? updaterOrValue(state.globalFilter)
+            : updaterOrValue;
+        return { globalFilter: newGlobalFilter };
       }),
   })
 );

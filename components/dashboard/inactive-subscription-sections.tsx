@@ -9,7 +9,10 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { useInactiveSubscriptionsStore } from "@/stores/use-inactive-subscriptions-store";
 import { useTRPC } from "@/trpc/client";
 
-import { InactiveSubscriptionsTable } from "./inactive-subscriptions/table";
+import {
+  InactiveSubscriptionsTable,
+  InactiveSubscriptionsTableSkeleton,
+} from "./inactive-subscriptions/table";
 
 export const InactiveSubscriptionSections = () => {
   return (
@@ -23,7 +26,7 @@ export const InactiveSubscriptionSections = () => {
       </CardHeader>
       <CardContent>
         <ErrorBoundary fallback={<div>Error</div>}>
-          <Suspense fallback={<div>loading...</div>}>
+          <Suspense fallback={<InactiveSubscriptionsTableSkeleton />}>
             <InactiveSubscriptionsTableSuspense />
           </Suspense>
         </ErrorBoundary>
@@ -34,7 +37,8 @@ export const InactiveSubscriptionSections = () => {
 
 const InactiveSubscriptionsTableSuspense = () => {
   const trpc = useTRPC();
-  const { pagination, sorting } = useInactiveSubscriptionsStore();
+  const { pagination, sorting, globalFilter } = useInactiveSubscriptionsStore();
+
   const { data: subscriptions } = useSuspenseQuery(
     trpc.subscriptions.getInactive.queryOptions({
       limit: pagination.pageSize,
@@ -49,10 +53,17 @@ const InactiveSubscriptionsTableSuspense = () => {
           | "status",
         sortingDirection: sorting[0].desc ? "desc" : "asc",
       }),
+      ...(globalFilter.length > 0 && {
+        globalFilter: globalFilter as string,
+      }),
     })
   );
   const { data: totalCount } = useSuspenseQuery(
-    trpc.subscriptions.countInactive.queryOptions()
+    trpc.subscriptions.countInactive.queryOptions({
+      ...(globalFilter.length > 0 && {
+        globalFilter: globalFilter as string,
+      }),
+    })
   );
 
   return (
