@@ -8,20 +8,20 @@ import { Table, TableBody, TableCell, TableRow } from "@/components/ui/table";
 import { formatDate, formatPrice, getStatusText } from "@/lib/utils";
 import { AppRouter } from "@/trpc/routers/_app";
 
-import { SubscriptionActions } from "./subscription-actions";
-import { SubscriptionScheduledBanner } from "./subscription-scheduled-banner";
+import { SubscriptionsStatusActions } from "./actions";
+import { SubscriptionsStatusScheduledAlert } from "./scheduled-alert";
 
 type SubscriptionOutput = inferProcedureOutput<
   AppRouter["subscriptions"]["getActive"]
 >;
 
-interface SubscriptionStatusSectionProps {
+interface SubscriptionStatusCardProps {
   activeSubscription: SubscriptionOutput;
 }
 
-export const SubscriptionStatusSection = ({
+export const SubscriptionStatusCard = ({
   activeSubscription,
-}: SubscriptionStatusSectionProps) => {
+}: SubscriptionStatusCardProps) => {
   return (
     <Card>
       <CardHeader className="flex flex-row items-center justify-between">
@@ -32,7 +32,7 @@ export const SubscriptionStatusSection = ({
         </CardTitle>
         {activeSubscription && (
           <div className="flex space-x-2">
-            <SubscriptionActions
+            <SubscriptionsStatusActions
               status={activeSubscription.status.toLowerCase()}
               subscriptionId={activeSubscription.paddleSubscriptionId}
               billingInterval={activeSubscription.billingCycleInterval.toLowerCase()}
@@ -44,7 +44,7 @@ export const SubscriptionStatusSection = ({
       <CardContent>
         {activeSubscription ? (
           <div className="space-y-4">
-            <SubscriptionScheduledBanner
+            <SubscriptionsStatusScheduledAlert
               activeSubscription={activeSubscription}
             />
             <div className="rounded-md border">
@@ -117,7 +117,7 @@ export const SubscriptionStatusSection = ({
   );
 };
 
-export const SubscriptionStatusSectionSkeleton = () => {
+export const SubscriptionStatusCardSkeleton = () => {
   return (
     <Card>
       <CardHeader className="flex flex-row items-center justify-between">

@@ -5,9 +5,9 @@ import { useState } from "react";
 import { MoreHorizontal, ArrowUp, ArrowDown, X } from "lucide-react";
 
 import {
-  SubscriptionManagementDialog,
+  SubscriptionsStatusManagementDialog,
   type SubscriptionAction,
-} from "@/components/dashboard/subscription-management-dialog";
+} from "@/components/dashboard/subscriptions/status/management-dialog";
 import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
@@ -16,7 +16,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 
-interface SubscriptionActionsProps {
+interface SubscriptionsStatusActionsProps {
   status: string;
   subscriptionId: string;
   billingInterval: string;
@@ -27,12 +27,12 @@ interface SubscriptionActionsProps {
   } | null;
 }
 
-export function SubscriptionActions({
+export function SubscriptionsStatusActions({
   status,
   subscriptionId,
   billingInterval,
   scheduledChange,
-}: SubscriptionActionsProps) {
+}: SubscriptionsStatusActionsProps) {
   const [dialogState, setDialogState] = useState<{
     isOpen: boolean;
     action: SubscriptionAction;
@@ -88,7 +88,7 @@ export function SubscriptionActions({
         </DropdownMenuContent>
       </DropdownMenu>
 
-      <SubscriptionManagementDialog
+      <SubscriptionsStatusManagementDialog
         isOpen={dialogState.isOpen}
         onClose={() => setDialogState({ isOpen: false, action: null })}
         action={dialogState.action}

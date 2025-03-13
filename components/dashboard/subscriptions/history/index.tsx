@@ -10,11 +10,11 @@ import { useInactiveSubscriptionsStore } from "@/stores/use-inactive-subscriptio
 import { useTRPC } from "@/trpc/client";
 
 import {
-  InactiveSubscriptionsTable,
-  InactiveSubscriptionsTableSkeleton,
-} from "./inactive-subscriptions/table";
+  SubscriptionsHistoryTable,
+  SubscriptionsHistoryTableSkeleton,
+} from "./table";
 
-export const InactiveSubscriptionSections = () => {
+export const SubscriptionsHistory = () => {
   return (
     <Card>
       <CardHeader>
@@ -26,8 +26,8 @@ export const InactiveSubscriptionSections = () => {
       </CardHeader>
       <CardContent>
         <ErrorBoundary fallback={<div>Error</div>}>
-          <Suspense fallback={<InactiveSubscriptionsTableSkeleton />}>
-            <InactiveSubscriptionsTableSuspense />
+          <Suspense fallback={<SubscriptionsHistoryTableSkeleton />}>
+            <SubscriptionsHistoryTableSuspense />
           </Suspense>
         </ErrorBoundary>
       </CardContent>
@@ -35,7 +35,7 @@ export const InactiveSubscriptionSections = () => {
   );
 };
 
-const InactiveSubscriptionsTableSuspense = () => {
+const SubscriptionsHistoryTableSuspense = () => {
   const trpc = useTRPC();
   const { pagination, sorting, globalFilter } = useInactiveSubscriptionsStore();
 
@@ -67,7 +67,7 @@ const InactiveSubscriptionsTableSuspense = () => {
   );
 
   return (
-    <InactiveSubscriptionsTable
+    <SubscriptionsHistoryTable
       subscriptions={subscriptions}
       totalCount={totalCount}
     />

@@ -1,6 +1,4 @@
 import "./globals.css";
-import { Footer } from "@/components/layout/footer";
-import { Navbar } from "@/components/layout/navbar";
 import { ClerkThemeProvider } from "@/components/providers/clerk-theme-provider";
 import { ThemeProvider } from "@/components/providers/theme-provider";
 import { Toaster } from "@/components/ui/toaster";
@@ -22,9 +20,7 @@ export default function RootLayout({
         >
           <ClerkThemeProvider>
             <TRPCReactProvider>
-              <Navbar />
-              <main className="flex-1">{children}</main>
-              <Footer />
+              {children}
               <Toaster />
             </TRPCReactProvider>
           </ClerkThemeProvider>
