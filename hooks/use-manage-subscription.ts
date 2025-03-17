@@ -26,6 +26,22 @@ export const useManageSubscription = () => {
             }),
           ]);
 
+          // Refetch the queries
+          await Promise.all([
+            queryClient.refetchQueries({
+              queryKey: trpc.subscriptions.getActive.queryKey(),
+              exact: false,
+            }),
+            queryClient.refetchQueries({
+              queryKey: trpc.subscriptions.getInactive.queryKey(),
+              exact: false,
+            }),
+            queryClient.refetchQueries({
+              queryKey: trpc.subscriptions.countInactive.queryKey(),
+              exact: false,
+            }),
+          ]);
+
           toast({
             title: "Subscription updated",
             description: `Successfully ${variables.action}ed subscription`,
