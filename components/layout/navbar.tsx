@@ -46,7 +46,10 @@ export function Navbar() {
               </SignInButton>
             </SignedOut>
             <SignedIn>
-              <UserButton />
+              <UserButton
+                userProfileMode="navigation"
+                userProfileUrl="/dashboard/profile"
+              />
             </SignedIn>
           </div>
 

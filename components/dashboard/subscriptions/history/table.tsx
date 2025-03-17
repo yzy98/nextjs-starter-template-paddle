@@ -12,19 +12,19 @@ import { AppRouter } from "@/trpc/routers/_app";
 
 import { columns } from "./columns";
 
-type InactiveSubscriptionsOutput = inferProcedureOutput<
+type SubscriptionsHistoryOutput = inferProcedureOutput<
   AppRouter["subscriptions"]["getInactive"]
 >;
 
-interface InactiveSubscriptionsTableProps {
-  subscriptions: InactiveSubscriptionsOutput;
+interface SubscriptionsHistoryOutputTableProps {
+  subscriptions: SubscriptionsHistoryOutput;
   totalCount: number;
 }
 
-export const InactiveSubscriptionsTable = ({
+export const SubscriptionsHistoryTable = ({
   subscriptions,
   totalCount,
-}: InactiveSubscriptionsTableProps) => {
+}: SubscriptionsHistoryOutputTableProps) => {
   const {
     pagination,
     setPagination,
@@ -65,7 +65,7 @@ export const InactiveSubscriptionsTable = ({
   );
 };
 
-export const InactiveSubscriptionsTableSkeleton = () => {
+export const SubscriptionsHistoryTableSkeleton = () => {
   // Column widths for realistic appearance
   const columnWidths = [
     "w-[15%]", // Product Name

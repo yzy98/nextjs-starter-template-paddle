@@ -31,7 +31,7 @@ import { cn } from "@/lib/utils";
 
 export type SubscriptionAction = "cancel" | "upgrade" | "downgrade" | null;
 
-interface SubscriptionManagementDialogProps {
+interface SubscriptionsStatusManagementDialogProps {
   isOpen: boolean;
   onClose: () => void;
   action: SubscriptionAction;
@@ -67,12 +67,12 @@ const actionConfig = {
   },
 } as const;
 
-export function SubscriptionManagementDialog({
+export function SubscriptionsStatusManagementDialog({
   isOpen,
   onClose,
   action,
   subscriptionId,
-}: SubscriptionManagementDialogProps) {
+}: SubscriptionsStatusManagementDialogProps) {
   const { manageSubscription, isPending } = useManageSubscription();
   const isDesktop = useMediaQuery("(min-width: 768px)");
   const [effectiveFrom, setEffectiveFrom] = useState<EffectiveFrom>(

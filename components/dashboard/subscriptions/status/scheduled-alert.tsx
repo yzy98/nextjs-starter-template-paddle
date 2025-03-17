@@ -16,13 +16,13 @@ type ScheduledChange = {
 type SubscriptionOutput = inferProcedureOutput<
   AppRouter["subscriptions"]["getActive"]
 >;
-interface SubscriptionScheduledBannerProps {
+interface SubscriptionsStatusScheduledAlertProps {
   activeSubscription: SubscriptionOutput;
 }
 
-export const SubscriptionScheduledBanner = ({
+export const SubscriptionsStatusScheduledAlert = ({
   activeSubscription,
-}: SubscriptionScheduledBannerProps) => {
+}: SubscriptionsStatusScheduledAlertProps) => {
   const { manageSubscription, isPending } = useManageSubscription();
 
   if (!activeSubscription?.scheduledChange) return null;

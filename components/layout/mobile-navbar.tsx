@@ -93,6 +93,8 @@ export function MobileNavbar() {
                       userButtonPopoverCard: { pointerEvents: "initial" },
                     },
                   }}
+                  userProfileMode="navigation"
+                  userProfileUrl="/dashboard/profile"
                 />
               </SignedIn>
               <SignedOut>

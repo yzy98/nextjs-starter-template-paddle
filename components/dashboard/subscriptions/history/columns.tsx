@@ -19,13 +19,13 @@ import { DATA_TABLE_ID_TITLE_MAP } from "@/lib/constants";
 import { formatPrice, getStatusText } from "@/lib/utils";
 import { AppRouter } from "@/trpc/routers/_app";
 
-type InactiveSubscriptionsOutput = inferProcedureOutput<
+type SubscriptionsHistoryOutput = inferProcedureOutput<
   AppRouter["subscriptions"]["getInactive"]
 >;
 
-type InactiveSubscription = InactiveSubscriptionsOutput[number];
+type SubscriptionsHistory = SubscriptionsHistoryOutput[number];
 
-export const columns: ColumnDef<InactiveSubscription>[] = [
+export const columns: ColumnDef<SubscriptionsHistory>[] = [
   {
     id: "select",
     header: ({ table }) => (
