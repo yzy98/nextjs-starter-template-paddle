@@ -14,33 +14,29 @@ export const useManageSubscription = () => {
     trpc.subscriptions.manage.mutationOptions({
       onSuccess: async (_, variables) => {
         try {
-          await Promise.all([
-            queryClient.invalidateQueries({
-              queryKey: trpc.subscriptions.getActive.queryKey(),
-            }),
-            queryClient.invalidateQueries({
-              queryKey: trpc.subscriptions.getInactive.queryKey(),
-            }),
-            queryClient.invalidateQueries({
-              queryKey: trpc.subscriptions.countInactive.queryKey(),
-            }),
-          ]);
+          queryClient.invalidateQueries({
+            queryKey: trpc.subscriptions.getActive.queryKey(),
+          });
+          queryClient.invalidateQueries({
+            queryKey: trpc.subscriptions.getInactive.queryKey(),
+          });
+          queryClient.invalidateQueries({
+            queryKey: trpc.subscriptions.countInactive.queryKey(),
+          });
 
           // Refetch the queries
-          await Promise.all([
-            queryClient.refetchQueries({
-              queryKey: trpc.subscriptions.getActive.queryKey(),
-              exact: false,
-            }),
-            queryClient.refetchQueries({
-              queryKey: trpc.subscriptions.getInactive.queryKey(),
-              exact: false,
-            }),
-            queryClient.refetchQueries({
-              queryKey: trpc.subscriptions.countInactive.queryKey(),
-              exact: false,
-            }),
-          ]);
+          queryClient.refetchQueries({
+            queryKey: trpc.subscriptions.getActive.queryKey(),
+            exact: false,
+          });
+          queryClient.refetchQueries({
+            queryKey: trpc.subscriptions.getInactive.queryKey(),
+            exact: false,
+          });
+          queryClient.refetchQueries({
+            queryKey: trpc.subscriptions.countInactive.queryKey(),
+            exact: false,
+          });
 
           toast({
             title: "Subscription updated",
