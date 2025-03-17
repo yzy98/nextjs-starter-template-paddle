@@ -10,6 +10,7 @@ import { AppRouter } from "@/trpc/routers/_app";
 
 import { SubscriptionsStatusActions } from "./actions";
 import { SubscriptionsStatusScheduledAlert } from "./scheduled-alert";
+import Link from "next/link";
 
 type SubscriptionOutput = inferProcedureOutput<
   AppRouter["subscriptions"]["getActive"]
@@ -108,7 +109,7 @@ export const SubscriptionStatusCard = ({
               You don&apos;t have an active subscription.
             </p>
             <Button asChild>
-              <a href="/pricing">View Plans</a>
+              <Link href="/pricing">View Plans</Link>
             </Button>
           </div>
         )}

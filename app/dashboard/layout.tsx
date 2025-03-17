@@ -33,9 +33,9 @@ export default async function DashboardLayout({
     <SidebarProvider defaultOpen={defaultOpen}>
       <HydrateClient>
         <DashboardSidebar />
-        <SidebarInset>
+        <SidebarInset className="min-w-0 flex-1">
           <main className="flex items-start justify-center w-full h-full px-4 sm:px-6 lg:px-8 py-4 md:py-8">
-            <div className="flex-col space-y-5 flex-1 max-w-5xl">
+            <div className="flex-col space-y-5 flex-1 max-w-5xl min-w-0">
               <SidebarTrigger />
               <DashboardBreadcrumb />
               {children}

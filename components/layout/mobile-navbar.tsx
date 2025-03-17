@@ -94,7 +94,7 @@ export function MobileNavbar() {
                     },
                   }}
                   userProfileMode="navigation"
-                  userProfileUrl="/dashboard/account"
+                  userProfileUrl="/dashboard/profile"
                 />
               </SignedIn>
               <SignedOut>

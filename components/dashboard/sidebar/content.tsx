@@ -12,15 +12,17 @@ import {
   SidebarMenuSub,
   SidebarMenuSubButton,
   SidebarMenuSubItem,
+  useSidebar,
 } from "@/components/ui/sidebar";
 import { usePathname } from "next/navigation";
+import Link from "next/link";
 
 export const DashboardSidebarContent = () => {
   // Menu items.
   const items = [
     {
-      title: "Account",
-      url: "/dashboard/account",
+      title: "Profile",
+      url: "/dashboard/profile",
       icon: User,
     },
     {
@@ -47,6 +49,9 @@ export const DashboardSidebarContent = () => {
 
   const pathname = usePathname();
 
+  const { state } = useSidebar();
+  const isCollapsed = state === "collapsed";
+
   return (
     <SidebarContent>
       <SidebarGroup>
@@ -54,11 +59,18 @@ export const DashboardSidebarContent = () => {
           <SidebarMenu>
             {items.map((item) => (
               <SidebarMenuItem key={item.title}>
-                <SidebarMenuButton asChild isActive={pathname === item.url}>
-                  <a href={item.url}>
+                <SidebarMenuButton
+                  asChild
+                  isActive={
+                    pathname === item.url ||
+                    (isCollapsed && pathname.includes(item.url))
+                  }
+                  tooltip={item.title}
+                >
+                  <Link href={item.url}>
                     <item.icon />
                     <span>{item.title}</span>
-                  </a>
+                  </Link>
                 </SidebarMenuButton>
                 {item.subItems && (
                   <SidebarMenuSub>
@@ -68,7 +80,7 @@ export const DashboardSidebarContent = () => {
                           asChild
                           isActive={pathname === subItem.url}
                         >
-                          <a href={subItem.url}>{subItem.title}</a>
+                          <Link href={subItem.url}>{subItem.title}</Link>
                         </SidebarMenuSubButton>
                       </SidebarMenuSubItem>
                     ))}

@@ -3,6 +3,8 @@ import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import {
@@ -14,7 +16,7 @@ import {
 } from "@/components/ui/sidebar";
 import { SignOutButton } from "@clerk/nextjs";
 import { currentUser } from "@clerk/nextjs/server";
-import { ChevronUp } from "lucide-react";
+import { ChevronUp, LogOut, Settings, User } from "lucide-react";
 import Link from "next/link";
 import { Suspense } from "react";
 
@@ -56,14 +58,27 @@ const DashboardSidebarFooterMenu = async () => {
             side="top"
             className="w-[--radix-popper-anchor-width]"
           >
-            <DropdownMenuItem>
-              <Link href="/dashboard/account">
-                <span>Account</span>
+            <DropdownMenuLabel>My Account</DropdownMenuLabel>
+            <DropdownMenuSeparator />
+            <DropdownMenuItem asChild>
+              <Link href="/dashboard/profile">
+                <User className="size-4 mr-2" />
+                <span>Profile</span>
               </Link>
             </DropdownMenuItem>
-            <DropdownMenuItem>
+            <DropdownMenuItem asChild>
+              <Link href="/dashboard/settings">
+                <Settings className="size-4 mr-2" />
+                <span>Settings</span>
+              </Link>
+            </DropdownMenuItem>
+            <DropdownMenuSeparator />
+            <DropdownMenuItem asChild>
               <SignOutButton>
-                <span>Sign out</span>
+                <div>
+                  <LogOut className="size-4 mr-2" />
+                  <span>Log out</span>
+                </div>
               </SignOutButton>
             </DropdownMenuItem>
           </DropdownMenuContent>

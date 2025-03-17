@@ -9,7 +9,7 @@ const nextConfig = {
     return [
       {
         source: "/dashboard",
-        destination: "/dashboard/account",
+        destination: "/dashboard/profile",
         permanent: true,
       },
       {

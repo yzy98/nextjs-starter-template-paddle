@@ -1,8 +1,8 @@
 import { UserProfile } from "@clerk/nextjs";
 
-export const AccountInfoCard = () => (
+export const ProfileCard = () => (
   <UserProfile
-    path="/dashboard/account"
+    path="/dashboard/profile"
     routing="path"
     appearance={{
       elements: {

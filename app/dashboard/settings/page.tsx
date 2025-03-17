@@ -1,3 +1,5 @@
+import { DashboardSettings } from "@/components/dashboard/settings";
+
 export default function SettingsPage() {
-  return <div>settings info</div>;
+  return <DashboardSettings />;
 }
