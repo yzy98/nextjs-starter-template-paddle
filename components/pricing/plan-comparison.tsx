@@ -4,15 +4,12 @@ import { use } from "react";
 
 import { CircleCheck } from "lucide-react";
 
-import { products, prices } from "@/server/db/schema";
-
-type SelectProduct = typeof products.$inferSelect;
-type SelectPrice = typeof prices.$inferSelect;
+import { Product, Price } from "@/server/db/schema";
 
 interface PlanComparisonProps {
   productsAndPricesPromise: Promise<{
-    products: SelectProduct[];
-    prices: SelectPrice[];
+    products: Product[];
+    prices: Price[];
   }>;
 }
 

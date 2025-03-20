@@ -2,18 +2,15 @@
 
 import { use, useState } from "react";
 
-import { products, prices } from "@/server/db/schema";
+import { Product, Price } from "@/server/db/schema";
 
 import { PriceCards } from "./price-cards";
 import { Toggle } from "./toggle";
 
-type SelectProduct = typeof products.$inferSelect;
-type SelectPrice = typeof prices.$inferSelect;
-
 type PriceCardsToggleProps = {
   productsAndPricesPromise: Promise<{
-    products: SelectProduct[];
-    prices: SelectPrice[];
+    products: Product[];
+    prices: Price[];
   }>;
 };
 

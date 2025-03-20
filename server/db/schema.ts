@@ -5,22 +5,60 @@ import {
   json,
   pgTable,
   serial,
-  varchar,
   index,
   foreignKey,
+  text,
+  boolean,
 } from "drizzle-orm/pg-core";
 
 export const users = pgTable("users", {
-  id: serial("id").primaryKey(),
-  clerkId: varchar("clerk_id").unique().notNull(),
-  createdTime: timestamp("created_time", { mode: "date" })
-    .defaultNow()
-    .notNull(),
-  email: varchar("email").unique().notNull(),
-  firstName: varchar("first_name"),
-  lastName: varchar("last_name"),
-  profileImageUrl: varchar("profile_image_url"),
-  gender: varchar("gender"),
+  id: text("id").primaryKey(),
+  name: text("name").notNull(),
+  email: text("email").notNull().unique(),
+  emailVerified: boolean("email_verified").notNull(),
+  image: text("image"),
+  createdAt: timestamp("created_at").notNull(),
+  updatedAt: timestamp("updated_at").notNull(),
+});
+
+export const sessions = pgTable("sessions", {
+  id: text("id").primaryKey(),
+  expiresAt: timestamp("expires_at").notNull(),
+  token: text("token").notNull().unique(),
+  createdAt: timestamp("created_at").notNull(),
+  updatedAt: timestamp("updated_at").notNull(),
+  ipAddress: text("ip_address"),
+  userAgent: text("user_agent"),
+  userId: text("user_id")
+    .notNull()
+    .references(() => users.id, { onDelete: "cascade" }),
+});
+
+export const accounts = pgTable("accounts", {
+  id: text("id").primaryKey(),
+  accountId: text("account_id").notNull(),
+  providerId: text("provider_id").notNull(),
+  userId: text("user_id")
+    .notNull()
+    .references(() => users.id, { onDelete: "cascade" }),
+  accessToken: text("access_token"),
+  refreshToken: text("refresh_token"),
+  idToken: text("id_token"),
+  accessTokenExpiresAt: timestamp("access_token_expires_at"),
+  refreshTokenExpiresAt: timestamp("refresh_token_expires_at"),
+  scope: text("scope"),
+  password: text("password"),
+  createdAt: timestamp("created_at").notNull(),
+  updatedAt: timestamp("updated_at").notNull(),
+});
+
+export const verifications = pgTable("verifications", {
+  id: text("id").primaryKey(),
+  identifier: text("identifier").notNull(),
+  value: text("value").notNull(),
+  expiresAt: timestamp("expires_at").notNull(),
+  createdAt: timestamp("created_at"),
+  updatedAt: timestamp("updated_at"),
 });
 
 export const usersRelations = relations(users, ({ many }) => ({
@@ -29,12 +67,12 @@ export const usersRelations = relations(users, ({ many }) => ({
 
 export const products = pgTable("products", {
   id: serial("id").primaryKey(),
-  paddleProductId: varchar("paddle_product_id").unique().notNull(),
-  name: varchar("name").notNull(),
-  type: varchar("type"),
-  description: varchar("description"),
-  taxCategory: varchar("tax_category").notNull(),
-  imageUrl: varchar("image_url"),
+  paddleProductId: text("paddle_product_id").unique().notNull(),
+  name: text("name").notNull(),
+  type: text("type"),
+  description: text("description"),
+  taxCategory: text("tax_category").notNull(),
+  imageUrl: text("image_url"),
   createdAt: timestamp("created_at", { mode: "date" }).notNull(),
   updatedAt: timestamp("updated_at", { mode: "date" }).notNull(),
 });
@@ -48,17 +86,17 @@ export const prices = pgTable(
   "prices",
   {
     id: serial("id").primaryKey(),
-    paddlePriceId: varchar("paddle_price_id").unique().notNull(),
-    productId: varchar("product_id").notNull(),
-    description: varchar("description").notNull(),
-    name: varchar("name"),
-    billingCycleInterval: varchar("billing_cycle_interval"),
+    paddlePriceId: text("paddle_price_id").unique().notNull(),
+    productId: text("product_id").notNull(),
+    description: text("description").notNull(),
+    name: text("name"),
+    billingCycleInterval: text("billing_cycle_interval"),
     billingCycleFrequency: integer("billing_cycle_frequency"),
-    trialPeriodInterval: varchar("trial_period_interval"),
+    trialPeriodInterval: text("trial_period_interval"),
     trialPeriodFrequency: integer("trial_period_frequency"),
-    taxMode: varchar("tax_mode").notNull(),
+    taxMode: text("tax_mode").notNull(),
     unitPriceAmount: integer("unit_price_amount").notNull(),
-    unitPriceCurrency: varchar("unit_price_currency").notNull(),
+    unitPriceCurrency: text("unit_price_currency").notNull(),
     createdAt: timestamp("created_at", { mode: "date" }).notNull(),
     updatedAt: timestamp("updated_at", { mode: "date" }).notNull(),
   },
@@ -84,17 +122,17 @@ export const subscriptions = pgTable(
   "subscriptions",
   {
     id: serial("id").primaryKey(),
-    paddleSubscriptionId: varchar("paddle_subscription_id").unique().notNull(),
-    userId: varchar("user_id").notNull(),
-    priceId: varchar("price_id").notNull(),
-    productId: varchar("product_id").notNull(),
-    status: varchar("status").notNull(),
+    paddleSubscriptionId: text("paddle_subscription_id").unique().notNull(),
+    userId: text("user_id").notNull(),
+    priceId: text("price_id").notNull(),
+    productId: text("product_id").notNull(),
+    status: text("status").notNull(),
 
     // Billing details
     priceAmount: integer("price_amount").notNull(),
-    priceCurrency: varchar("price_currency").notNull(),
-    collectionMode: varchar("collection_mode").notNull(),
-    billingCycleInterval: varchar("billing_cycle_interval").notNull(),
+    priceCurrency: text("price_currency").notNull(),
+    collectionMode: text("collection_mode").notNull(),
+    billingCycleInterval: text("billing_cycle_interval").notNull(),
     billingCycleFrequency: integer("billing_cycle_frequency").notNull(),
 
     // Timestamps
@@ -112,7 +150,7 @@ export const subscriptions = pgTable(
     index("subscription_product_id_idx").on(table.productId),
     foreignKey({
       columns: [table.userId],
-      foreignColumns: [users.clerkId],
+      foreignColumns: [users.id],
       name: "user_id_fk",
     }),
     foreignKey({
@@ -131,7 +169,7 @@ export const subscriptions = pgTable(
 export const subscriptionsRelations = relations(subscriptions, ({ one }) => ({
   user: one(users, {
     fields: [subscriptions.userId],
-    references: [users.clerkId],
+    references: [users.id],
   }),
   price: one(prices, {
     fields: [subscriptions.priceId],
@@ -142,3 +180,19 @@ export const subscriptionsRelations = relations(subscriptions, ({ one }) => ({
     references: [products.paddleProductId],
   }),
 }));
+
+export type User = typeof users.$inferSelect;
+export type Session = typeof sessions.$inferSelect;
+export type Account = typeof accounts.$inferSelect;
+export type Verification = typeof verifications.$inferSelect;
+export type Product = typeof products.$inferSelect;
+export type Price = typeof prices.$inferSelect;
+export type Subscription = typeof subscriptions.$inferSelect;
+
+export type NewUser = typeof users.$inferInsert;
+export type NewSession = typeof sessions.$inferInsert;
+export type NewAccount = typeof accounts.$inferInsert;
+export type NewVerification = typeof verifications.$inferInsert;
+export type NewProduct = typeof products.$inferInsert;
+export type NewPrice = typeof prices.$inferInsert;
+export type NewSubscription = typeof subscriptions.$inferInsert;

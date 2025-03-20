@@ -32,7 +32,7 @@ export default function Home() {
           {[
             {
               icon: "⚡",
-              title: "Next.js 14",
+              title: "Next.js 15",
               description:
                 "The React framework for production-grade applications.",
             },
@@ -50,7 +50,7 @@ export default function Home() {
             },
             {
               icon: "🔐",
-              title: "Clerk Authentication",
+              title: "Better Auth",
               description:
                 "Secure, feature-rich authentication and user management.",
             },

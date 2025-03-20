@@ -1,29 +1,25 @@
 import { redirect } from "next/navigation";
 
-import { useUser } from "@clerk/nextjs";
-
 import { BackgroundGradient } from "@/components/ui/background-gradient";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
 import { useToast } from "@/hooks/use-toast";
 import { cn, formatPrice } from "@/lib/utils";
-import { products, prices } from "@/server/db/schema";
+import { Product, Price } from "@/server/db/schema";
 
 import { PriceAmount } from "./price-amount";
 import { PriceFeatures } from "./price-features";
 import { PriceTitle } from "./price-title";
-
-type SelectProduct = typeof products.$inferSelect;
-type SelectPrice = typeof prices.$inferSelect;
+import { useSession } from "@/auth/client";
 
 type PriceCardProps = {
-  price: SelectPrice;
-  product: SelectProduct;
+  price: Price;
+  product: Product;
 };
 
 export const PriceCard = ({ price, product }: PriceCardProps) => {
+  const { data: session, isPending } = useSession();
   const { toast } = useToast();
-  const { user } = useUser();
 
   const isPremium = product.name === "Premium";
 
@@ -33,7 +29,7 @@ export const PriceCard = ({ price, product }: PriceCardProps) => {
     : "rounded-[22px] bg-card/70 border border-border";
 
   const handleClick = (e: React.MouseEvent) => {
-    if (!user) {
+    if (!session && !isPending) {
       e.preventDefault();
       toast({
         title: "Authentication required",

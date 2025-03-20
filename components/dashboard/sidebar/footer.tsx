@@ -1,3 +1,4 @@
+import { auth } from "@/auth/server";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import {
   DropdownMenu,
@@ -14,11 +15,21 @@ import {
   SidebarMenuItem,
   SidebarMenuSkeleton,
 } from "@/components/ui/sidebar";
-import { SignOutButton } from "@clerk/nextjs";
-import { currentUser } from "@clerk/nextjs/server";
 import { ChevronUp, LogOut, Settings, User } from "lucide-react";
+import { headers } from "next/headers";
 import Link from "next/link";
+import { redirect } from "next/navigation";
 import { Suspense } from "react";
+
+const handleSignOut = async () => {
+  "use server";
+
+  await auth.api.signOut({
+    headers: await headers(),
+  });
+
+  redirect("/");
+};
 
 export const DashboardSidebarFooter = () => {
   return (
@@ -31,7 +42,15 @@ export const DashboardSidebarFooter = () => {
 };
 
 const DashboardSidebarFooterMenu = async () => {
-  const user = await currentUser();
+  const session = await auth.api.getSession({
+    headers: await headers(),
+  });
+
+  if (!session) {
+    redirect("/sign-in");
+  }
+
+  const { user } = session;
 
   return (
     <SidebarMenu>
@@ -40,16 +59,14 @@ const DashboardSidebarFooterMenu = async () => {
           <DropdownMenuTrigger asChild>
             <SidebarMenuButton>
               <Avatar className="size-4">
-                <AvatarImage src={user?.imageUrl} />
-                <AvatarFallback>
-                  {user?.firstName?.charAt(0)}
-                  {user?.lastName?.charAt(0)}
-                </AvatarFallback>
+                <AvatarImage
+                  src={user.image ?? undefined}
+                  alt={user.name || ""}
+                />
+                <AvatarFallback>{user.name.charAt(0)}</AvatarFallback>
               </Avatar>
               <span className="w-full flex items-center justify-between">
-                {user?.fullName ||
-                  user?.username ||
-                  user?.emailAddresses[0].emailAddress}
+                {user.name}
                 <ChevronUp />
               </span>
             </SidebarMenuButton>
@@ -74,12 +91,15 @@ const DashboardSidebarFooterMenu = async () => {
             </DropdownMenuItem>
             <DropdownMenuSeparator />
             <DropdownMenuItem asChild>
-              <SignOutButton>
-                <div>
+              <form action={handleSignOut}>
+                <button
+                  type="submit"
+                  className="flex w-full items-center gap-2"
+                >
                   <LogOut className="size-4 mr-2" />
                   <span>Log out</span>
-                </div>
-              </SignOutButton>
+                </button>
+              </form>
             </DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>
