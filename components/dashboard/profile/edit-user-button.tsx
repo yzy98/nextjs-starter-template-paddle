@@ -55,7 +55,7 @@ export const EditUserButton = () => {
   };
 
   const triggerButton = (
-    <Button size="sm" className="gap-2" variant="secondary">
+    <Button size="sm" className="gap-2 cursor-pointer" variant="secondary">
       <Edit size={13} />
       Edit User
     </Button>

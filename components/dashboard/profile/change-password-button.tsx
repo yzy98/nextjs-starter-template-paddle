@@ -39,7 +39,7 @@ export const ChangePasswordButton = () => {
   const isDesktop = useMediaQuery("(min-width: 768px)");
 
   const triggerButton = (
-    <Button className="gap-2 z-10" variant="outline" size="sm">
+    <Button className="gap-2 cursor-pointer" variant="outline" size="sm">
       <svg
         xmlns="http://www.w3.org/2000/svg"
         width="1em"

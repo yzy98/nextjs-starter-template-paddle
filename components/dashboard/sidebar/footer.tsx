@@ -20,16 +20,7 @@ import { headers } from "next/headers";
 import Link from "next/link";
 import { redirect } from "next/navigation";
 import { Suspense } from "react";
-
-const handleSignOut = async () => {
-  "use server";
-
-  await auth.api.signOut({
-    headers: await headers(),
-  });
-
-  redirect("/");
-};
+import { SignOutButton } from "./sign-out-button";
 
 export const DashboardSidebarFooter = () => {
   return (
@@ -90,17 +81,7 @@ const DashboardSidebarFooterMenu = async () => {
               </Link>
             </DropdownMenuItem>
             <DropdownMenuSeparator />
-            <DropdownMenuItem asChild>
-              <form action={handleSignOut}>
-                <button
-                  type="submit"
-                  className="flex w-full items-center gap-2"
-                >
-                  <LogOut className="size-4 mr-2" />
-                  <span>Log out</span>
-                </button>
-              </form>
-            </DropdownMenuItem>
+            <SignOutButton />
           </DropdownMenuContent>
         </DropdownMenu>
       </SidebarMenuItem>

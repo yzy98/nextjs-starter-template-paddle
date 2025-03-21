@@ -1,6 +1,6 @@
 "use client";
 
-import { authClient, signOut } from "@/auth/client";
+import { signOut } from "@/auth/client";
 import { Session } from "@/auth/types";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
@@ -17,20 +17,16 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { toast } from "@/hooks/use-toast";
 import {
   ArrowRight,
   ArrowUpFromLine,
   BadgeAlert,
   BadgeCheck,
-  Laptop,
   Loader2,
   LogOut,
-  Smartphone,
 } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { Suspense, use, useState } from "react";
-import { UAParser } from "ua-parser-js";
 import { Badge } from "@/components/ui/badge";
 import { EditUserButton } from "./edit-user-button";
 import { ChangePasswordButton } from "./change-password-button";
@@ -38,6 +34,8 @@ import Link from "next/link";
 import { EmailVerificationAlert } from "./email-verification-alert";
 import { useTRPC } from "@/trpc/client";
 import { useSuspenseQuery } from "@tanstack/react-query";
+import { ActiveSessions } from "./active-sessions";
+import { Skeleton } from "@/components/ui/skeleton";
 
 type ProfileCardProps = {
   profileSessionsPromise: Promise<[Session | null, Session["session"][]]>;
@@ -45,14 +43,13 @@ type ProfileCardProps = {
 
 export const ProfileCard = ({ profileSessionsPromise }: ProfileCardProps) => {
   return (
-    <Suspense fallback={<div>loading...</div>}>
+    <Suspense fallback={<ProfileCardSkeleton />}>
       <ProfileCardSuspense profileSessionsPromise={profileSessionsPromise} />
     </Suspense>
   );
 };
 
 const ProfileCardSuspense = ({ profileSessionsPromise }: ProfileCardProps) => {
-  const [isTerminating, setIsTerminating] = useState<string>();
   const [isSigningOut, setIsSigningOut] = useState<boolean>(false);
 
   const router = useRouter();
@@ -159,67 +156,19 @@ const ProfileCardSuspense = ({ profileSessionsPromise }: ProfileCardProps) => {
         {/* Email verification [FIXME] email sent state not working */}
         {!user.emailVerified && <EmailVerificationAlert email={user.email} />}
 
-        {/* Active Sessions [FIXME] */}
-        <div className="border-l-2 px-2 w-max gap-1 flex flex-col">
-          <p className="text-xs font-medium ">Active Sessions</p>
-          {activeSessions
-            .filter((session) => session.userAgent)
-            .map((session) => {
-              return (
-                <div key={session.id}>
-                  <div className="flex items-center gap-2 text-sm  text-black font-medium dark:text-white">
-                    {new UAParser(session.userAgent || "").getDevice().type ===
-                    "mobile" ? (
-                      <Smartphone size={16} />
-                    ) : (
-                      <Laptop size={16} />
-                    )}
-                    {new UAParser(session.userAgent || "").getOS().name},{" "}
-                    {new UAParser(session.userAgent || "").getBrowser().name}
-                    <button
-                      className="text-red-500 opacity-80  cursor-pointer text-xs border-muted-foreground underline "
-                      onClick={async () => {
-                        setIsTerminating(session.id);
-                        const res = await authClient.revokeSession({
-                          token: session.token,
-                        });
-
-                        if (res.error) {
-                          toast({
-                            title: "Error",
-                            variant: "destructive",
-                            description: res.error.message,
-                          });
-                        } else {
-                          toast({
-                            title: "Success",
-                            description: "Session terminated successfully",
-                          });
-                        }
-                        router.refresh();
-                        setIsTerminating(undefined);
-                      }}
-                    >
-                      {isTerminating === session.id ? (
-                        <Loader2 size={15} className="animate-spin" />
-                      ) : session.id === currentSession.id ? (
-                        "Sign Out"
-                      ) : (
-                        "Terminate"
-                      )}
-                    </button>
-                  </div>
-                </div>
-              );
-            })}
-        </div>
+        {/* Active Sessions */}
+        <ActiveSessions
+          activeSessions={activeSessions}
+          currentSession={currentSession}
+        />
       </CardContent>
       <CardFooter className="gap-2 justify-between items-center">
         <ChangePasswordButton />
 
         {/* Sign out */}
         <Button
-          className="gap-2 z-10"
+          className="gap-2 cursor-pointer"
+          size="sm"
           variant="secondary"
           disabled={isSigningOut}
           onClick={async () => {
@@ -245,6 +194,62 @@ const ProfileCardSuspense = ({ profileSessionsPromise }: ProfileCardProps) => {
             )}
           </span>
         </Button>
+      </CardFooter>
+    </Card>
+  );
+};
+
+export const ProfileCardSkeleton = () => {
+  return (
+    <Card>
+      <CardHeader>
+        <CardTitle>Profile</CardTitle>
+      </CardHeader>
+      <CardContent className="grid gap-6 grid-cols-1">
+        {/* User info skeleton */}
+        <div className="flex flex-col gap-2">
+          <div className="flex items-start justify-between">
+            <div className="flex items-center gap-4">
+              {/* Avatar skeleton */}
+              <Skeleton className="size-9 rounded-full" />
+              <div className="grid">
+                {/* Username skeleton */}
+                <div className="flex items-center gap-1">
+                  <Skeleton className="h-4 w-24" />
+                  <Skeleton className="size-4 rounded-full" />
+                </div>
+                {/* Email skeleton */}
+                <Skeleton className="h-4 w-32 mt-1" />
+              </div>
+            </div>
+            {/* Edit button skeleton */}
+            <Skeleton className="h-8 w-24" />
+          </div>
+
+          {/* Subscription info skeleton */}
+          <div className="flex items-center justify-between mt-2">
+            <Skeleton className="h-6 w-16" />
+            <Skeleton className="h-8 w-32" />
+          </div>
+        </div>
+
+        {/* Email verification skeleton */}
+        <Skeleton className="h-20 w-full" />
+
+        {/* Active sessions skeleton */}
+        <div className="space-y-2">
+          <Skeleton className="h-4 w-24" />
+          <div className="space-y-2">
+            <Skeleton className="h-10 w-full" />
+            <Skeleton className="h-10 w-full" />
+          </div>
+        </div>
+      </CardContent>
+      <CardFooter className="gap-2 justify-between items-center">
+        {/* Change password button skeleton */}
+        <Skeleton className="h-8 w-32" />
+        {/* Sign out button skeleton */}
+        <Skeleton className="h-8 w-24" />
       </CardFooter>
     </Card>
   );
