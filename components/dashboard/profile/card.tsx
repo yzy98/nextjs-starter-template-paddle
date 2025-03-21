@@ -41,10 +41,6 @@ import { ChangePasswordButton } from "./change-password-button";
 import { EditUserButton } from "./edit-user-button";
 import { EmailVerificationAlert } from "./email-verification-alert";
 
-
-
-
-
 type ProfileCardProps = {
   profileSessionsPromise: Promise<[Session | null, Session["session"][]]>;
 };

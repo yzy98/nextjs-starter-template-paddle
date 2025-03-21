@@ -18,6 +18,7 @@ import {
 import { DATA_TABLE_ID_TITLE_MAP } from "@/lib/constants";
 import { formatPrice, getStatusText } from "@/lib/utils";
 import { AppRouter } from "@/trpc/routers/_app";
+import Link from "next/link";
 
 type SubscriptionsHistoryOutput = inferProcedureOutput<
   AppRouter["subscriptions"]["getInactive"]
@@ -163,7 +164,13 @@ export const columns: ColumnDef<SubscriptionsHistory>[] = [
               Copy Subscription ID
             </DropdownMenuItem>
             <DropdownMenuSeparator />
-            <DropdownMenuItem>View Subscription Details</DropdownMenuItem>
+            <DropdownMenuItem asChild>
+              <Link
+                href={`/dashboard/subscriptions/history/${subscription.paddleSubscriptionId}`}
+              >
+                View Subscription Details
+              </Link>
+            </DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>
       );

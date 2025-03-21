@@ -260,4 +260,11 @@ export const DB_QUERIES = {
       )
       .then((result) => result[0]?.count || 0);
   },
+  getSubscriptionById: function (subscriptionId: string) {
+    return db
+      .select()
+      .from(subscriptions)
+      .where(eq(subscriptions.paddleSubscriptionId, subscriptionId))
+      .limit(1);
+  },
 };

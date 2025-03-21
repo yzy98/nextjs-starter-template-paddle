@@ -2,50 +2,10 @@
 
 import { unstable_cache } from "next/cache";
 
-import { Product, Price } from "@paddle/paddle-node-sdk";
-
 import { DB_MUTATIONS } from "@/server/db/mutations";
 import { DB_QUERIES } from "@/server/db/queries";
+import { PADDLE_QUERIES } from "@/server/paddle/queries";
 import { NewPrice, NewProduct } from "@/server/db/schema";
-import { getPaddleInstance } from "@/server/paddle";
-
-export async function getPaddleProducts() {
-  const paddle = getPaddleInstance();
-
-  try {
-    const productCollection = paddle.products.list();
-    let allProducts: Product[] = [];
-
-    do {
-      const singlePageProducts = await productCollection.next();
-      allProducts = [...allProducts, ...singlePageProducts];
-    } while (productCollection.hasMore);
-
-    return allProducts;
-  } catch (error) {
-    console.error("Error fetching Paddle products:", error);
-    throw error;
-  }
-}
-
-export async function getPaddlePrices() {
-  const paddle = getPaddleInstance();
-
-  try {
-    const priceCollection = paddle.prices.list();
-    let allPrices: Price[] = [];
-
-    do {
-      const singlePagePrices = await priceCollection.next();
-      allPrices = [...allPrices, ...singlePagePrices];
-    } while (priceCollection.hasMore);
-
-    return allPrices;
-  } catch (error) {
-    console.error("Error fetching Paddle prices:", error);
-    throw error;
-  }
-}
 
 export async function syncProducts() {
   // Fetch all products from db
@@ -60,7 +20,7 @@ export async function syncProducts() {
   }
 
   // Fetch all products from paddle
-  const paddleProducts = await getPaddleProducts();
+  const paddleProducts = await PADDLE_QUERIES.getAllProducts();
 
   for (const paddleProduct of paddleProducts) {
     // Skip archived products
@@ -105,7 +65,7 @@ export async function syncPrices() {
   }
 
   // Fetch all prices from paddle
-  const paddlePrices = await getPaddlePrices();
+  const paddlePrices = await PADDLE_QUERIES.getAllPrices();
 
   for (const paddlePrice of paddlePrices) {
     // Skip archived prices
