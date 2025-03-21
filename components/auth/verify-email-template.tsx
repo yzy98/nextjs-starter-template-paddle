@@ -1,5 +1,6 @@
-import { User } from "better-auth";
 import * as React from "react";
+
+import { User } from "better-auth";
 
 interface VerifyEmailTemplateProps {
   user: User;
@@ -48,7 +49,7 @@ export const VerifyEmailTemplate = ({
             Verify Email Address
           </a>
         </div>
-        <p>If you didn't request this email, you can safely ignore it.</p>
+        <p>If you didn&apos;t request this email, you can safely ignore it.</p>
         <p>This link will expire in 1 hour.</p>
       </div>
       <div

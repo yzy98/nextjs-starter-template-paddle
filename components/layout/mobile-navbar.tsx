@@ -2,7 +2,7 @@ import Image from "next/image";
 import Link from "next/link";
 
 import { VisuallyHidden } from "@radix-ui/react-visually-hidden";
-import { Menu, LogIn, Home, CreditCard, LayoutDashboard } from "lucide-react";
+import { Menu, Home, CreditCard } from "lucide-react";
 
 import {
   Sheet,

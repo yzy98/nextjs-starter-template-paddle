@@ -1,7 +1,8 @@
 "use client";
 
-import { EyeIcon, EyeOffIcon } from "lucide-react";
 import * as React from "react";
+
+import { EyeIcon, EyeOffIcon } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";

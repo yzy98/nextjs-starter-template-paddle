@@ -1,6 +1,12 @@
-import { Loader2 } from "lucide-react";
 import { useState } from "react";
 
+import Image from "next/image";
+import { useRouter } from "next/navigation";
+
+import { Loader2 } from "lucide-react";
+import { Edit, X } from "lucide-react";
+
+import { authClient, useSession } from "@/auth/client";
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
@@ -14,22 +20,17 @@ import {
 import {
   Drawer,
   DrawerTrigger,
-  DrawerClose,
   DrawerContent,
   DrawerDescription,
   DrawerFooter,
   DrawerHeader,
   DrawerTitle,
 } from "@/components/ui/drawer";
-import { useRouter } from "next/navigation";
-import { authClient, useSession } from "@/auth/client";
-import { Edit, X } from "lucide-react";
-import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
-import Image from "next/image";
-import { cn, convertImageToBase64 } from "@/lib/utils";
-import { toast } from "@/hooks/use-toast";
+import { Label } from "@/components/ui/label";
 import { useMediaQuery } from "@/hooks/use-media-query";
+import { toast } from "@/hooks/use-toast";
+import { cn, convertImageToBase64 } from "@/lib/utils";
 
 export const EditUserButton = () => {
   const [name, setName] = useState<string>();
@@ -40,7 +41,7 @@ export const EditUserButton = () => {
 
   const isDesktop = useMediaQuery("(min-width: 768px)");
   const router = useRouter();
-  const { data, isPending, error } = useSession();
+  const { data } = useSession();
 
   const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];

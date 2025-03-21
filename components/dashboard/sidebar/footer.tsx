@@ -1,3 +1,11 @@
+import { Suspense } from "react";
+
+import { headers } from "next/headers";
+import Link from "next/link";
+import { redirect } from "next/navigation";
+
+import { ChevronUp, Settings, User } from "lucide-react";
+
 import { auth } from "@/auth/server";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import {
@@ -15,11 +23,7 @@ import {
   SidebarMenuItem,
   SidebarMenuSkeleton,
 } from "@/components/ui/sidebar";
-import { ChevronUp, LogOut, Settings, User } from "lucide-react";
-import { headers } from "next/headers";
-import Link from "next/link";
-import { redirect } from "next/navigation";
-import { Suspense } from "react";
+
 import { SignOutButton } from "./sign-out-button";
 
 export const DashboardSidebarFooter = () => {

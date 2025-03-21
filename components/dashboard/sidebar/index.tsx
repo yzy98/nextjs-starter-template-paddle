@@ -1,7 +1,8 @@
 import { Sidebar, SidebarSeparator } from "@/components/ui/sidebar";
-import { DashboardSidebarHeader } from "./header";
-import { DashboardSidebarFooter } from "./footer";
+
 import { DashboardSidebarContent } from "./content";
+import { DashboardSidebarFooter } from "./footer";
+import { DashboardSidebarHeader } from "./header";
 
 export function DashboardSidebar() {
   return (

@@ -1,7 +1,8 @@
 "use server";
 
-import { auth } from "@/auth/server";
 import { headers } from "next/headers";
+
+import { auth } from "@/auth/server";
 
 export const getProfileSessions = async () => {
   const headersList = await headers();

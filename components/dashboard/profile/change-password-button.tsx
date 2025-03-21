@@ -1,3 +1,7 @@
+import { useState } from "react";
+
+import { Loader2 } from "lucide-react";
+
 import { authClient } from "@/auth/client";
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
@@ -13,7 +17,6 @@ import {
 import {
   Drawer,
   DrawerTrigger,
-  DrawerClose,
   DrawerContent,
   DrawerDescription,
   DrawerFooter,
@@ -25,8 +28,6 @@ import { Label } from "@/components/ui/label";
 import { useMediaQuery } from "@/hooks/use-media-query";
 import { toast } from "@/hooks/use-toast";
 import { cn } from "@/lib/utils";
-import { Loader2 } from "lucide-react";
-import { useState } from "react";
 
 export const ChangePasswordButton = () => {
   const [currentPassword, setCurrentPassword] = useState<string>("");

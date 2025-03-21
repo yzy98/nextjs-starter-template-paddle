@@ -1,22 +1,11 @@
 "use client";
 
-import { signOut } from "@/auth/client";
-import { Session } from "@/auth/types";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { Button } from "@/components/ui/button";
-import {
-  Tooltip,
-  TooltipContent,
-  TooltipProvider,
-  TooltipTrigger,
-} from "@/components/ui/tooltip";
-import {
-  Card,
-  CardContent,
-  CardFooter,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
+import { Suspense, use, useState } from "react";
+
+import Link from "next/link";
+import { useRouter } from "next/navigation";
+
+import { useSuspenseQuery } from "@tanstack/react-query";
 import {
   ArrowRight,
   ArrowUpFromLine,
@@ -25,17 +14,36 @@ import {
   Loader2,
   LogOut,
 } from "lucide-react";
-import { useRouter } from "next/navigation";
-import { Suspense, use, useState } from "react";
+
+import { signOut } from "@/auth/client";
+import { Session } from "@/auth/types";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
-import { EditUserButton } from "./edit-user-button";
-import { ChangePasswordButton } from "./change-password-button";
-import Link from "next/link";
-import { EmailVerificationAlert } from "./email-verification-alert";
-import { useTRPC } from "@/trpc/client";
-import { useSuspenseQuery } from "@tanstack/react-query";
-import { ActiveSessions } from "./active-sessions";
+import { Button } from "@/components/ui/button";
+import {
+  Card,
+  CardContent,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
+import { useTRPC } from "@/trpc/client";
+
+import { ActiveSessions } from "./active-sessions";
+import { ChangePasswordButton } from "./change-password-button";
+import { EditUserButton } from "./edit-user-button";
+import { EmailVerificationAlert } from "./email-verification-alert";
+
+
+
+
 
 type ProfileCardProps = {
   profileSessionsPromise: Promise<[Session | null, Session["session"][]]>;

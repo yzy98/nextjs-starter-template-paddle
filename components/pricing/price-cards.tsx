@@ -1,4 +1,5 @@
 import { Price, Product } from "@/server/db/schema";
+
 import { PriceCard } from "./price-card";
 
 type PriceCardsProps = {

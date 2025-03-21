@@ -1,11 +1,16 @@
 "use client";
 
-import { z } from "zod";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { useForm } from "react-hook-form";
-import { signUp } from "@/auth/client";
+import { useState } from "react";
+
+import Image from "next/image";
 import { useRouter } from "next/navigation";
 
+import { zodResolver } from "@hookform/resolvers/zod";
+import { Loader2, X } from "lucide-react";
+import { useForm } from "react-hook-form";
+import { z } from "zod";
+
+import { signUp } from "@/auth/client";
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -25,9 +30,6 @@ import {
 import { Input } from "@/components/ui/input";
 import { InputPassword } from "@/components/ui/input-password";
 import { useToast } from "@/hooks/use-toast";
-import { useState } from "react";
-import Image from "next/image";
-import { Loader2, X } from "lucide-react";
 import { convertImageToBase64 } from "@/lib/utils";
 
 const signUpFormSchema = z

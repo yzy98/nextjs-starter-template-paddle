@@ -1,5 +1,6 @@
 import { redirect } from "next/navigation";
 
+import { useSession } from "@/auth/client";
 import { BackgroundGradient } from "@/components/ui/background-gradient";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
@@ -10,7 +11,6 @@ import { Product, Price } from "@/server/db/schema";
 import { PriceAmount } from "./price-amount";
 import { PriceFeatures } from "./price-features";
 import { PriceTitle } from "./price-title";
-import { useSession } from "@/auth/client";
 
 type PriceCardProps = {
   price: Price;

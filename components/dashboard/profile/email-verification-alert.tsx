@@ -1,9 +1,11 @@
+import { useState } from "react";
+
+import { Loader2, Send, ShieldAlert } from "lucide-react";
+
 import { authClient } from "@/auth/client";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { Button } from "@/components/ui/button";
 import { useToast } from "@/hooks/use-toast";
-import { Loader2, Send, ShieldAlert } from "lucide-react";
-import { useState } from "react";
 
 export const EmailVerificationAlert = ({ email }: { email: string }) => {
   const [emailVerificationPending, setEmailVerificationPending] =

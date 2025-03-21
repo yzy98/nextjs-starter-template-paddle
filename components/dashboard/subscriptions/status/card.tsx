@@ -1,3 +1,5 @@
+import Link from "next/link";
+
 import { inferProcedureOutput } from "@trpc/server";
 
 import { Badge } from "@/components/ui/badge";
@@ -10,7 +12,6 @@ import { AppRouter } from "@/trpc/routers/_app";
 
 import { SubscriptionsStatusActions } from "./actions";
 import { SubscriptionsStatusScheduledAlert } from "./scheduled-alert";
-import Link from "next/link";
 
 type SubscriptionOutput = inferProcedureOutput<
   AppRouter["subscriptions"]["getActive"]

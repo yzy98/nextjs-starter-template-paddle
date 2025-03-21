@@ -1,14 +1,18 @@
 "use client";
 
-import { authClient } from "@/auth/client";
+import { useState } from "react";
+
+import { useRouter } from "next/navigation";
+
 import { Loader2 } from "lucide-react";
-import { Session } from "@/auth/types";
-import { useToast } from "@/hooks/use-toast";
 import { Laptop } from "lucide-react";
 import { Smartphone } from "lucide-react";
-import { useRouter } from "next/navigation";
-import { useState } from "react";
 import { UAParser } from "ua-parser-js";
+
+import { authClient } from "@/auth/client";
+import { Session } from "@/auth/types";
+import { useToast } from "@/hooks/use-toast";
+
 
 interface ActiveSessionsProps {
   activeSessions: Session["session"][];

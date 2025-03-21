@@ -1,5 +1,9 @@
 "use client";
 
+import { Fragment } from "react";
+
+import { usePathname } from "next/navigation";
+
 import {
   Breadcrumb,
   BreadcrumbItem,
@@ -8,8 +12,6 @@ import {
   BreadcrumbPage,
   BreadcrumbSeparator,
 } from "@/components/ui/breadcrumb";
-import { usePathname } from "next/navigation";
-import { Fragment } from "react";
 
 export const DashboardBreadcrumb = () => {
   const pathname = usePathname();

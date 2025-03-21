@@ -1,9 +1,10 @@
 import Image from "next/image";
 import Link from "next/link";
 
+import { UserMenu } from "../auth/user-menu";
+
 import { MobileNavbar } from "./mobile-navbar";
 import { ModeToggle } from "./mode-toggle";
-import { UserMenu } from "../auth/user-menu";
 
 export function Navbar() {
   return (

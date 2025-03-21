@@ -1,11 +1,15 @@
 "use client";
 
-import { z } from "zod";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { useForm } from "react-hook-form";
-import { signIn } from "@/auth/client";
+import { useState } from "react";
+
 import { useRouter } from "next/navigation";
 
+import { zodResolver } from "@hookform/resolvers/zod";
+import { Loader2 } from "lucide-react";
+import { useForm } from "react-hook-form";
+import { z } from "zod";
+
+import { signIn } from "@/auth/client";
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -14,6 +18,7 @@ import {
   CardTitle,
   CardDescription,
 } from "@/components/ui/card";
+import { Checkbox } from "@/components/ui/checkbox";
 import {
   Form,
   FormControl,
@@ -24,10 +29,8 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { InputPassword } from "@/components/ui/input-password";
-import { Checkbox } from "@/components/ui/checkbox";
-import { Loader2 } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
-import { useState } from "react";
+
 
 const signInFormSchema = z.object({
   email: z.string().email("Invalid email address"),
