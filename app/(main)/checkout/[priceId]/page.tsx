@@ -1,20 +1,18 @@
+import { headers } from "next/headers";
 import { redirect } from "next/navigation";
 
-import { currentUser } from "@clerk/nextjs/server";
-
+import { auth } from "@/auth/server";
 import { CheckoutContents } from "@/components/checkout/checkout-contents";
-
 export default async function CheckoutPage() {
-  const user = await currentUser();
+  const session = await auth.api.getSession({
+    headers: await headers(),
+  });
 
-  if (!user) {
-    redirect("/");
+  if (!session?.user) {
+    redirect("/sign-in");
   }
 
   return (
-    <CheckoutContents
-      userEmail={user.emailAddresses[0].emailAddress}
-      userId={user.id}
-    />
+    <CheckoutContents userEmail={session.user.email} userId={session.user.id} />
   );
 }

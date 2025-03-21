@@ -1,5 +1,8 @@
 "use client";
 
+import Link from "next/link";
+import { usePathname } from "next/navigation";
+
 import { DollarSign, Settings, User } from "lucide-react";
 
 import {
@@ -14,8 +17,6 @@ import {
   SidebarMenuSubItem,
   useSidebar,
 } from "@/components/ui/sidebar";
-import { usePathname } from "next/navigation";
-import Link from "next/link";
 
 export const DashboardSidebarContent = () => {
   // Menu items.

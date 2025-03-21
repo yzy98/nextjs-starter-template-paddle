@@ -13,6 +13,8 @@ import {
   count,
 } from "drizzle-orm";
 import { prices, products, subscriptions, users } from "./schema";
+import { auth } from "@/auth/server";
+import { headers } from "next/headers";
 
 export const DB_QUERIES = {
   /**
@@ -28,10 +30,35 @@ export const DB_QUERIES = {
     return db.select().from(prices);
   },
   /**
-   * Get a user by his/her Clerk ID
+   * Get the current logged in user
    */
-  getUserByClerkId: function (clerkId: string) {
-    return db.select().from(users).where(eq(users.clerkId, clerkId));
+  getUser: async function () {
+    const session = await auth.api.getSession({
+      headers: await headers(),
+    });
+
+    if (!session?.user) {
+      return null;
+    }
+
+    const userId = session.user.id;
+    const user = await db
+      .select()
+      .from(users)
+      .where(eq(users.id, userId))
+      .limit(1);
+
+    if (user.length === 0) {
+      return null;
+    }
+
+    return user[0];
+  },
+  /**
+   * Get a user by userId
+   */
+  getUserById: function (userId: string) {
+    return db.select().from(users).where(eq(users.id, userId));
   },
   /**
    * Fetch a price by interval
@@ -61,7 +88,7 @@ export const DB_QUERIES = {
   /**
    * Fetch a user's active subscriptions
    */
-  getUserActiveSubscriptions: function (clerkId: string) {
+  getUserActiveSubscriptions: function (userId: string) {
     return db
       .select({
         id: subscriptions.id,
@@ -83,7 +110,7 @@ export const DB_QUERIES = {
       )
       .where(
         and(
-          eq(subscriptions.userId, clerkId),
+          eq(subscriptions.userId, userId),
           inArray(subscriptions.status, ACTIVE_SUBSCRIPTION_STATUSES)
         )
       );
@@ -92,14 +119,14 @@ export const DB_QUERIES = {
    * Fetch a user's inactive subscriptions
    */
   getUserInactiveSubscriptions: function ({
-    clerkUserId,
+    userId,
     limit,
     page,
     sortingId,
     sortingDirection,
     globalFilter,
   }: {
-    clerkUserId: string;
+    userId: string;
     limit: number;
     page: number;
     sortingId?:
@@ -137,7 +164,7 @@ export const DB_QUERIES = {
       )
       .where(
         and(
-          eq(subscriptions.userId, clerkUserId),
+          eq(subscriptions.userId, userId),
           notInArray(subscriptions.status, ACTIVE_SUBSCRIPTION_STATUSES),
           ...(globalFilter && globalFilter.length > 0
             ? [
@@ -188,10 +215,10 @@ export const DB_QUERIES = {
    * Fetch the count of a user's inactive subscriptions
    */
   getInactiveSubscriptionsCount: async function ({
-    clerkUserId,
+    userId,
     globalFilter,
   }: {
-    clerkUserId: string;
+    userId: string;
     globalFilter?: string;
   }) {
     return db
@@ -203,7 +230,7 @@ export const DB_QUERIES = {
       )
       .where(
         and(
-          eq(subscriptions.userId, clerkUserId),
+          eq(subscriptions.userId, userId),
           notInArray(subscriptions.status, ACTIVE_SUBSCRIPTION_STATUSES),
           ...(globalFilter && globalFilter.length > 0
             ? [

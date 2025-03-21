@@ -4,19 +4,21 @@ import {
   isPaddleEvent,
   isPaddleSubscriptionEvent,
 } from "@/server/paddle/typeguards";
-import { prices, products, subscriptions, users } from "./schema";
 import { eq } from "drizzle-orm";
-
-type InsertProduct = typeof products.$inferInsert;
-type InsertPrice = typeof prices.$inferInsert;
-type InsertUser = typeof users.$inferInsert;
-type InsertSubscription = typeof subscriptions.$inferInsert;
+import {
+  NewPrice,
+  NewProduct,
+  NewSubscription,
+  prices,
+  products,
+  subscriptions,
+} from "./schema";
 
 export const DB_MUTATIONS = {
   /**
    * Create or update single record in DB Product table
    */
-  upsertProduct: async function (upsertProduct: InsertProduct) {
+  upsertProduct: async function (upsertProduct: NewProduct) {
     try {
       const result = await db
         .insert(products)
@@ -36,7 +38,7 @@ export const DB_MUTATIONS = {
   /**
    * Create or update single record in DB Price table
    */
-  upsertPrice: async function (upsertPrice: InsertPrice) {
+  upsertPrice: async function (upsertPrice: NewPrice) {
     try {
       const result = await db
         .insert(prices)
@@ -54,34 +56,6 @@ export const DB_MUTATIONS = {
     }
   },
   /**
-   * Create or update single record in DB User table
-   */
-  upsertUser: async function (upsertUser: InsertUser) {
-    try {
-      await db
-        .insert(users)
-        .values({ ...upsertUser })
-        .onConflictDoUpdate({
-          target: users.clerkId,
-          set: { ...upsertUser },
-        });
-    } catch (error: any) {
-      console.error("Error creating or updating user:", error);
-      throw new Error(error.message);
-    }
-  },
-  /**
-   * Delete single record in DB User table
-   */
-  deleteUser: async function ({ clerk_id }: { clerk_id: string }) {
-    try {
-      await db.delete(users).where(eq(users.clerkId, clerk_id));
-    } catch (error: any) {
-      console.error("Error deleting user:", error);
-      throw new Error(error.message);
-    }
-  },
-  /**
    * Create single record in DB Subscription table
    */
   createSubscription: async function (data: any) {
@@ -89,7 +63,7 @@ export const DB_MUTATIONS = {
       throw new Error("Invalid subscription event data");
     }
 
-    const updateData: InsertSubscription = {
+    const updateData: NewSubscription = {
       paddleSubscriptionId: data.data.id,
       userId: data.data?.custom_data?.user_id ?? "",
       priceId: data.data.items[0].price.id,

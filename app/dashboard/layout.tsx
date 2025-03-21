@@ -1,14 +1,14 @@
 import { cookies } from "next/headers";
 
-import { SUBSCRIPTION_HISTORY_PAGE_SIZE } from "@/lib/constants";
-import { HydrateClient, prefetch, trpc } from "@/trpc/server";
+import { DashboardBreadcrumb } from "@/components/dashboard/breadcrumb";
 import { DashboardSidebar } from "@/components/dashboard/sidebar";
 import {
   SidebarInset,
   SidebarProvider,
   SidebarTrigger,
 } from "@/components/ui/sidebar";
-import { DashboardBreadcrumb } from "@/components/dashboard/breadcrumb";
+import { SUBSCRIPTION_HISTORY_PAGE_SIZE } from "@/lib/constants";
+import { HydrateClient, prefetch, trpc } from "@/trpc/server";
 
 export default async function DashboardLayout({
   children,

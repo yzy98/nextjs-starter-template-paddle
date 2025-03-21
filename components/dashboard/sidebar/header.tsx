@@ -1,12 +1,11 @@
+import Image from "next/image";
+import Link from "next/link";
+
 import {
   SidebarHeader,
   SidebarMenu,
-  SidebarMenuButton,
   SidebarMenuItem,
 } from "@/components/ui/sidebar";
-
-import Image from "next/image";
-import Link from "next/link";
 
 export const DashboardSidebarHeader = () => {
   return (

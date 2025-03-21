@@ -1,16 +1,19 @@
+import { auth } from "@/auth/server";
 import { DB_QUERIES } from "@/server/db/queries";
 import { ratelimit } from "@/server/redis/ratelimit";
-import { auth } from "@clerk/nextjs/server";
 import { initTRPC, TRPCError } from "@trpc/server";
+import { headers } from "next/headers";
 import { cache } from "react";
 import superjson from "superjson";
 
 // Keep it as light as possible
 export const createTRPCContext = cache(async () => {
-  const { userId } = await auth();
+  const session = await auth.api.getSession({
+    headers: await headers(),
+  });
 
   return {
-    clerkUserId: userId,
+    userId: session?.user.id,
   };
 });
 
@@ -35,12 +38,12 @@ export const protectedProcedure = t.procedure.use(async (opts) => {
   // Check if the user is authenticated
   const { ctx } = opts;
 
-  if (!ctx.clerkUserId) {
+  if (!ctx.userId) {
     throw new TRPCError({ code: "UNAUTHORIZED" });
   }
 
   // Get the user from the database
-  const users = await DB_QUERIES.getUserByClerkId(ctx.clerkUserId);
+  const users = await DB_QUERIES.getUserById(ctx.userId);
 
   if (!users || users.length === 0) {
     throw new TRPCError({ code: "UNAUTHORIZED" });
@@ -49,7 +52,7 @@ export const protectedProcedure = t.procedure.use(async (opts) => {
   const user = users[0];
 
   // Check if the user is rate limited
-  const { success } = await ratelimit.limit(user.clerkId);
+  const { success } = await ratelimit.limit(user.id);
 
   if (!success) {
     throw new TRPCError({ code: "TOO_MANY_REQUESTS" });

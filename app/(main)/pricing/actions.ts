@@ -6,11 +6,8 @@ import { Product, Price } from "@paddle/paddle-node-sdk";
 
 import { DB_MUTATIONS } from "@/server/db/mutations";
 import { DB_QUERIES } from "@/server/db/queries";
-import { prices, products } from "@/server/db/schema";
+import { NewPrice, NewProduct } from "@/server/db/schema";
 import { getPaddleInstance } from "@/server/paddle";
-
-type InsertProduct = typeof products.$inferInsert;
-type InsertPrice = typeof prices.$inferInsert;
 
 export async function getPaddleProducts() {
   const paddle = getPaddleInstance();
@@ -55,7 +52,7 @@ export async function syncProducts() {
   const products = await DB_QUERIES.getProducts();
 
   // Helper function to add a product to the products array and sync it with the db
-  async function addProduct(product: InsertProduct) {
+  async function addProduct(product: NewProduct) {
     console.log(`Syncing product ${product.name} with the database...`);
     const result = await DB_MUTATIONS.upsertProduct(product);
     console.log(`Product ${result.name} synced with the database.`);
@@ -100,7 +97,7 @@ export async function syncPrices() {
   const prices = await DB_QUERIES.getPrices();
 
   // Helper function to add a price to the prices array and sync it with the db
-  async function addPrice(price: InsertPrice) {
+  async function addPrice(price: NewPrice) {
     console.log(`Syncing price ${price.name} with the database...`);
     const result = await DB_MUTATIONS.upsertPrice(price);
     console.log(`Price ${result.name} synced with the database.`);

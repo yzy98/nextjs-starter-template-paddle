@@ -1,9 +1,7 @@
 import Image from "next/image";
 import Link from "next/link";
 
-import { SignedIn, SignedOut, SignInButton, UserButton } from "@clerk/nextjs";
-
-import { Button } from "@/components/ui/button";
+import { UserMenu } from "../auth/user-menu";
 
 import { MobileNavbar } from "./mobile-navbar";
 import { ModeToggle } from "./mode-toggle";
@@ -31,26 +29,8 @@ export function Navbar() {
             >
               Pricing
             </Link>
-            <SignedIn>
-              <Link
-                href="/dashboard"
-                className="text-muted-foreground hover:text-foreground transition-colors"
-              >
-                Dashboard
-              </Link>
-            </SignedIn>
             <ModeToggle />
-            <SignedOut>
-              <SignInButton>
-                <Button>Sign in</Button>
-              </SignInButton>
-            </SignedOut>
-            <SignedIn>
-              <UserButton
-                userProfileMode="navigation"
-                userProfileUrl="/dashboard/profile"
-              />
-            </SignedIn>
+            <UserMenu />
           </div>
 
           {/* Mobile Navigation */}

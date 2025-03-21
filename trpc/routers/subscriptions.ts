@@ -7,14 +7,14 @@ import { SUBSCRIPTION_HISTORY_PAGE_SIZE } from "@/lib/constants";
 
 export const subscriptionsRouter = createTRPCRouter({
   getActive: protectedProcedure.query(async ({ ctx }) => {
-    const { clerkUserId } = ctx;
+    const { userId } = ctx;
 
-    if (!clerkUserId) {
+    if (!userId) {
       throw new TRPCError({ code: "UNAUTHORIZED" });
     }
 
     try {
-      const data = await DB_QUERIES.getUserActiveSubscriptions(clerkUserId);
+      const data = await DB_QUERIES.getUserActiveSubscriptions(userId);
       return data[0] || null;
     } catch (error) {
       throw new TRPCError({
@@ -48,16 +48,16 @@ export const subscriptionsRouter = createTRPCRouter({
       })
     )
     .query(async ({ ctx, input }) => {
-      const { clerkUserId } = ctx;
+      const { userId } = ctx;
       const { limit, page, sortingId, sortingDirection, globalFilter } = input;
 
-      if (!clerkUserId) {
+      if (!userId) {
         throw new TRPCError({ code: "UNAUTHORIZED" });
       }
 
       try {
         const data = await DB_QUERIES.getUserInactiveSubscriptions({
-          clerkUserId,
+          userId,
           limit,
           page,
           sortingId,
@@ -77,9 +77,9 @@ export const subscriptionsRouter = createTRPCRouter({
   countInactive: protectedProcedure
     .input(z.object({ globalFilter: z.string().optional() }))
     .query(async ({ ctx, input }) => {
-      const { clerkUserId } = ctx;
+      const { userId } = ctx;
 
-      if (!clerkUserId) {
+      if (!userId) {
         throw new TRPCError({ code: "UNAUTHORIZED" });
       }
 
@@ -87,7 +87,7 @@ export const subscriptionsRouter = createTRPCRouter({
 
       try {
         const data = await DB_QUERIES.getInactiveSubscriptionsCount({
-          clerkUserId,
+          userId,
           globalFilter,
         });
         return data;
@@ -104,9 +104,9 @@ export const subscriptionsRouter = createTRPCRouter({
       })
     )
     .mutation(async ({ ctx, input }) => {
-      const { clerkUserId } = ctx;
+      const { userId } = ctx;
 
-      if (!clerkUserId) {
+      if (!userId) {
         throw new TRPCError({ code: "UNAUTHORIZED" });
       }
 

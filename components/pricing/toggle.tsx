@@ -1,12 +1,9 @@
-
 import { Badge } from "@/components/ui/badge";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { prices } from "@/server/db/schema";
-
-type SelectPrice = typeof prices.$inferSelect;
+import { Price } from "@/server/db/schema";
 
 interface ToggleProps {
-  prices: SelectPrice[];
+  prices: Price[];
   interval: "month" | "year";
   setInterval: (interval: "month" | "year") => void;
 }

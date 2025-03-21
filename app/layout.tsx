@@ -1,5 +1,5 @@
 import "./globals.css";
-import { ClerkThemeProvider } from "@/components/providers/clerk-theme-provider";
+
 import { ThemeProvider } from "@/components/providers/theme-provider";
 import { Toaster } from "@/components/ui/toaster";
 import { TRPCReactProvider } from "@/trpc/client";
@@ -18,12 +18,10 @@ export default function RootLayout({
           enableSystem
           disableTransitionOnChange
         >
-          <ClerkThemeProvider>
-            <TRPCReactProvider>
-              {children}
-              <Toaster />
-            </TRPCReactProvider>
-          </ClerkThemeProvider>
+          <TRPCReactProvider>
+            {children}
+            <Toaster />
+          </TRPCReactProvider>
         </ThemeProvider>
       </body>
     </html>

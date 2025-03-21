@@ -1,9 +1,8 @@
 import Image from "next/image";
 import Link from "next/link";
 
-import { SignedIn, SignedOut, SignInButton, UserButton } from "@clerk/nextjs";
 import { VisuallyHidden } from "@radix-ui/react-visually-hidden";
-import { Menu, LogIn, Home, CreditCard, LayoutDashboard } from "lucide-react";
+import { Menu, Home, CreditCard } from "lucide-react";
 
 import {
   Sheet,
@@ -77,7 +76,7 @@ export function MobileNavbar() {
                   <span>Pricing</span>
                 </Link>
               </SheetClose>
-              <SignedIn>
+              {/* <SignedIn>
                 <SheetClose asChild>
                   <Link
                     href="/dashboard"
@@ -87,15 +86,6 @@ export function MobileNavbar() {
                     <span>Dashboard</span>
                   </Link>
                 </SheetClose>
-                <UserButton
-                  appearance={{
-                    elements: {
-                      userButtonPopoverCard: { pointerEvents: "initial" },
-                    },
-                  }}
-                  userProfileMode="navigation"
-                  userProfileUrl="/dashboard/profile"
-                />
               </SignedIn>
               <SignedOut>
                 <SheetClose>
@@ -106,7 +96,7 @@ export function MobileNavbar() {
                     </div>
                   </SignInButton>
                 </SheetClose>
-              </SignedOut>
+              </SignedOut> */}
               <ModeToggle />
             </div>
           </div>

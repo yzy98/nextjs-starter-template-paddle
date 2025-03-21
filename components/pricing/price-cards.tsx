@@ -1,13 +1,10 @@
-import { products, prices } from "@/server/db/schema";
+import { Price, Product } from "@/server/db/schema";
 
 import { PriceCard } from "./price-card";
 
-type SelectProduct = typeof products.$inferSelect;
-type SelectPrice = typeof prices.$inferSelect;
-
 type PriceCardsProps = {
-  allProducts: SelectProduct[];
-  allPrices: SelectPrice[];
+  allProducts: Product[];
+  allPrices: Price[];
 };
 
 export const PriceCards = ({ allProducts, allPrices }: PriceCardsProps) => {
