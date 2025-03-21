@@ -4,17 +4,18 @@ A modern full-stack starter template with authentication, database, payments, an
 
 ## Tech Stack
 
-| Category       | Technology                  |
-| -------------- | --------------------------- |
-| Framework      | Next.js                     |
-| Styling        | Tailwind CSS                |
-| Components     | Shadcn UI                   |
-| Authentication | Clerk                       |
-| Database       | Neon PostgreSQL             |
-| ORM            | Drizzle                     |
-| Payments       | Paddle                      |
-| Rate Limiting  | Upstash                     |
-| API Layer      | tRPC + TanStack React Query |
+| Category       | Technology                                                                           |
+| -------------- | ------------------------------------------------------------------------------------ |
+| Framework      | [Next.js](https://nextjs.org/)                                                       |
+| Styling        | [tailwindcss](https://tailwindcss.com/)                                              |
+| Components     | [Shadcn](https://ui.shadcn.com/)                                                     |
+| Authentication | [Better-Auth](https://www.better-auth.com/)                                          |
+| Database       | [Neon PostgreSQL](https://neon.tech/home)                                            |
+| ORM            | [Drizzle](https://orm.drizzle.team/)                                                 |
+| API Layer      | [tRPC](https://trpc.io/) + [TanStack React Query](https://tanstack.com/query/latest) |
+| Payments       | [Paddle](https://www.paddle.com/)                                                    |
+| Rate Limiting  | [Upstash](https://upstash.com/)                                                      |
+| Email          | [Resend](https://resend.com/home)                                                    |
 
 ## Getting Started
 
@@ -37,7 +38,7 @@ pnpm install
 2. **Set up .env**
 
 copy `.env.example` to `.env`, and fill in the values according to the comments in the `.env.example` file.
-You need to initialize Clerk, Neon, Paddle and Upstash projects.
+You need to initialize Better-Auth, Neon, Paddle, Upstash and Resend projects.
 
 3. **Initialize Database**
 
@@ -51,7 +52,7 @@ You can go to your Neon project dashboard to check if all User, Product, Price a
 
 - 🎯 Styled with Tailwind CSS
 - 🎨 Beautiful UI components with Shadcn
-- 🔐 Authentication with Clerk
+- 🔐 Authentication with Better-Auth
 - 🗄️ PostgreSQL Database with Neon
 - 💳 Payment processing with Paddle
 - 🔄 Real-time webhook handling
@@ -69,11 +70,10 @@ You can go to your Neon project dashboard to check if all User, Product, Price a
 ```
 ├── app/
 │   ├── api/
-│   │   ├── auth/
-│   │   │   └── webhook/route.ts
 │   │   └── billing/
 │   │   |   └── webhook/route.ts
-|   |   └── user/route.ts
+|   |   |── auth/
+|   |   └── trpc/
 │   ├── sign-in/
 │   ├── sign-up/
 │   ├── dashboard/
@@ -129,12 +129,8 @@ ngrok config add-authtoken $YOUR_AUTHTOKEN
 ```
 
 4. Get a static domain in **_[Ngrok Dashboard](https://dashboard.ngrok.com/domains)_**, copy the domain as value of `NGROK_DOMAIN` inside `.env`
-5. Configure Clerk webhook endpoint with the ngrok URL:
 
-- URL: `<ngrok-domain>/api/auth/webhook`
-- Events: `user.created`, `user.deleted`, `user.updated`
-
-6. Configure Paddle webhook endpoint with the ngrok URL:
+5. Configure Paddle webhook endpoint with the ngrok URL:
 
 - URL: `<ngrok-domain>/api/billing/webhook`
 - Events: `subscription.created`, `subscription.updated`, `subscription.canceled`
