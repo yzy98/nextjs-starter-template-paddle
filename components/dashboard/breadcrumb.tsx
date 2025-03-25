@@ -15,7 +15,6 @@ import {
 
 export const DashboardBreadcrumb = () => {
   const pathname = usePathname();
-  console.log("pathname: ", pathname);
   const pathnameParts = pathname
     .split("/")
     .filter((path) => !["", "dashboard"].includes(path));

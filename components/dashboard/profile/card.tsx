@@ -65,7 +65,8 @@ const ProfileCardSuspense = ({ profileSessionsPromise }: ProfileCardProps) => {
   );
 
   if (!sessionWithUser || !activeSessions) {
-    return <div>No session found</div>;
+    router.push("/");
+    return;
   }
 
   const { user, session: currentSession } = sessionWithUser;

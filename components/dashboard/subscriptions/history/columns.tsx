@@ -1,5 +1,7 @@
 "use client";
 
+import Link from "next/link";
+
 import { ColumnDef } from "@tanstack/react-table";
 import { inferProcedureOutput } from "@trpc/server";
 import { MoreHorizontal } from "lucide-react";
@@ -18,7 +20,6 @@ import {
 import { DATA_TABLE_ID_TITLE_MAP } from "@/lib/constants";
 import { formatPrice, getStatusText } from "@/lib/utils";
 import { AppRouter } from "@/trpc/routers/_app";
-import Link from "next/link";
 
 type SubscriptionsHistoryOutput = inferProcedureOutput<
   AppRouter["subscriptions"]["getInactive"]

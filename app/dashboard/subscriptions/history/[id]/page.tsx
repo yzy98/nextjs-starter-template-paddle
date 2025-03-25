@@ -1,4 +1,5 @@
 import { SubscriptionDetail } from "@/components/dashboard/subscriptions/subscription-detail";
+
 import { getSubscription } from "./actions";
 
 export default function SubscriptionHistoryDetailPage({

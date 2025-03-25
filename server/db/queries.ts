@@ -262,8 +262,15 @@ export const DB_QUERIES = {
   },
   getSubscriptionById: function (subscriptionId: string) {
     return db
-      .select()
+      .select({
+        subscription: subscriptions,
+        product: products,
+      })
       .from(subscriptions)
+      .innerJoin(
+        products,
+        eq(subscriptions.productId, products.paddleProductId)
+      )
       .where(eq(subscriptions.paddleSubscriptionId, subscriptionId))
       .limit(1);
   },

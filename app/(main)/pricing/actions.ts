@@ -4,8 +4,8 @@ import { unstable_cache } from "next/cache";
 
 import { DB_MUTATIONS } from "@/server/db/mutations";
 import { DB_QUERIES } from "@/server/db/queries";
-import { PADDLE_QUERIES } from "@/server/paddle/queries";
 import { NewPrice, NewProduct } from "@/server/db/schema";
+import { PADDLE_QUERIES } from "@/server/paddle/queries";
 
 export async function syncProducts() {
   // Fetch all products from db
