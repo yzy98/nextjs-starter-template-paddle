@@ -37,9 +37,8 @@ import {
 import { useTRPC } from "@/trpc/client";
 
 import { ActiveSessions } from "./active-sessions";
-import { ChangePasswordButton } from "./change-password-button";
-import { EditUserButton } from "./edit-user-button";
 import { EmailVerificationAlert } from "./email-verification-alert";
+import { ProfileActions } from "./profile-actions";
 
 type ProfileCardProps = {
   profileSessionsPromise: Promise<[Session | null, Session["session"][]]>;
@@ -119,7 +118,7 @@ const ProfileCardSuspense = ({ profileSessionsPromise }: ProfileCardProps) => {
                 <p className="text-sm">{user.email}</p>
               </div>
             </div>
-            <EditUserButton />
+            <ProfileActions />
           </div>
 
           {/* Subscription badge */}
@@ -167,10 +166,7 @@ const ProfileCardSuspense = ({ profileSessionsPromise }: ProfileCardProps) => {
           currentSession={currentSession}
         />
       </CardContent>
-      <CardFooter className="gap-2 justify-between items-center">
-        <ChangePasswordButton />
-
-        {/* Sign out */}
+      <CardFooter className="justify-end">
         <Button
           className="gap-2 cursor-pointer"
           size="sm"
@@ -228,7 +224,7 @@ export const ProfileCardSkeleton = () => {
               </div>
             </div>
             {/* Edit button skeleton */}
-            <Skeleton className="h-8 w-24" />
+            <Skeleton className="size-8" />
           </div>
 
           {/* Subscription info skeleton */}
@@ -245,14 +241,12 @@ export const ProfileCardSkeleton = () => {
         <div className="space-y-2">
           <Skeleton className="h-4 w-24" />
           <div className="space-y-2">
-            <Skeleton className="h-10 w-full" />
-            <Skeleton className="h-10 w-full" />
+            <Skeleton className="h-5 w-40" />
+            <Skeleton className="h-5 w-40" />
           </div>
         </div>
       </CardContent>
-      <CardFooter className="gap-2 justify-between items-center">
-        {/* Change password button skeleton */}
-        <Skeleton className="h-8 w-32" />
+      <CardFooter className="justify-end">
         {/* Sign out button skeleton */}
         <Skeleton className="h-8 w-24" />
       </CardFooter>
