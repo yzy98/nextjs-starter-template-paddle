@@ -1,4 +1,5 @@
 import Link from "next/link";
+
 import { ArrowLeft } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
@@ -22,7 +23,7 @@ export default function GoodbyePage() {
             </span>
           </div>
           <CardTitle className="text-2xl">Account Deleted</CardTitle>
-          <CardDescription>We're sorry to see you go</CardDescription>
+          <CardDescription>We&apos;re sorry to see you go</CardDescription>
         </CardHeader>
         <CardContent className="space-y-4 text-center">
           <p>
@@ -30,10 +31,10 @@ export default function GoodbyePage() {
             been removed.
           </p>
           <div className="rounded-lg bg-muted p-3 text-sm">
-            <p className="font-medium mb-2">What's next:</p>
+            <p className="font-medium mb-2">What&apos;s next:</p>
             <ul className="list-inside space-y-1 text-muted-foreground">
               <li>No more emails from us</li>
-              <li>To return, you'll need a new account</li>
+              <li>To return, you&apos;ll need a new account</li>
             </ul>
           </div>
         </CardContent>

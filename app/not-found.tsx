@@ -1,4 +1,5 @@
 import Link from "next/link";
+
 import { ArrowLeft } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
@@ -22,10 +23,12 @@ export default function NotFound() {
             </span>
           </div>
           <CardTitle className="text-2xl">Page Not Found</CardTitle>
-          <CardDescription>Oops! This page doesn't exist</CardDescription>
+          <CardDescription>Oops! This page doesn&apos;t exist</CardDescription>
         </CardHeader>
         <CardContent className="space-y-4 text-center">
-          <p>The page you're looking for might have been moved or deleted.</p>
+          <p>
+            The page you&apos;re looking for might have been moved or deleted.
+          </p>
           <div className="rounded-lg bg-muted p-3 text-sm">
             <p className="font-medium mb-2">You can try:</p>
             <ul className="list-inside space-y-1 text-muted-foreground">
