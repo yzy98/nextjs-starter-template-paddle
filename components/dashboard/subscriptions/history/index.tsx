@@ -1,6 +1,6 @@
 "use client";
 
-import { Suspense } from "react";
+import { Suspense, useDeferredValue } from "react";
 
 import { useSuspenseQuery } from "@tanstack/react-query";
 import { ErrorBoundary } from "react-error-boundary";
@@ -39,29 +39,35 @@ const SubscriptionsHistoryTableSuspense = () => {
   const trpc = useTRPC();
   const { pagination, sorting, globalFilter } = useInactiveSubscriptionsStore();
 
+  const deferredGlobalFilter = useDeferredValue(globalFilter);
+  const isFilterStale = globalFilter !== deferredGlobalFilter;
+
+  const deferredSorting = useDeferredValue(sorting);
+  const isSortingStale = sorting !== deferredSorting;
+
   const { data: subscriptions } = useSuspenseQuery(
     trpc.subscriptions.getInactive.queryOptions({
       limit: pagination.pageSize,
       page: pagination.pageIndex,
-      ...(sorting.length > 0 && {
-        sortingId: sorting[0].id as
+      ...(deferredSorting.length > 0 && {
+        sortingId: deferredSorting[0].id as
           | "productName"
           | "billingCycleInterval"
           | "priceAmount"
           | "startsAt"
           | "endsAt"
           | "status",
-        sortingDirection: sorting[0].desc ? "desc" : "asc",
+        sortingDirection: deferredSorting[0].desc ? "desc" : "asc",
       }),
-      ...(globalFilter.length > 0 && {
-        globalFilter: globalFilter as string,
+      ...(deferredGlobalFilter.length > 0 && {
+        globalFilter: deferredGlobalFilter as string,
       }),
     })
   );
   const { data: totalCount } = useSuspenseQuery(
     trpc.subscriptions.countInactive.queryOptions({
-      ...(globalFilter.length > 0 && {
-        globalFilter: globalFilter as string,
+      ...(deferredGlobalFilter.length > 0 && {
+        globalFilter: deferredGlobalFilter as string,
       }),
     })
   );
@@ -70,6 +76,7 @@ const SubscriptionsHistoryTableSuspense = () => {
     <SubscriptionsHistoryTable
       subscriptions={subscriptions}
       totalCount={totalCount}
+      isStale={isFilterStale || isSortingStale}
     />
   );
 };

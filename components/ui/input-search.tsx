@@ -1,5 +1,3 @@
-import { useEffect, useState } from "react";
-
 import { Search, X } from "lucide-react";
 
 import { cn } from "@/lib/utils";
@@ -7,32 +5,16 @@ import { cn } from "@/lib/utils";
 import { Input } from "./input";
 
 export const InputSearch = ({
-  value: initialValue,
+  value,
   onChange,
-  debounce = 500,
   className,
   ...props
 }: {
   value: string | number;
   onChange: (value: string | number) => void;
-  debounce?: number;
 } & Omit<React.InputHTMLAttributes<HTMLInputElement>, "onChange">) => {
-  const [value, setValue] = useState(initialValue);
-
-  useEffect(() => {
-    setValue(initialValue);
-  }, [initialValue]);
-
-  useEffect(() => {
-    const timeout = setTimeout(() => {
-      onChange(value);
-    }, debounce);
-
-    return () => clearTimeout(timeout);
-  }, [value, onChange, debounce]);
-
   const handleClear = () => {
-    setValue("");
+    onChange("");
   };
 
   return (
@@ -42,7 +24,7 @@ export const InputSearch = ({
         {...props}
         className={cn("pl-8 pr-8", className)}
         value={value}
-        onChange={(e) => setValue(e.target.value)}
+        onChange={(e) => onChange(e.target.value)}
       />
       {value && (
         <button

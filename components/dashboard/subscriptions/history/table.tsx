@@ -19,11 +19,13 @@ type SubscriptionsHistoryOutput = inferProcedureOutput<
 interface SubscriptionsHistoryOutputTableProps {
   subscriptions: SubscriptionsHistoryOutput;
   totalCount: number;
+  isStale: boolean;
 }
 
 export const SubscriptionsHistoryTable = ({
   subscriptions,
   totalCount,
+  isStale,
 }: SubscriptionsHistoryOutputTableProps) => {
   const {
     pagination,
@@ -54,7 +56,15 @@ export const SubscriptionsHistoryTable = ({
   });
 
   return (
-    <div className="w-full space-y-4">
+    <div
+      className="w-full space-y-4"
+      style={{
+        opacity: isStale ? 0.5 : 1,
+        transition: isStale
+          ? "opacity 0.2s 0.2s linear"
+          : "opacity 0s 0s linear",
+      }}
+    >
       <div className="flex items-center">
         <DataTableFilter table={table} />
         <DataTableViewOptions table={table} />
