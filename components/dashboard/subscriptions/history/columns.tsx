@@ -3,7 +3,6 @@
 import Link from "next/link";
 
 import { ColumnDef } from "@tanstack/react-table";
-import { inferProcedureOutput } from "@trpc/server";
 import { MoreHorizontal } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
@@ -19,15 +18,9 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { DATA_TABLE_ID_TITLE_MAP } from "@/lib/constants";
 import { formatPrice, getStatusText } from "@/lib/utils";
-import { AppRouter } from "@/trpc/routers/_app";
+import { SubscriptionsGetInactiveOutputSingle } from "@/trpc/types";
 
-type SubscriptionsHistoryOutput = inferProcedureOutput<
-  AppRouter["subscriptions"]["getInactive"]
->;
-
-type SubscriptionsHistory = SubscriptionsHistoryOutput[number];
-
-export const columns: ColumnDef<SubscriptionsHistory>[] = [
+export const columns: ColumnDef<SubscriptionsGetInactiveOutputSingle>[] = [
   {
     id: "select",
     header: ({ table }) => (

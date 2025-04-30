@@ -1,24 +1,18 @@
 import Link from "next/link";
 
-import { inferProcedureOutput } from "@trpc/server";
-
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Table, TableBody, TableCell, TableRow } from "@/components/ui/table";
 import { formatDate, formatPrice, getStatusText } from "@/lib/utils";
-import { AppRouter } from "@/trpc/routers/_app";
+import { SubscriptionsGetActiveOutput } from "@/trpc/types";
 
 import { SubscriptionsStatusActions } from "./actions";
 import { SubscriptionsStatusScheduledAlert } from "./scheduled-alert";
 
-type SubscriptionOutput = inferProcedureOutput<
-  AppRouter["subscriptions"]["getActive"]
->;
-
 interface SubscriptionStatusCardProps {
-  activeSubscription: SubscriptionOutput;
+  activeSubscription: SubscriptionsGetActiveOutput;
 }
 
 export const SubscriptionStatusCard = ({

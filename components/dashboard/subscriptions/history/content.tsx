@@ -3,7 +3,6 @@
 import { Suspense, useState } from "react";
 
 import { useReactTable, getCoreRowModel } from "@tanstack/react-table";
-import { inferProcedureOutput } from "@trpc/server";
 import { ErrorBoundary } from "react-error-boundary";
 
 import { columns } from "@/components/dashboard/subscriptions/history/columns";
@@ -15,16 +14,10 @@ import {
 import { DataTableFilter } from "@/components/ui/data-table/data-table-filter";
 import { DataTableViewOptions } from "@/components/ui/data-table/data-table-view-options";
 import { useInactiveSubscriptionsStore } from "@/stores/use-inactive-subscriptions-store";
-import { AppRouter } from "@/trpc/routers/_app";
-
-
-type Subscription = inferProcedureOutput<
-  AppRouter["subscriptions"]["getInactive"]
->[number];
-
-type TotalCount = inferProcedureOutput<
-  AppRouter["subscriptions"]["countInactive"]
->;
+import {
+  SubscriptionsCountInactiveOutput,
+  SubscriptionsGetInactiveOutput,
+} from "@/trpc/types";
 
 export const SubscriptionsHistoryContent = () => {
   const {
@@ -36,8 +29,10 @@ export const SubscriptionsHistoryContent = () => {
     setGlobalFilter,
   } = useInactiveSubscriptionsStore();
 
-  const [subscriptions, setSubscriptions] = useState<Subscription[]>([]);
-  const [totalCount, setTotalCount] = useState<TotalCount>(0);
+  const [subscriptions, setSubscriptions] =
+    useState<SubscriptionsGetInactiveOutput>([]);
+  const [totalCount, setTotalCount] =
+    useState<SubscriptionsCountInactiveOutput>(0);
 
   const table = useReactTable({
     data: subscriptions,

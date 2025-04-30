@@ -1,11 +1,10 @@
-import { inferProcedureOutput } from "@trpc/server";
 import { CalendarDays } from "lucide-react";
 
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { Button } from "@/components/ui/button";
 import { useManageSubscription } from "@/hooks/use-manage-subscription";
 import { formatDate } from "@/lib/utils";
-import { AppRouter } from "@/trpc/routers/_app";
+import { SubscriptionsGetActiveOutput } from "@/trpc/types";
 
 type ScheduledChange = {
   action: "pause" | "cancel";
@@ -13,11 +12,8 @@ type ScheduledChange = {
   resume_at: string | null;
 };
 
-type SubscriptionOutput = inferProcedureOutput<
-  AppRouter["subscriptions"]["getActive"]
->;
 interface SubscriptionsStatusScheduledAlertProps {
-  activeSubscription: SubscriptionOutput;
+  activeSubscription: SubscriptionsGetActiveOutput;
 }
 
 export const SubscriptionsStatusScheduledAlert = ({

@@ -2,22 +2,19 @@ import { useDeferredValue, useEffect } from "react";
 
 import { useSuspenseQuery } from "@tanstack/react-query";
 import { Table } from "@tanstack/react-table";
-import { inferProcedureOutput } from "@trpc/server";
 
 import { DataTable } from "@/components/ui/data-table";
 import { Skeleton } from "@/components/ui/skeleton";
 import { SUBSCRIPTION_HISTORY_PAGE_SIZE } from "@/lib/constants";
 import { useInactiveSubscriptionsStore } from "@/stores/use-inactive-subscriptions-store";
 import { useTRPC } from "@/trpc/client";
-import { AppRouter } from "@/trpc/routers/_app";
-
-type Subscription = inferProcedureOutput<
-  AppRouter["subscriptions"]["getInactive"]
->[number];
+import { SubscriptionsGetInactiveOutputSingle } from "@/trpc/types";
 
 interface SubscriptionsHistoryTableProps {
-  table: Table<Subscription>;
-  setSubscriptions: (subscriptions: Subscription[]) => void;
+  table: Table<SubscriptionsGetInactiveOutputSingle>;
+  setSubscriptions: (
+    subscriptions: SubscriptionsGetInactiveOutputSingle[]
+  ) => void;
 }
 
 export function SubscriptionsHistoryTable({
