@@ -1,4 +1,4 @@
-export const SUBSCRIPTION_HISTORY_PAGE_SIZE = 10;
+export const SUBSCRIPTION_HISTORY_PAGE_SIZE = 5;
 
 export const ACTIVE_SUBSCRIPTION_STATUSES = [
   "active",

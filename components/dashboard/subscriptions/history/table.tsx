@@ -1,63 +1,65 @@
-import { getCoreRowModel, useReactTable } from "@tanstack/react-table";
+import { useDeferredValue, useEffect } from "react";
+
+import { useSuspenseQuery } from "@tanstack/react-query";
+import { Table } from "@tanstack/react-table";
 import { inferProcedureOutput } from "@trpc/server";
 
 import { DataTable } from "@/components/ui/data-table";
-import { DataTableFilter } from "@/components/ui/data-table/data-table-filter";
-import { DataTablePagination } from "@/components/ui/data-table/data-table-pagination";
-import { DataTableViewOptions } from "@/components/ui/data-table/data-table-view-options";
 import { Skeleton } from "@/components/ui/skeleton";
 import { SUBSCRIPTION_HISTORY_PAGE_SIZE } from "@/lib/constants";
 import { useInactiveSubscriptionsStore } from "@/stores/use-inactive-subscriptions-store";
+import { useTRPC } from "@/trpc/client";
 import { AppRouter } from "@/trpc/routers/_app";
 
-import { columns } from "./columns";
-
-type SubscriptionsHistoryOutput = inferProcedureOutput<
+type Subscription = inferProcedureOutput<
   AppRouter["subscriptions"]["getInactive"]
->;
+>[number];
 
-interface SubscriptionsHistoryOutputTableProps {
-  subscriptions: SubscriptionsHistoryOutput;
-  totalCount: number;
-  isStale: boolean;
+interface SubscriptionsHistoryTableProps {
+  table: Table<Subscription>;
+  setSubscriptions: (subscriptions: Subscription[]) => void;
 }
 
-export const SubscriptionsHistoryTable = ({
-  subscriptions,
-  totalCount,
-  isStale,
-}: SubscriptionsHistoryOutputTableProps) => {
-  const {
-    pagination,
-    setPagination,
-    sorting,
-    setSorting,
-    globalFilter,
-    setGlobalFilter,
-  } = useInactiveSubscriptionsStore();
+export function SubscriptionsHistoryTable({
+  table,
+  setSubscriptions,
+}: SubscriptionsHistoryTableProps) {
+  const trpc = useTRPC();
+  const { pagination, sorting, globalFilter } = useInactiveSubscriptionsStore();
 
-  const table = useReactTable({
-    data: subscriptions,
-    columns,
-    pageCount: Math.ceil(totalCount / pagination.pageSize),
-    state: {
-      pagination,
-      sorting,
-      globalFilter,
-    },
-    onPaginationChange: setPagination,
-    manualPagination: true,
-    onSortingChange: setSorting,
-    manualSorting: true,
-    enableMultiSort: false,
-    onGlobalFilterChange: setGlobalFilter,
-    manualFiltering: true,
-    getCoreRowModel: getCoreRowModel(),
-  });
+  const deferredGlobalFilter = useDeferredValue(globalFilter);
+  const deferredSorting = useDeferredValue(sorting);
+  const isStale =
+    deferredGlobalFilter !== globalFilter || deferredSorting !== sorting;
+
+  const { data: subscriptions } = useSuspenseQuery(
+    trpc.subscriptions.getInactive.queryOptions({
+      limit: pagination.pageSize,
+      page: pagination.pageIndex,
+      ...(deferredSorting.length > 0 && {
+        sortingId: deferredSorting[0].id as
+          | "productName"
+          | "billingCycleInterval"
+          | "priceAmount"
+          | "startsAt"
+          | "endsAt"
+          | "status",
+        sortingDirection: deferredSorting[0].desc ? "desc" : "asc",
+      }),
+      ...(deferredGlobalFilter.length > 0 && {
+        globalFilter: deferredGlobalFilter as string,
+      }),
+    })
+  );
+
+  useEffect(() => {
+    if (subscriptions) {
+      setSubscriptions(subscriptions);
+    }
+  }, [subscriptions, setSubscriptions]);
 
   return (
     <div
-      className="w-full space-y-4"
       style={{
         opacity: isStale ? 0.5 : 1,
         transition: isStale
@@ -65,15 +67,10 @@ export const SubscriptionsHistoryTable = ({
           : "opacity 0s 0s linear",
       }}
     >
-      <div className="flex items-center">
-        <DataTableFilter table={table} />
-        <DataTableViewOptions table={table} />
-      </div>
       <DataTable table={table} />
-      <DataTablePagination table={table} />
     </div>
   );
-};
+}
 
 export const SubscriptionsHistoryTableSkeleton = () => {
   // Column widths for realistic appearance
@@ -88,58 +85,39 @@ export const SubscriptionsHistoryTableSkeleton = () => {
   ];
 
   return (
-    <div className="w-full space-y-4">
-      <div className="flex items-center justify-between">
-        {/* Filter skeleton */}
-        <Skeleton className="h-10 w-[220px] sm:w-[250px]" />
-
-        {/* View options skeleton */}
-        <Skeleton className="h-10 w-[120px] sm:w-[120px]" />
+    <div className="rounded-md border overflow-hidden">
+      {/* Table header */}
+      <div className="h-12 border-b bg-muted/30 px-4">
+        <div className="flex h-full items-center gap-4">
+          {columnWidths.map((width, i) => (
+            <Skeleton
+              key={`header-${i}`}
+              className={`h-4 ${width} rounded-md`}
+            />
+          ))}
+        </div>
       </div>
 
-      {/* Table skeleton */}
-      <div className="rounded-md border overflow-hidden">
-        {/* Table header */}
-        <div className="h-12 border-b bg-muted/30 px-4">
-          <div className="flex h-full items-center gap-4">
-            {columnWidths.map((width, i) => (
-              <Skeleton
-                key={`header-${i}`}
-                className={`h-4 ${width} rounded-md`}
-              />
-            ))}
+      {/* Fixed number of skeleton rows */}
+      <div>
+        {Array.from({ length: SUBSCRIPTION_HISTORY_PAGE_SIZE }).map((_, i) => (
+          <div
+            key={`row-${i}`}
+            className="border-b px-4 py-4 animate-pulse"
+            style={{ animationDelay: `${i * 100}ms` }}
+          >
+            <div className="flex items-center gap-4">
+              {columnWidths.map((width, j) => (
+                <Skeleton
+                  key={`cell-${i}-${j}`}
+                  className={`h-5 ${width} rounded-md ${
+                    j === 0 ? "bg-muted/60" : "bg-muted/40"
+                  }`}
+                />
+              ))}
+            </div>
           </div>
-        </div>
-
-        {/* Fixed number of skeleton rows */}
-        <div>
-          {Array.from({ length: SUBSCRIPTION_HISTORY_PAGE_SIZE }).map(
-            (_, i) => (
-              <div
-                key={`row-${i}`}
-                className="border-b px-4 py-4 animate-pulse"
-                style={{ animationDelay: `${i * 100}ms` }}
-              >
-                <div className="flex items-center gap-4">
-                  {columnWidths.map((width, j) => (
-                    <Skeleton
-                      key={`cell-${i}-${j}`}
-                      className={`h-5 ${width} rounded-md ${
-                        j === 0 ? "bg-muted/60" : "bg-muted/40"
-                      }`}
-                    />
-                  ))}
-                </div>
-              </div>
-            )
-          )}
-        </div>
-      </div>
-
-      {/* Pagination skeleton */}
-      <div className="flex items-center justify-between px-2">
-        <Skeleton className="h-9 w-[250px]" />
-        <Skeleton className="h-9 w-[120px]" />
+        ))}
       </div>
     </div>
   );
